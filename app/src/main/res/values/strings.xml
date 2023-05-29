@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">EasyWay</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="login">Login Page</string>
+    <string name="splash">Splash Page</string>
+    <string name="register">Register Page</string>
 </resources>
