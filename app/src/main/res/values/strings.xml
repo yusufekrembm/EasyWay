@@ -14,4 +14,8 @@
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="or">Or</string>
     <string name="log_with_one_of_the_following_options">Login with one of the following options</string>
+    <string name="signupPageText">Sign up</string>
+    <string name="create_a_account">Create an account</string>
+    <string name="sign_up_with_one_of_the_following_options">Sign up with one of the following options</string>
+    <string name="re_password">Re-Password</string>
 </resources>
