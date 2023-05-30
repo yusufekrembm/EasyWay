@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
-    <item android:drawable="@color/black"/>
-    <item>
+
+    <!-- Arka plan gradienti -->
+    <item android:gravity="center">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#000000"
+                android:endColor="#F857A6"
+                android:type="linear"
+                android:angle="270" />
+        </shape>
+    </item>
+
+    <!-- Metin -->
+    <item android:gravity="center">
         <bitmap
+            android:src="@drawable/sign_easyway_logo"
             android:gravity="center"
-            android:src="@drawable/ic_launcher" />
+            android:scaleX="0.5"
+            android:scaleY="0.5" />
     </item>
-    <item>
-        <bitmap
-            android:gravity="bottom"
-            android:src="@drawable/signforsplash" />
-    </item>
+
 </layer-list>

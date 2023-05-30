@@ -1,7 +1,21 @@
 <resources>
     <string name="app_name">EasyWay</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="login">Login Page</string>
     <string name="splash">Splash Page</string>
     <string name="register">Register Page</string>
+    <string name="backButton">backButton</string>
+    <string name="easyWay">EasyWay</string>
+    <string name="loginText">Log in</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="loginButton">Log in</string>
+    <string name="gotosignup">goToSignUp</string>
+    <string name="sign_up">Sign up</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="or">Or</string>
+    <string name="log_with_one_of_the_following_options">Login with one of the following options</string>
+    <string name="signupPageText">Sign up</string>
+    <string name="create_a_account">Create an account</string>
+    <string name="sign_up_with_one_of_the_following_options">Sign up with one of the following options</string>
+    <string name="re_password">Re-Password</string>
 </resources>
