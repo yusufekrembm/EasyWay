@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,7 +36,7 @@ public class RegisterFragment extends Fragment {
     private boolean isPasswordVisible = false;
     private ImageView showPasswordButton;
     private ImageView showRePasswordButton;
-    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
 
     @Nullable
     @Override
@@ -52,9 +53,12 @@ public class RegisterFragment extends Fragment {
         showRePasswordButton = view.findViewById(R.id.repasswordVisibilityToggle);
         registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
         registerButton.setOnClickListener(v -> registerUser());
-        hideKeyboardPressEnter();
+        view.setOnClickListener(v -> hideKeyboard());
+
+        keyboardProcess();
         calculateStrengthPassword();
         showPassword();
+
         return view;
     }
 
@@ -65,8 +69,8 @@ public class RegisterFragment extends Fragment {
 
         registerViewModel.registerUser(email, password, rePassword, new RegisterViewModel.OnRegistrationListener() {
             @Override
-            public void onRegistrationSuccess() {
-                Toast.makeText(getActivity(), "Kayıt başarılı", Toast.LENGTH_SHORT).show();
+            public void onRegistrationSuccess(String successMessage) {
+                Toast.makeText(getActivity(), "Aktivasyon maili gönderildi: " + successMessage, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -76,10 +80,17 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-    private void hideKeyboardPressEnter() {
-        rePasswordSignUp.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+    private void keyboardProcess() {
+        signUpPassword.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                rePasswordSignUp.requestFocus();
 
+                return true;
+            }
+            return false;
+        });
+        rePasswordSignUp.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                 InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 return true;
@@ -88,12 +99,13 @@ public class RegisterFragment extends Fragment {
         });
     }
 
+
     private void calculateStrengthPassword() {
         strengthPassword.setVisibility(View.GONE);
         signUpPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not needed for this example
+
             }
 
             @SuppressLint("SetTextI18n")
@@ -127,7 +139,6 @@ public class RegisterFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Not needed for this example
             }
         });
     }
@@ -177,6 +188,10 @@ public class RegisterFragment extends Fragment {
             }
             rePasswordSignUp.setSelection(rePasswordSignUp.getText().length());
         });
+    }
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 }
 
