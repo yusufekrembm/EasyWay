@@ -1,9 +1,7 @@
 package com.yusufekremunlu.easyway.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-
 import com.yusufekremunlu.easyway.R;
 
 public class HomeActivity extends AppCompatActivity {
