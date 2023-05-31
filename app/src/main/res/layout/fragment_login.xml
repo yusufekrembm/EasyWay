@@ -53,7 +53,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginStart="56dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="56dp"
         android:autofillHints="Email"
         android:background="@drawable/edittext_design_background"

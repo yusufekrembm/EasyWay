@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "52590881501",
+    "project_id": "easyway-968c0",
+    "storage_bucket": "easyway-968c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52590881501:android:f836d7c285d2df865d0934",
+        "android_client_info": {
+          "package_name": "com.yusufekremunlu.easyway"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9iXlK1IpB9STMzg3A3jkXnCD3lDgDhRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
