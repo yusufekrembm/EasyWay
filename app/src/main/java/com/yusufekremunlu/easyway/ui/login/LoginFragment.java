@@ -8,6 +8,8 @@ import androidx.navigation.Navigation;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,8 @@ public class LoginFragment extends Fragment {
     private ImageView showPasswordButton;
     private boolean isPasswordVisible = false;
 
-    public LoginFragment() {}
+    public LoginFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,12 +44,15 @@ public class LoginFragment extends Fragment {
 
         TextView loginTextBut = view.findViewById(R.id.loginTextBut);
         loginTextBut.setOnClickListener(v -> loginUser());
+        view.setOnClickListener(v -> hideKeyboard());
 
         View goToSignUpPage = view.findViewById(R.id.goToSignUpPage);
         goToSignUpPage.setOnClickListener(v -> navigateToRegisterFragment());
 
         backButton();
         showPassword();
+        keyboardProcess();
+
         return view;
     }
 
@@ -78,6 +84,7 @@ public class LoginFragment extends Fragment {
             }
         });
     }
+
     private void showPassword() {
         showPasswordButton.setOnClickListener(v -> {
             if (isPasswordVisible) {
@@ -96,7 +103,7 @@ public class LoginFragment extends Fragment {
         imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
     }
 
-    private void backButton(){
+    private void backButton() {
         backButton.setOnClickListener(v -> {
             // Bir önceki fragmenta geri dönmek için:
             if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
@@ -109,5 +116,24 @@ public class LoginFragment extends Fragment {
 
     private void navigateToRegisterFragment() {
         Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registerFragment);
+    }
+
+    private void keyboardProcess() {
+        emailEditText.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                passwordEditText.requestFocus();
+
+                return true;
+            }
+            return false;
+        });
+        passwordEditText.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -213,15 +213,19 @@ public class RegisterFragment extends Fragment {
     }
 
     private void backButton(){
-        backButton.setOnClickListener(v -> {
-            // Bir önceki fragmenta geri dönmek için:
-            if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            } else {
-                requireActivity().onBackPressed();
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Bir önceki fragmenta geri dönmek için:
+                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    requireActivity().onBackPressed();
+                }
             }
         });
     }
+
 }
 
 
