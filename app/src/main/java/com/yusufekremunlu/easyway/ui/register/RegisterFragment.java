@@ -1,7 +1,9 @@
 package com.yusufekremunlu.easyway.ui.register;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -20,16 +22,20 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.yusufekremunlu.easyway.R;
-
-import java.util.Objects;
 
 
 public class RegisterFragment extends Fragment {
@@ -43,6 +49,10 @@ public class RegisterFragment extends Fragment {
     private ImageView showPasswordButton;
     private ImageView showRePasswordButton;
     private ImageButton backButton;
+    private ImageView twitterButton;
+    private ImageView githubButton;
+    private GoogleSignInClient mGoogleSignInClient;
+    private ActivityResultLauncher<Intent> signInLauncher;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -61,16 +71,32 @@ public class RegisterFragment extends Fragment {
         showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
         showRePasswordButton = view.findViewById(R.id.repasswordVisibilityToggle);
         backButton = view.findViewById(R.id.backButton);
-        registerButton.setOnClickListener(v -> registerUser());
+        twitterButton = view.findViewById(R.id.twitterSignUp);
+        githubButton = view.findViewById(R.id.githubSignUp);
 
         View goToLoginPage = view.findViewById(R.id.goToLoginPage);
-        goToLoginPage.setOnClickListener(v -> navigateToRegisterFragment());
 
+
+        registerButton.setOnClickListener(v -> registerUser());
+        goToLoginPage.setOnClickListener(v -> navigateToRegisterFragment());
         view.setOnClickListener(v -> hideKeyboard());
+
+
+
+        view.findViewById(R.id.googleSignUp).setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            signInLauncher.launch(signInIntent);
+        });
+
+
+        signInGoogle();
         keyboardProcess();
         calculateStrengthPassword();
         showPassword();
         backButton();
+
+        twitterButton.setOnClickListener(v -> signInTwitter());
+        githubButton.setOnClickListener(v -> signInGithub());
 
         return view;
     }
@@ -212,20 +238,71 @@ public class RegisterFragment extends Fragment {
         Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_loginFragment);
     }
 
-    private void backButton(){
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Bir önceki fragmenta geri dönmek için:
-                if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                    requireActivity().getSupportFragmentManager().popBackStack();
-                } else {
-                    requireActivity().onBackPressed();
-                }
+    private void backButton() {
+        backButton.setOnClickListener(v -> {
+            // Bir önceki fragmenta geri dönmek için:
+            if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            } else {
+                requireActivity().onBackPressed();
             }
         });
     }
 
+    private void signInTwitter(){
+        twitterButton.setOnClickListener(v -> registerViewModel.signInWithTwitter(getActivity()));
+
+        registerViewModel.getSignInTwitterSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                // Başarılı giriş durumunda yapılacak işlemler
+                Toast.makeText(getActivity(), "Twitter ile giriş başarılı", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        registerViewModel.getSignInTwitterError().observe(getViewLifecycleOwner(), error -> {
+            // Hata durumunda yapılacak işlemler
+            Toast.makeText(getActivity(), "Twitter ile giriş hatası: " + error, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void signInGithub(){
+        githubButton.setOnClickListener(v -> registerViewModel.signInWithGithub(getActivity()));
+
+        registerViewModel.getSignInGithubSuccess().observe(getViewLifecycleOwner(), success -> {
+            if (success) {
+                // Başarılı giriş durumunda yapılacak işlemler
+                Toast.makeText(getActivity(), "Github ile giriş başarılı", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        registerViewModel.getSignInGithubError().observe(getViewLifecycleOwner(), error -> {
+            // Hata durumunda yapılacak işlemler
+            Toast.makeText(getActivity(), "Github ile giriş hatası: " + error, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    private void signInGoogle() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+
+        signInLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            registerViewModel.signInWithGoogle(getActivity(),account);
+                        } catch (ApiException e) {
+                            // Oturum açma başarısız oldu
+                        }
+                    }
+                });
+    }
 }
 
 

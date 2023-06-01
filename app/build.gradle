@@ -49,12 +49,12 @@ dependencies {
     // Firebase implementation
     implementation platform("com.google.firebase:firebase-bom:$bom_version")
     implementation 'com.google.firebase:firebase-auth'
-    // Google Sign-In
-    implementation 'com.google.android.gms:play-services-auth:19.2.0'
-
+    
     // ViewModel implementation
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
 
 }
