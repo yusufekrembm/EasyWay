@@ -1,14 +1,89 @@
 package com.yusufekremunlu.easyway.ui.register;
 
+import android.app.Activity;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
 
+    private final MutableLiveData<Boolean> signInTwitterSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> signInTwitterError = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> signInGithubSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> signInGithubError = new MutableLiveData<>();
+
     public RegisterViewModel() {
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    public LiveData<Boolean> getSignInGithubSuccess() {
+        return signInGithubSuccess;
+    }
+    public LiveData<String> getSignInGithubError() {
+        return signInGithubError;
+    }
+    public LiveData<Boolean> getSignInTwitterSuccess() {
+        return signInTwitterSuccess;
+    }
+    public LiveData<String> getSignInTwitterError() {
+        return signInTwitterError;
+    }
+
+
+    public void signInWithGoogle(Activity activity, GoogleSignInAccount account){
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(activity, task -> {
+                    if (task.isSuccessful()) {
+                        // Oturum açma başarılı
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        // İlgili işlemleri gerçekleştirin
+                    } else {
+                        // Oturum açma başarısız
+                    }
+                });
+    }
+
+    public void signInWithGithub(Activity activity) {
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
+
+        mAuth
+                .startActivityForSignInWithProvider(activity, provider.build())
+                .addOnSuccessListener(
+                        authResult -> {
+                            signInGithubSuccess.setValue(true);
+                        })
+                .addOnFailureListener(
+                        e -> {
+                            signInGithubError.setValue(e.getMessage());
+                        });
+
+    }
+
+    public void signInWithTwitter(Activity activity) {
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+
+        mAuth.startActivityForSignInWithProvider(activity, provider.build())
+                .addOnSuccessListener(
+                        authResult -> {
+                            signInTwitterSuccess.setValue(true);
+                        })
+                .addOnFailureListener(
+                        e -> {
+                            signInTwitterError.setValue(e.getMessage());
+                        });
     }
 
     public void registerUser(String email, String password, String rePassword, OnRegistrationListener listener) {
@@ -58,6 +133,7 @@ public class RegisterViewModel extends ViewModel {
 
     public interface OnRegistrationListener {
         void onRegistrationSuccess(String successMessage);
+
         void onRegistrationError(String errorMessage);
     }
 }
