@@ -12,7 +12,20 @@
           "package_name": "com.yusufekremunlu.easyway"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "52590881501-2ctisica1dj3jsem0fhrup917fap09qe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yusufekremunlu.easyway",
+            "certificate_hash": "2ed9d2d7770ac9bdb648da2de7875b11f68bea41"
+          }
+        },
+        {
+          "client_id": "52590881501-uu9r5iok1570jicu5disujjkf1ccvh9f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD9iXlK1IpB9STMzg3A3jkXnCD3lDgDhRI"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52590881501-uu9r5iok1570jicu5disujjkf1ccvh9f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

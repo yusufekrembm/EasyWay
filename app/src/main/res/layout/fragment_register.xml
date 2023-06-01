@@ -39,7 +39,7 @@
         android:layout_width="147dp"
         android:layout_height="62dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="40dp"
         android:fontFamily="@font/dosis_extrabold"
         android:text="@string/signupPageText"
         android:textColor="#3C3C3C"
@@ -58,6 +58,7 @@
         android:background="@drawable/edittext_design_background"
         android:fontFamily="@font/dubai_regular"
         android:hint="@string/email"
+        android:maxLines="1"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!@#$%^*()"
         android:inputType="textEmailAddress"
         android:paddingStart="20dp"
@@ -74,6 +75,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="56dp"
         android:autofillHints="Password"
+        android:maxLines="1"
         android:background="@drawable/edittext_design_background"
         android:fontFamily="@font/dubai_regular"
         android:hint="@string/password"
@@ -110,6 +112,7 @@
         android:fontFamily="@font/dubai_regular"
         android:hint="@string/re_password"
         android:paddingStart="20dp"
+        android:maxLines="1"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!@#$%^*()"
         android:inputType="textPassword"
         android:textColorHint="#6F6F6F"
@@ -175,10 +178,11 @@
             android:background="@drawable/button_background" />
         <TextView
             android:id="@+id/registerText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/create_a_account"
             android:textColor="#FFFFFF"
+            android:textAlignment="center"
             android:textSize="18sp"
             android:textStyle="bold"
             android:fontFamily="@font/dubai_regular" />
@@ -206,7 +210,7 @@
             android:layout_marginEnd="0dp" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/goToSignUp"
+            android:id="@+id/goToLoginPage"
             android:layout_width="55dp"
             android:layout_height="30dp"
             android:paddingStart="5dp"
@@ -288,6 +292,7 @@
         app:layout_constraintTop_toBottomOf="@+id/optionsLoginText">
 
         <ImageView
+            android:id="@+id/googleSignUp"
             android:layout_width="90dp"
             android:layout_height="52dp"
             android:scaleType="center"
@@ -296,6 +301,7 @@
             android:src="@drawable/google" />
 
         <ImageView
+            android:id="@+id/facebookSignUp"
             android:layout_width="90dp"
             android:layout_height="52dp"
             android:layout_marginStart="16dp"
@@ -304,6 +310,7 @@
             android:src="@drawable/facebook" />
 
         <ImageView
+            android:id="@+id/twitterSignUp"
             android:layout_width="90dp"
             android:layout_height="52dp"
             android:layout_marginStart="16dp"
