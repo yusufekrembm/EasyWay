@@ -13,18 +13,24 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+
 import com.yusufekremunlu.easyway.R;
+
+import java.util.Objects;
+
 
 public class RegisterFragment extends Fragment {
     private EditText signUpEmail;
@@ -36,12 +42,15 @@ public class RegisterFragment extends Fragment {
     private boolean isPasswordVisible = false;
     private ImageView showPasswordButton;
     private ImageView showRePasswordButton;
+    private ImageButton backButton;
 
-
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
+
+        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
         signUpEmail = view.findViewById(R.id.signUpEmail);
         signUpPassword = view.findViewById(R.id.signUpPassword);
@@ -51,13 +60,17 @@ public class RegisterFragment extends Fragment {
         strengthText = view.findViewById(R.id.strengthText);
         showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
         showRePasswordButton = view.findViewById(R.id.repasswordVisibilityToggle);
-        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
+        backButton = view.findViewById(R.id.backButton);
         registerButton.setOnClickListener(v -> registerUser());
-        view.setOnClickListener(v -> hideKeyboard());
 
+        View goToLoginPage = view.findViewById(R.id.goToLoginPage);
+        goToLoginPage.setOnClickListener(v -> navigateToRegisterFragment());
+
+        view.setOnClickListener(v -> hideKeyboard());
         keyboardProcess();
         calculateStrengthPassword();
         showPassword();
+        backButton();
 
         return view;
     }
@@ -115,7 +128,7 @@ public class RegisterFragment extends Fragment {
                 int passwordStrength = calculatePasswordStrength(password);
                 strengthPassword.setVisibility(View.VISIBLE);
                 strengthPassword.setProgress(passwordStrength);
-                if (passwordStrength < 20 || password.length() <6 || password.length() > 20) {
+                if (passwordStrength < 20 || password.length() < 6 || password.length() > 20) {
                     strengthText.setText("Geçersiz Şifre");
                     strengthPassword.setProgressTintList(ColorStateList.valueOf(Color.rgb(255, 0, 0)));
                 } else if (passwordStrength <= 40) {
@@ -130,7 +143,7 @@ public class RegisterFragment extends Fragment {
                     strengthPassword.setProgressTintList(null);
                     strengthPassword.setProgressTintList(ColorStateList.valueOf(Color.rgb(255, 165, 0)));
                     strengthText.setText("Strong");
-                } else if (passwordStrength <= 100){
+                } else if (passwordStrength <= 100) {
                     strengthPassword.setProgressTintList(null);
                     strengthPassword.setProgressTintList(ColorStateList.valueOf(Color.rgb(255, 255, 153)));
                     strengthText.setText("Very Strong");
@@ -189,9 +202,25 @@ public class RegisterFragment extends Fragment {
             rePasswordSignUp.setSelection(rePasswordSignUp.getText().length());
         });
     }
+
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
+    }
+
+    private void navigateToRegisterFragment() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_registerFragment_to_loginFragment);
+    }
+
+    private void backButton(){
+        backButton.setOnClickListener(v -> {
+            // Bir önceki fragmenta geri dönmek için:
+            if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                requireActivity().getSupportFragmentManager().popBackStack();
+            } else {
+                requireActivity().onBackPressed();
+            }
+        });
     }
 }
 
