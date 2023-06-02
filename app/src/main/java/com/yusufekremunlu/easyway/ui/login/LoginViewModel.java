@@ -1,9 +1,13 @@
 package com.yusufekremunlu.easyway.ui.login;
 
 import android.app.Activity;
+import android.content.Context;
+import android.widget.Toast;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +27,8 @@ public class LoginViewModel extends ViewModel {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public LiveData<Boolean> getSignInGithubSuccess() {return signInGithubSuccess;
+    public LiveData<Boolean> getSignInGithubSuccess() {
+        return signInGithubSuccess;
     }
 
     public LiveData<String> getSignInGithubError() {
@@ -39,7 +44,7 @@ public class LoginViewModel extends ViewModel {
     }
 
 
-    public void signInWithGoogle(Activity activity, GoogleSignInAccount account){
+    public void signInWithGoogle(Activity activity, GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, task -> {
@@ -101,11 +106,26 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-
     public interface OnRegistrationListener {
         void onRegistrationSuccess(String successMessage);
+
         void onRegistrationError(String errorMessage);
     }
+
+    public void resetPassword(String email, Context context) {
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Şifre sıfırlama e-postası başarıyla gönderildi
+                        Toast.makeText(context, "Şifre sıfırlama e-postası gönderildi.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Şifre sıfırlama e-postası gönderilirken bir hata oluştu
+                        String errorMessage = task.getException().getMessage();
+                        Toast.makeText(context, "Şifre sıfırlama e-postası gönderilirken hata oluştu: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }
+
 
 

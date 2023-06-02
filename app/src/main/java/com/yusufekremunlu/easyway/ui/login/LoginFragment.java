@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -33,15 +34,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.OAuthProvider;
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.ui.HomeActivity;
-import com.yusufekremunlu.easyway.ui.MainActivity;
 import com.yusufekremunlu.easyway.utils.NavigationUtils;
 
-import org.jetbrains.annotations.NotNull;
 
 public class LoginFragment extends Fragment {
     private EditText emailEditText, passwordEditText;
@@ -53,6 +48,7 @@ public class LoginFragment extends Fragment {
     private ActivityResultLauncher<Intent> signInLauncher;
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView githubLogin;
+    private AppCompatButton forgotPassword;
 
     public LoginFragment() {
     }
@@ -70,6 +66,7 @@ public class LoginFragment extends Fragment {
         showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
         twitterLogin = view.findViewById(R.id.twitterLogInButton);
         githubLogin = view.findViewById(R.id.githubLogin);
+        forgotPassword =view.findViewById(R.id.forgotPassword);
 
         TextView loginTextBut = view.findViewById(R.id.loginTextBut);
         loginTextBut.setOnClickListener(v -> loginUser());
@@ -77,6 +74,7 @@ public class LoginFragment extends Fragment {
 
         View goToSignUpPage = view.findViewById(R.id.goToSignUpPage);
         goToSignUpPage.setOnClickListener(v -> navigateToRegisterFragment());
+        forgotPassword.setOnClickListener(v -> navigateToForgotPasswordFragment());
 
         view.findViewById(R.id.googleLogin).setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -154,6 +152,10 @@ public class LoginFragment extends Fragment {
 
     private void navigateToRegisterFragment() {
         Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registerFragment);
+    }
+
+    private void navigateToForgotPasswordFragment() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_forgotPassword2);
     }
 
     private void keyboardProcess() {
