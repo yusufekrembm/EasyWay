@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -32,7 +33,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.OAuthProvider;
 import com.yusufekremunlu.easyway.R;
+import com.yusufekremunlu.easyway.ui.MainActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 public class LoginFragment extends Fragment {
     private EditText emailEditText, passwordEditText;
@@ -44,6 +51,7 @@ public class LoginFragment extends Fragment {
     private ActivityResultLauncher<Intent> signInLauncher;
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView githubLogin;
+    private static final int RC_SIGN_IN = 123; // Örneğin, herhangi bir değer olabilir
 
     public LoginFragment() {
     }
@@ -83,6 +91,7 @@ public class LoginFragment extends Fragment {
 
         return view;
     }
+
 
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
@@ -164,7 +173,8 @@ public class LoginFragment extends Fragment {
             return false;
         });
     }
-    private void signInTwitter(){
+
+    private void signInTwitter() {
         twitterLogin.setOnClickListener(v -> loginViewModel.signInWithTwitter(getActivity()));
 
         loginViewModel.getSignInTwitterSuccess().observe(getViewLifecycleOwner(), success -> {
@@ -180,8 +190,9 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    private void signInGithub(){
+    private void signInGithub() {
         githubLogin.setOnClickListener(v -> loginViewModel.signInWithGithub(getActivity()));
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
 
         loginViewModel.getSignInGithubSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
@@ -203,6 +214,7 @@ public class LoginFragment extends Fragment {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        mGoogleSignInClient.signOut();
 
         signInLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -211,7 +223,7 @@ public class LoginFragment extends Fragment {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
-                            loginViewModel.signInWithGoogle(getActivity(),account);
+                            loginViewModel.signInWithGoogle(getActivity(), account);
                         } catch (ApiException e) {
                             // Oturum açma başarısız oldu
                         }

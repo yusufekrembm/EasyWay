@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.auth.TwitterAuthProvider;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
@@ -31,18 +33,21 @@ public class RegisterViewModel extends ViewModel {
     public LiveData<Boolean> getSignInGithubSuccess() {
         return signInGithubSuccess;
     }
+
     public LiveData<String> getSignInGithubError() {
         return signInGithubError;
     }
+
     public LiveData<Boolean> getSignInTwitterSuccess() {
         return signInTwitterSuccess;
     }
+
     public LiveData<String> getSignInTwitterError() {
         return signInTwitterError;
     }
 
 
-    public void signInWithGoogle(Activity activity, GoogleSignInAccount account){
+    public void signInWithGoogle(Activity activity, GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, task -> {
@@ -58,22 +63,21 @@ public class RegisterViewModel extends ViewModel {
 
     public void signInWithGithub(Activity activity) {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
-
-        mAuth
-                .startActivityForSignInWithProvider(activity, provider.build())
-                .addOnSuccessListener(
-                        authResult -> {
-                            signInGithubSuccess.setValue(true);
-                        })
-                .addOnFailureListener(
-                        e -> {
-                            signInGithubError.setValue(e.getMessage());
-                        });
-
+        provider.addCustomParameter("login", "true");
+        mAuth.startActivityForSignInWithProvider(activity, provider.build())
+                .addOnSuccessListener(authResult -> {
+                    // Handle success.
+                    signInGithubSuccess.setValue(true);
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure.
+                    signInGithubError.setValue(e.getMessage());
+                });
     }
 
     public void signInWithTwitter(Activity activity) {
         OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+        provider.addCustomParameter("login", "true");
 
         mAuth.startActivityForSignInWithProvider(activity, provider.build())
                 .addOnSuccessListener(
