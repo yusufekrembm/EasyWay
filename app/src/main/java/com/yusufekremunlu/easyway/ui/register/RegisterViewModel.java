@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.yusufekremunlu.easyway.utils.NavigationUtils;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
@@ -54,6 +55,7 @@ public class RegisterViewModel extends ViewModel {
                     if (task.isSuccessful()) {
                         // Oturum açma başarılı
                         FirebaseUser user = mAuth.getCurrentUser();
+                        NavigationUtils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
                     } else {
                         // Oturum açma başarısız
@@ -68,6 +70,7 @@ public class RegisterViewModel extends ViewModel {
                 .addOnSuccessListener(authResult -> {
                     // Handle success.
                     signInGithubSuccess.setValue(true);
+                    NavigationUtils.startHomeActivity(activity);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure.
@@ -83,6 +86,7 @@ public class RegisterViewModel extends ViewModel {
                 .addOnSuccessListener(
                         authResult -> {
                             signInTwitterSuccess.setValue(true);
+                            NavigationUtils.startHomeActivity(activity);
                         })
                 .addOnFailureListener(
                         e -> {

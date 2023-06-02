@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.HomeActivity">
 
+    <TextView
+        android:id="@+id/textViewHome"
+        android:layout_width="122dp"
+        android:layout_height="91dp"
+        android:layout_marginTop="97dp"
+        android:text="Home Page"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TextSizeCheck">
+
+    </TextView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

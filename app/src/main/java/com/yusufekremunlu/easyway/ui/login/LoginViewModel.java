@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
+import com.yusufekremunlu.easyway.utils.NavigationUtils;
 
 public class LoginViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
@@ -43,8 +44,8 @@ public class LoginViewModel extends ViewModel {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
-
                         FirebaseUser user = mAuth.getCurrentUser();
+                        NavigationUtils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
                     } else {
                         // Oturum açma başarısız
@@ -61,6 +62,7 @@ public class LoginViewModel extends ViewModel {
                 .addOnSuccessListener(
                         authResult -> {
                             signInTwitterSuccess.setValue(true);
+                            NavigationUtils.startHomeActivity(activity);
                         })
                 .addOnFailureListener(
                         e -> {
@@ -75,6 +77,7 @@ public class LoginViewModel extends ViewModel {
                 .addOnSuccessListener(authResult -> {
                     // Handle success.
                     signInGithubSuccess.setValue(true);
+                    NavigationUtils.startHomeActivity(activity);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure.
@@ -97,6 +100,7 @@ public class LoginViewModel extends ViewModel {
                     }
                 });
     }
+
 
     public interface OnRegistrationListener {
         void onRegistrationSuccess(String successMessage);

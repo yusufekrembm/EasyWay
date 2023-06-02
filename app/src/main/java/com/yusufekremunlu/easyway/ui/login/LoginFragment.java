@@ -37,7 +37,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.OAuthProvider;
 import com.yusufekremunlu.easyway.R;
+import com.yusufekremunlu.easyway.ui.HomeActivity;
 import com.yusufekremunlu.easyway.ui.MainActivity;
+import com.yusufekremunlu.easyway.utils.NavigationUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +53,6 @@ public class LoginFragment extends Fragment {
     private ActivityResultLauncher<Intent> signInLauncher;
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView githubLogin;
-    private static final int RC_SIGN_IN = 123; // Örneğin, herhangi bir değer olabilir
 
     public LoginFragment() {
     }
@@ -112,7 +113,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onRegistrationSuccess(String successMessage) {
                 Toast.makeText(requireContext(), successMessage, Toast.LENGTH_SHORT).show();
-                // Handle successful login, e.g., navigate to another fragment
+                NavigationUtils.startHomeActivity(getActivity());
             }
 
             @Override
@@ -192,11 +193,9 @@ public class LoginFragment extends Fragment {
 
     private void signInGithub() {
         githubLogin.setOnClickListener(v -> loginViewModel.signInWithGithub(getActivity()));
-        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
 
         loginViewModel.getSignInGithubSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
-                // Başarılı giriş durumunda yapılacak işlemler
                 Toast.makeText(getActivity(), "Github ile giriş başarılı", Toast.LENGTH_SHORT).show();
             }
         });
