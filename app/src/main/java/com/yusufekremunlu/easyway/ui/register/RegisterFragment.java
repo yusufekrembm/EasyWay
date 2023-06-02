@@ -268,6 +268,7 @@ public class RegisterFragment extends Fragment {
     private void signInGithub(){
         githubButton.setOnClickListener(v -> registerViewModel.signInWithGithub(getActivity()));
 
+
         registerViewModel.getSignInGithubSuccess().observe(getViewLifecycleOwner(), success -> {
             if (success) {
                 // Başarılı giriş durumunda yapılacak işlemler
@@ -288,6 +289,7 @@ public class RegisterFragment extends Fragment {
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), gso);
+        mGoogleSignInClient.signOut();
 
         signInLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
