@@ -4,30 +4,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
 import android.text.TextUtils;
-import android.text.method.HideReturnsTransformationMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,20 +32,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.utils.NavigationUtils;
+import com.yusufekremunlu.easyway.utils.Utils;
 
 
 public class LoginFragment extends Fragment {
     private EditText emailEditText, passwordEditText;
     private LoginViewModel loginViewModel;
-    private ImageButton backButton;
-    private ImageView showPasswordButton;
     private ImageView twitterLogin;
-    private boolean isPasswordVisible = false;
     private ActivityResultLauncher<Intent> signInLauncher;
     private GoogleSignInClient mGoogleSignInClient;
     private ImageView githubLogin;
-    private AppCompatButton forgotPassword;
+    private CheckBox rememberMeCheckbox;
 
     public LoginFragment() {
     }
@@ -58,39 +52,44 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+        //Declaring Items
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-
         emailEditText = view.findViewById(R.id.emailEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
-        backButton = view.findViewById(R.id.backButton);
-        showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
+        ImageButton backButton = view.findViewById(R.id.backButton);
+        ImageView showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
         twitterLogin = view.findViewById(R.id.twitterLogInButton);
         githubLogin = view.findViewById(R.id.githubLogin);
-        forgotPassword =view.findViewById(R.id.forgotPassword);
-
-        TextView loginTextBut = view.findViewById(R.id.loginTextBut);
-        loginTextBut.setOnClickListener(v -> loginUser());
-        view.setOnClickListener(v -> hideKeyboard());
-
+        AppCompatButton forgotPassword = view.findViewById(R.id.forgotPassword);
+        LinearLayout loginButton = view.findViewById(R.id.loginButton);
         View goToSignUpPage = view.findViewById(R.id.goToSignUpPage);
+        Animation buttonAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.button_anim);
+        rememberMeCheckbox = view.findViewById(R.id.rememberMeCheckBox);
+        //Navigation
         goToSignUpPage.setOnClickListener(v -> navigateToRegisterFragment());
         forgotPassword.setOnClickListener(v -> navigateToForgotPasswordFragment());
-
+        //User login processes
+        loginButton.setOnClickListener(v -> {
+            loginUser();
+            loginButton.startAnimation(buttonAnimation);
+        });
         view.findViewById(R.id.googleLogin).setOnClickListener(v -> {
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             signInLauncher.launch(signInIntent);
         });
         twitterLogin.setOnClickListener(v -> signInTwitter());
         githubLogin.setOnClickListener(v -> signInGithub());
-
         signInGoogle();
-        backButton();
-        showPassword();
-        keyboardProcess();
+        //Utils usage
+        Utils.showPassword(showPasswordButton,passwordEditText);
+        Utils.setBackButtonClickListener(backButton,getActivity());
+        Utils.setupNextFocus(emailEditText,passwordEditText);
+        Utils.setupHideKeyboardOnEnter(passwordEditText);
+        Utils.setCheckBoxTextColors(rememberMeCheckbox,Color.rgb(255, 165, 0),Color.rgb(255, 165, 0));
+        view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(),view));
 
         return view;
     }
-
 
     private void loginUser() {
         String email = emailEditText.getText().toString().trim();
@@ -106,74 +105,31 @@ public class LoginFragment extends Fragment {
             return;
         }
 
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // CheckBox durumunu kontrol edin
+        boolean rememberMe = rememberMeCheckbox.isChecked();
+        if (rememberMe) {
+            editor.putString("email", email);
+            editor.putString("password", password);
+        } else {
+            editor.remove("email");
+            editor.remove("password");
+        }
+        editor.apply();
 
         loginViewModel.loginUser(email, password, new LoginViewModel.OnRegistrationListener() {
             @Override
             public void onRegistrationSuccess(String successMessage) {
                 Toast.makeText(requireContext(), successMessage, Toast.LENGTH_SHORT).show();
-                NavigationUtils.startHomeActivity(getActivity());
+                Utils.startHomeActivity(getActivity());
             }
 
             @Override
             public void onRegistrationError(String errorMessage) {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
             }
-        });
-    }
-
-    private void showPassword() {
-        showPasswordButton.setOnClickListener(v -> {
-            if (isPasswordVisible) {
-                passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                isPasswordVisible = false;
-            } else {
-                passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                isPasswordVisible = true;
-            }
-            passwordEditText.setSelection(passwordEditText.getText().length());
-        });
-    }
-
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(requireView().getWindowToken(), 0);
-    }
-
-    private void backButton() {
-        backButton.setOnClickListener(v -> {
-            // Bir önceki fragmenta geri dönmek için:
-            if (requireActivity().getSupportFragmentManager().getBackStackEntryCount() > 0) {
-                requireActivity().getSupportFragmentManager().popBackStack();
-            } else {
-                requireActivity().onBackPressed();
-            }
-        });
-    }
-
-    private void navigateToRegisterFragment() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registerFragment);
-    }
-
-    private void navigateToForgotPasswordFragment() {
-        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_forgotPassword2);
-    }
-
-    private void keyboardProcess() {
-        emailEditText.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                passwordEditText.requestFocus();
-
-                return true;
-            }
-            return false;
-        });
-        passwordEditText.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                return true;
-            }
-            return false;
         });
     }
 
@@ -230,5 +186,13 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void navigateToRegisterFragment() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_registerFragment);
+    }
+
+    private void navigateToForgotPasswordFragment() {
+        Navigation.findNavController(requireView()).navigate(R.id.action_loginFragment_to_forgotPassword2);
     }
 }

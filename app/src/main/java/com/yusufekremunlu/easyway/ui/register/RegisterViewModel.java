@@ -2,22 +2,17 @@ package com.yusufekremunlu.easyway.ui.register;
 
 import android.app.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
-import com.google.firebase.auth.TwitterAuthProvider;
-import com.yusufekremunlu.easyway.utils.NavigationUtils;
+import com.yusufekremunlu.easyway.utils.Utils;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
@@ -55,7 +50,7 @@ public class RegisterViewModel extends ViewModel {
                     if (task.isSuccessful()) {
                         // Oturum açma başarılı
                         FirebaseUser user = mAuth.getCurrentUser();
-                        NavigationUtils.startHomeActivity(activity);
+                        Utils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
                     } else {
                         // Oturum açma başarısız
@@ -70,7 +65,7 @@ public class RegisterViewModel extends ViewModel {
                 .addOnSuccessListener(authResult -> {
                     // Handle success.
                     signInGithubSuccess.setValue(true);
-                    NavigationUtils.startHomeActivity(activity);
+                    Utils.startHomeActivity(activity);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure.
@@ -86,7 +81,7 @@ public class RegisterViewModel extends ViewModel {
                 .addOnSuccessListener(
                         authResult -> {
                             signInTwitterSuccess.setValue(true);
-                            NavigationUtils.startHomeActivity(activity);
+                            Utils.startHomeActivity(activity);
                         })
                 .addOnFailureListener(
                         e -> {

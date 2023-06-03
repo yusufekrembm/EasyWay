@@ -20,4 +20,16 @@
 
     </TextView>
 
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="16dp"
+        android:text="Log Out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </Button>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
