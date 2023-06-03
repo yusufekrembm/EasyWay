@@ -19,12 +19,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         logOutButton = findViewById(R.id.logOutButton);
-        logOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Çıkış işlemi
-                performLogout();
-            }
+        logOutButton.setOnClickListener(v -> {
+            // Çıkış işlemi
+            performLogout();
         });
     }
 

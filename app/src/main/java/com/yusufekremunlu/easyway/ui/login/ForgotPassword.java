@@ -61,6 +61,7 @@ public class ForgotPassword extends Fragment {
     private void sendEmailLinkForgotPassword() {
         buttonForgotPassword.setOnClickListener(v -> {
             String email = forgotEmailText.getText().toString();
+            buttonForgotPassword.startAnimation(buttonAnimation);
 
             if (TextUtils.isEmpty(email)) {
                 // E-posta alanı boş olduğunda yapılacak işlemler
@@ -70,7 +71,6 @@ public class ForgotPassword extends Fragment {
 
             if (!isLinkSent) { // Bayrak false ise bağlantıyı gönder
                 viewModel.resetPassword(email, requireContext());
-                buttonForgotPassword.startAnimation(buttonAnimation);
                 isLinkSent = true; // Bayrağı true olarak ayarla
             } else {
                 Toast.makeText(requireContext(), "Zaten bir bağlantı gönderildi", Toast.LENGTH_SHORT).show();

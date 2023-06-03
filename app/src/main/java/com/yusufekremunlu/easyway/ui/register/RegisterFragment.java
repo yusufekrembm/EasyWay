@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +53,7 @@ public class RegisterFragment extends Fragment {
         signUpEmail = view.findViewById(R.id.signUpEmail);
         signUpPassword = view.findViewById(R.id.signUpPassword);
         rePasswordSignUp = view.findViewById(R.id.rePasswordSignUp);
-        TextView registerButton = view.findViewById(R.id.registerLayout);
+        LinearLayout registerButton = view.findViewById(R.id.registerLayout);
         ProgressBar strengthPassword = view.findViewById(R.id.strengthPassword);
         TextView strengthText = view.findViewById(R.id.strengthText);
         ImageView showPasswordButton = view.findViewById(R.id.passwordVisibilityToggle);
