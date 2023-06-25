@@ -1,4 +1,4 @@
-package com.yusufekremunlu.easyway.ui.register;
+package com.yusufekremunlu.easyway.ui.auth.register;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
