@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/fragment_home">
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.yusufekremunlu.easyway.ui.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/fragment_weather"
+        android:name="com.yusufekremunlu.easyway.ui.main.weather.WeatherFragment"
+        android:label="fragment_weather"
+        tools:layout="@layout/fragment_weather" />
+    <fragment
+        android:id="@+id/fragment_qr"
+        android:name="com.yusufekremunlu.easyway.ui.main.qr.QrFragment"
+        android:label="fragment_qr"
+        tools:layout="@layout/fragment_qr" />
+    <fragment
+        android:id="@+id/fragment_movies"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.MoviesFragment"
+        android:label="fragment_movies"
+        tools:layout="@layout/fragment_movies" />
+    <fragment
+        android:id="@+id/fragment_youtube"
+        android:name="com.yusufekremunlu.easyway.ui.main.youtube.YoutubeFragment"
+        android:label="fragment_youtube"
+        tools:layout="@layout/fragment_youtube" />
+</navigation>

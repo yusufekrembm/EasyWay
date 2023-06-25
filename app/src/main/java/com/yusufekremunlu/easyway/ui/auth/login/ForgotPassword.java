@@ -1,4 +1,4 @@
-package com.yusufekremunlu.easyway.ui.login;
+package com.yusufekremunlu.easyway.ui.auth.login;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -13,13 +13,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.utils.Utils;
-
-import java.util.Objects;
 
 public class ForgotPassword extends Fragment {
     private LoginViewModel viewModel;

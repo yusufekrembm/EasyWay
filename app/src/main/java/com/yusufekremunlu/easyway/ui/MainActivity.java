@@ -1,18 +1,14 @@
 package com.yusufekremunlu.easyway.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.utils.Utils;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);

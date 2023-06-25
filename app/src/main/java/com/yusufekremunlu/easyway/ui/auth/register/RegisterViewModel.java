@@ -1,8 +1,6 @@
-package com.yusufekremunlu.easyway.ui.login;
+package com.yusufekremunlu.easyway.ui.auth.register;
 
 import android.app.Activity;
-import android.content.Context;
-import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -16,14 +14,15 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.yusufekremunlu.easyway.utils.Utils;
 
-public class LoginViewModel extends ViewModel {
+public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
-    private final MutableLiveData<Boolean> signInGithubSuccess = new MutableLiveData<>();
-    private final MutableLiveData<String> signInGithubError = new MutableLiveData<>();
+
     private final MutableLiveData<Boolean> signInTwitterSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> signInTwitterError = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> signInGithubSuccess = new MutableLiveData<>();
+    private final MutableLiveData<String> signInGithubError = new MutableLiveData<>();
 
-    public LoginViewModel() {
+    public RegisterViewModel() {
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -49,6 +48,7 @@ public class LoginViewModel extends ViewModel {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
+                        // Oturum açma başarılı
                         FirebaseUser user = mAuth.getCurrentUser();
                         Utils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
@@ -56,23 +56,6 @@ public class LoginViewModel extends ViewModel {
                         // Oturum açma başarısız
                     }
                 });
-    }
-
-
-    public void signInWithTwitter(Activity activity) {
-        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
-        provider.addCustomParameter("login", "true");
-
-        mAuth.startActivityForSignInWithProvider(activity, provider.build())
-                .addOnSuccessListener(
-                        authResult -> {
-                            signInTwitterSuccess.setValue(true);
-                            Utils.startHomeActivity(activity);
-                        })
-                .addOnFailureListener(
-                        e -> {
-                            signInTwitterError.setValue(e.getMessage());
-                        });
     }
 
     public void signInWithGithub(Activity activity) {
@@ -90,42 +73,71 @@ public class LoginViewModel extends ViewModel {
                 });
     }
 
-    public void loginUser(String email, String password, OnRegistrationListener listener) {
-        mAuth.signInWithEmailAndPassword(email, password)
+    public void signInWithTwitter(Activity activity) {
+        OAuthProvider.Builder provider = OAuthProvider.newBuilder("twitter.com");
+        provider.addCustomParameter("login", "true");
+
+        mAuth.startActivityForSignInWithProvider(activity, provider.build())
+                .addOnSuccessListener(
+                        authResult -> {
+                            signInTwitterSuccess.setValue(true);
+                            Utils.startHomeActivity(activity);
+                        })
+                .addOnFailureListener(
+                        e -> {
+                            signInTwitterError.setValue(e.getMessage());
+                        });
+    }
+
+    public void registerUser(String email, String password, String rePassword, OnRegistrationListener listener) {
+        if (!password.equals(rePassword)) {
+            listener.onRegistrationError("Parolalar eşleşmiyor");
+            return;
+        }
+
+        // Gerekli alanların kontrolü
+        if (email.isEmpty() || password.isEmpty()) {
+            listener.onRegistrationError("Lütfen alanları doldurunuz");
+            return;
+        }
+
+        // Firebase Authentication ile kullanıcı kaydı yap
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        // Kullanıcı kaydı başarılı
                         FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null && user.isEmailVerified()) {
-                            listener.onRegistrationSuccess("Login successful.");
+                        if (user != null) {
+                            sendEmailVerification(user, listener);
                         } else {
-                            listener.onRegistrationError("Login failed. Please verify your email.");
+                            listener.onRegistrationError("Kullanıcı alınamadı");
                         }
                     } else {
-                        listener.onRegistrationError("Login failed. Please check your credentials.");
+                        // Kullanıcı kaydı başarısız
+                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Kayıt hatası";
+                        listener.onRegistrationError(errorMessage);
                     }
                 });
     }
+
+    private void sendEmailVerification(FirebaseUser user, OnRegistrationListener listener) {
+        user.sendEmailVerification()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // E-posta doğrulama e-postası başarıyla gönderildi
+                        listener.onRegistrationSuccess("Hesabını aktifleştirmek için lütfen mailinize gelen bağlantıya tıklayın.");
+                    } else {
+                        // E-posta doğrulama e-postası gönderilemedi
+                        listener.onRegistrationError("E-posta doğrulama e-postası gönderilemedi");
+                    }
+                });
+    }
+
 
     public interface OnRegistrationListener {
         void onRegistrationSuccess(String successMessage);
 
         void onRegistrationError(String errorMessage);
     }
-
-    public void resetPassword(String email, Context context) {
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Şifre sıfırlama e-postası başarıyla gönderildi
-                        Toast.makeText(context, "Şifre sıfırlama e-postası gönderildi.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Şifre sıfırlama e-postası gönderilirken bir hata oluştu
-                        String errorMessage = task.getException().getMessage();
-                        Toast.makeText(context, "Şifre sıfırlama e-postası gönderilirken hata oluştu: " + errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 }
-
-
 

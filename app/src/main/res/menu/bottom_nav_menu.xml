@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fragment_home"
+        android:title="Home"
+        android:icon="@drawable/homepagelogo" />
+    <item
+        android:id="@+id/fragment_weather"
+        android:title="Weather"
+        android:icon="@drawable/clouds"/>
+    <item
+        android:id="@+id/fragment_qr"
+        android:title="" />
+    <item
+        android:id="@+id/fragment_movies"
+        android:title="Movies"
+        android:icon="@drawable/movieslogo"/>
+
+    <item
+        android:id="@+id/fragment_youtube"
+        android:title="Youtube"
+        android:icon="@drawable/youtube" />
+</menu>
