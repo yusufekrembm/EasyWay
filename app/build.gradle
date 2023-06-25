@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.huawei.agconnect'
 }
 
 android {
@@ -13,7 +14,7 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
+        resConfigs "en", "zh-rCN"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -45,15 +46,14 @@ dependencies {
     // Java language implementation
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
-
     // Firebase implementation
     implementation platform("com.google.firebase:firebase-bom:$bom_version")
     implementation 'com.google.firebase:firebase-auth'
-    
     // ViewModel implementation
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-
     // Also add the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    //Huawei Mobile Services
+    implementation 'com.huawei.hms:scanplus:2.11.0.300'
 }
