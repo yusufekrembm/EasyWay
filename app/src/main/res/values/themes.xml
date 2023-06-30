@@ -16,4 +16,23 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="RatingBarTheme" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#FFFFFF</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
+    <style name="NunitoRegularStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/nunito</item>
+    </style>
+
+    <style name="NunitoSemiBoldStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/nunito_semibold</item>
+    </style>
+
+    <style name="TitleStyle" parent="android:Widget.TextView">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/oswald</item>
+        <item name="android:lineSpacingMultiplier">0.75</item>
+    </style>
+
 </resources>
