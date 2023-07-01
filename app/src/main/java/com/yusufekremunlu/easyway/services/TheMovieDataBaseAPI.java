@@ -14,7 +14,7 @@ import retrofit2.http.Query;
 public class TheMovieDataBaseAPI {
     private static Retrofit retrofit;
     private static final int API_VERSION = 3;
-    public static final String API_KEY = "d7289dbb6944cf037226fd769dc03924";;
+    public static final String API_KEY = "";;
     public static final String BASE_API_URL = "https://api.themoviedb.org/";
 
     public interface MovieService {
