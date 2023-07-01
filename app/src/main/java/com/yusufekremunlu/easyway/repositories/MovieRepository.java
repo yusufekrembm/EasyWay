@@ -50,4 +50,52 @@ public class MovieRepository {
             }
         });
     }
+    public void getUpComingMovies(int page, final MovieCallback<List<Movie>> callback) {
+        Call<MoviesResponse> call = movieService.fetchUpcomingList(page);
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.isSuccessful()) {
+                    MoviesResponse moviesResponse = response.body();
+                    if (moviesResponse != null) {
+                        List<Movie> movies = moviesResponse.getResults();
+                        callback.onSuccess(movies);
+                    } else {
+                        callback.onError("Movies response is null");
+                    }
+                } else {
+                    callback.onError("Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                callback.onError("Error: " + t.getMessage());
+            }
+        });
+    }
+    public void getInTheatersMovies(int page, final MovieCallback<List<Movie>> callback) {
+        Call<MoviesResponse> call = movieService.fetchInTheatersList(page);
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                if (response.isSuccessful()) {
+                    MoviesResponse moviesResponse = response.body();
+                    if (moviesResponse != null) {
+                        List<Movie> movies = moviesResponse.getResults();
+                        callback.onSuccess(movies);
+                    } else {
+                        callback.onError("Movies response is null");
+                    }
+                } else {
+                    callback.onError("Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                callback.onError("Error: " + t.getMessage());
+            }
+        });
+    }
 }

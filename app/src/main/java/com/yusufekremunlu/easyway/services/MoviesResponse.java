@@ -17,9 +17,6 @@ public class MoviesResponse {
         this.results = results;
     }
 
-    public int getPage() {
-        return page;
-    }
 
     public List<Movie> getResults() {
         return results;
