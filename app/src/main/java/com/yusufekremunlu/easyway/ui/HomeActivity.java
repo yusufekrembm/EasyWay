@@ -27,7 +27,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
-import com.huawei.hms.ml.scan.HmsScanAnalyzer;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 import com.yusufekremunlu.easyway.R;
 
@@ -41,6 +40,9 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         bottomNavigationProcesses();
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
+
     }
 
     private void bottomNavigationProcesses(){
