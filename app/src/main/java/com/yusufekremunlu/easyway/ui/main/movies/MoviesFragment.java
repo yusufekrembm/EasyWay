@@ -1,6 +1,5 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
@@ -35,7 +32,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
     private MoviesAdapter moviesPopular;
     private MoviesAdapter moviesUpComing;
     MovieApiClient movieApiClient = MovieApiClient.getInstance();
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

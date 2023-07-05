@@ -1,9 +1,14 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
+import android.os.Bundle;
+
 import androidx.lifecycle.MutableLiveData;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
+import com.yusufekremunlu.easyway.model.network.movies.CreditsResponse;
 import com.yusufekremunlu.easyway.model.network.movies.MovieResponse;
-import com.yusufekremunlu.easyway.utils.Credentials;
+import com.yusufekremunlu.easyway.model.network.movies.VideosResponse;
 import com.yusufekremunlu.easyway.utils.builders.MovieRetrofitBuilder;
 import java.util.List;
 import retrofit2.Call;
@@ -11,17 +16,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieApiClient {
+    private static MovieApiClient instance;
+    private static final MovieApiInterface movieApiInterface = MovieRetrofitBuilder.getMovieApiInterface();
     private final MutableLiveData<List<MovieModel>> mTrendingMovies;
     private final MutableLiveData<List<MovieModel>> mPopularMovies;
     private final MutableLiveData<List<MovieModel>> mUpComingMovies;
-    private static MovieApiClient instance;
-    private static final MovieApiInterface movieApiInterface = MovieRetrofitBuilder.getMovieApiInterface();
+    private final MutableLiveData<List<MovieCastModel>> mCastModelMovies;
+    private final MutableLiveData<List<MovieVideoModel>> mVideoModelMovies;
+
     private int currentPageTrending = 1;
     private int currentPagePopular = 1;
     private int currentPageUpComing = 1;
+
     private boolean isFetchingTrendingMovies = false;
     private boolean isFetchingPopularMovies = false;
     private boolean isFetchingUpComingMovies = false;
+
     private boolean isLastPageTrending = false;
     private boolean isLastPagePopular = false;
     private boolean isLastPageUpComing = false;
@@ -37,6 +47,9 @@ public class MovieApiClient {
         mTrendingMovies = new MutableLiveData<>();
         mPopularMovies = new MutableLiveData<>();
         mUpComingMovies = new MutableLiveData<>();
+        mCastModelMovies = new MutableLiveData<>();
+        mVideoModelMovies = new MutableLiveData<>();
+
         getTrendingMoviesFromApi();
         getPopularMoviesFromApi();
         getUpComingMoviesFromApi();
@@ -52,6 +65,14 @@ public class MovieApiClient {
 
     public MutableLiveData<List<MovieModel>> getUpComingMovies() {
         return mUpComingMovies;
+    }
+
+    public MutableLiveData<List<MovieCastModel>> getCastModelMovies() {
+        return mCastModelMovies;
+    }
+
+    public MutableLiveData<List<MovieVideoModel>> getVideoModelMovies() {
+        return mVideoModelMovies;
     }
 
     public void loadMoreTrendingMovies() {
@@ -166,6 +187,43 @@ public class MovieApiClient {
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
                 isFetchingUpComingMovies = false;
+            }
+        });
+    }
+
+    public void getMovieCastModelFromApi(int movie_id) {
+        Call<CreditsResponse> movieCasts = movieApiInterface.fetchMovieCasts(movie_id);
+        movieCasts.enqueue(new Callback<CreditsResponse>() {
+            @Override
+            public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
+                if (response.isSuccessful()) {
+                    CreditsResponse movieCastResponse = response.body();
+                    if(movieCastResponse!=null){
+                        List<MovieCastModel> movieCastModels = movieCastResponse.getCasts();
+                        mCastModelMovies.setValue(movieCastModels);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<CreditsResponse> call, Throwable t) {
+            }
+        });
+    }
+    public void getMovieVideosFromApi(int movie_id) {
+        Call<VideosResponse> movieVideos = movieApiInterface.fetchMovieVideos(movie_id);
+        movieVideos.enqueue(new Callback<VideosResponse>() {
+            @Override
+            public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
+                if (response.isSuccessful()) {
+                    VideosResponse movieVideosResponse = response.body();
+                    if(movieVideosResponse!=null){
+                        List<MovieVideoModel> movieVideoModels = movieVideosResponse.getVideos();
+                        mVideoModelMovies.setValue(movieVideoModels);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<VideosResponse> call, Throwable t) {
             }
         });
     }
