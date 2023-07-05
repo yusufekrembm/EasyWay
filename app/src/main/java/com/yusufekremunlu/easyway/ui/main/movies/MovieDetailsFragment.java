@@ -16,13 +16,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieDetailsFragment extends Fragment {
+public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.OnItemClickListener {
     MovieDetailViewModel movieDetailViewModel;
     private MovieCastAdapter movieCastAdapter;
     private MovieVideoAdapter movieVideoAdapter;
@@ -48,28 +50,38 @@ public class MovieDetailsFragment extends Fragment {
         if (args != null) {
             MovieModel movie = args.getParcelable("movie");
             if (movie != null) {
+
                 int movieId = movie.getMovie_id();
                 MovieApiClient.getInstance().getMovieCastModelFromApi(movieId);
                 MovieApiClient.getInstance().getMovieVideosFromApi(movieId);
+
                 TextView detailMovieTitleText = view.findViewById(R.id.detailMovieTitleText);
                 detailMovieTitleText.setText(movie.getTitle());
+
                 ImageView detailMovieImageView = view.findViewById(R.id.detailsMovieImage);
                 Glide.with(this)
                         .load(Credentials.MOVIE_BACKDROP_URL + movie.getBackdrop_path())
                         .into(detailMovieImageView);
+
                 RatingBar detailMovieRatingBar = view.findViewById(R.id.detailMovieRatingBar);
                 detailMovieRatingBar.setRating(movie.getVote_average() / 2);
+
                 TextView detailMovienumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
                 detailMovienumOfVotes.setText(String.valueOf(movie.getVote_count() + " votes"));
+
                 TextView detailMovieOverView = view.findViewById(R.id.detailMovieOverView);
                 detailMovieOverView.setText(movie.getOverview());
+
                 TextView detailMovieReleasedDate = view.findViewById(R.id.detailMovieReleasedDate);
                 detailMovieReleasedDate.setText(movie.getRelease_date());
+
                 TextView detailMovieLanguageText = view.findViewById(R.id.detailMovieLanguageText);
                 detailMovieLanguageText.setText(movie.getOriginal_language().toUpperCase());
+
                 TextView detailTitleOriginal = view.findViewById(R.id.detailTitleOriginal);
                 detailTitleOriginal.setText(movie.getOriginal_title());
                 detailTitleOriginal.setMaxLines(1);
+
                 List<Integer> genreIds = movie.getGenre_ids();
                 StringBuilder genreBuilder = new StringBuilder();
                 if (genreIds != null && !genreIds.isEmpty()) {
@@ -109,5 +121,10 @@ public class MovieDetailsFragment extends Fragment {
         movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> {
             movieVideoAdapter.setMovieVideoList(videoModelList);
         });
+    }
+
+    @Override
+    public void onItemClick(MovieCastModel castModel) {
+
     }
 }
