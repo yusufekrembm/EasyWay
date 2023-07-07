@@ -18,6 +18,8 @@ import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviesAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.ArrayList;
@@ -170,7 +172,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         hlImageView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putParcelable("movie", movie);
-
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_fragment_movies_to_movieDetailsFragment, bundle);
         });

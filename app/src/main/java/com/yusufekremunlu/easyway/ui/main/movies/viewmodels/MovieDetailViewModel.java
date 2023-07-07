@@ -1,4 +1,4 @@
-package com.yusufekremunlu.easyway.ui.main.movies;
+package com.yusufekremunlu.easyway.ui.main.movies.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;

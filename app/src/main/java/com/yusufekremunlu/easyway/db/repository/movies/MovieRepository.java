@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonCredits;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonImages;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 
 import java.util.List;
@@ -38,6 +40,12 @@ public class MovieRepository {
     }
     public LiveData<List<MovieVideoModel>> getVideoModelMovies(){
         return movieApiClient.getVideoModelMovies();
+    }
+    public LiveData<List<MoviePersonImages>> getPersonImagesModelMovies(){
+        return movieApiClient.getPersonImagesModelMovies();
+    }
+    public LiveData<List<MoviePersonCredits>> getPersonCreditsModelMovies(){
+        return movieApiClient.getPersonCreditsModelMovies();
     }
 }
 

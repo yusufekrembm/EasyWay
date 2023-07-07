@@ -1,11 +1,10 @@
-package com.yusufekremunlu.easyway.ui.main.movies;
+package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -72,7 +71,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         public void bind(MovieModel movie) {
             Glide.with(context)
-                    .load(Credentials.MOVIE_BASE_POSTER_URL +movie.getPoster_path())
+                    .load(Credentials.MOVIE_BASE_POSTER_URL + movie.getPoster_path())
                     .into(imageView);
             titleTextView.setText(movie.getTitle());
         }

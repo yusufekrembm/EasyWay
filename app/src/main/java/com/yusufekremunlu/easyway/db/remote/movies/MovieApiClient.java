@@ -1,12 +1,18 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonCredits;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonImages;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 import com.yusufekremunlu.easyway.model.network.movies.CreditsResponse;
+import com.yusufekremunlu.easyway.model.network.movies.MoviePersonCreditsResponse;
+import com.yusufekremunlu.easyway.model.network.movies.MoviePersonImagesResponse;
 import com.yusufekremunlu.easyway.model.network.movies.MovieResponse;
 import com.yusufekremunlu.easyway.model.network.movies.VideosResponse;
 import com.yusufekremunlu.easyway.utils.builders.MovieRetrofitBuilder;
@@ -23,6 +29,8 @@ public class MovieApiClient {
     private final MutableLiveData<List<MovieModel>> mUpComingMovies;
     private final MutableLiveData<List<MovieCastModel>> mCastModelMovies;
     private final MutableLiveData<List<MovieVideoModel>> mVideoModelMovies;
+    private final MutableLiveData<List<MoviePersonImages>> mPersonImagesModelMovies;
+    private final MutableLiveData<List<MoviePersonCredits>> mPersonCreditsModelMovies;
 
     private int currentPageTrending = 1;
     private int currentPagePopular = 1;
@@ -49,6 +57,8 @@ public class MovieApiClient {
         mUpComingMovies = new MutableLiveData<>();
         mCastModelMovies = new MutableLiveData<>();
         mVideoModelMovies = new MutableLiveData<>();
+        mPersonImagesModelMovies = new MutableLiveData<>();
+        mPersonCreditsModelMovies = new MutableLiveData<>();
 
         getTrendingMoviesFromApi();
         getPopularMoviesFromApi();
@@ -74,6 +84,13 @@ public class MovieApiClient {
     public MutableLiveData<List<MovieVideoModel>> getVideoModelMovies() {
         return mVideoModelMovies;
     }
+    public MutableLiveData<List<MoviePersonImages>> getPersonImagesModelMovies() {
+        return mPersonImagesModelMovies;
+    }
+    public MutableLiveData<List<MoviePersonCredits>> getPersonCreditsModelMovies() {
+        return mPersonCreditsModelMovies;
+    }
+
 
     public void loadMoreTrendingMovies() {
         if (!isFetchingTrendingMovies && !isLastPageTrending) {
@@ -224,6 +241,66 @@ public class MovieApiClient {
             }
             @Override
             public void onFailure(Call<VideosResponse> call, Throwable t) {
+            }
+        });
+    }
+    public void getMoviesPersonsFromApi(int personId, final MovieApiCallback callback) {
+        Call<MoviePerson> responseCall = movieApiInterface.fetchPersonDetails(personId);
+        responseCall.enqueue(new Callback<MoviePerson>() {
+            @Override
+            public void onResponse(Call<MoviePerson> call, Response<MoviePerson> response) {
+                if (response.isSuccessful()) {
+                    MoviePerson moviePerson = response.body();
+                    callback.onSuccess(moviePerson);
+                } else {
+                    callback.onFailure(new Throwable("Response unsuccessful"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MoviePerson> call, Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+    public interface MovieApiCallback {
+        void onSuccess(MoviePerson moviePerson);
+        void onFailure(Throwable throwable);
+    }
+    public void getMoviePersonImages(int person_id) {
+        Call<MoviePersonImagesResponse> moviePersonImagesResponseCall = movieApiInterface.fetchPersonImages(person_id);
+        moviePersonImagesResponseCall.enqueue(new Callback<MoviePersonImagesResponse>() {
+            @Override
+            public void onResponse(Call<MoviePersonImagesResponse> call, Response<MoviePersonImagesResponse> response) {
+                if (response.isSuccessful()) {
+                    MoviePersonImagesResponse moviePersonImagesResponse = response.body();
+                    if(moviePersonImagesResponse!=null){
+                        List<MoviePersonImages> moviePersonImagesModels = moviePersonImagesResponse.getImages();
+                        mPersonImagesModelMovies.setValue(moviePersonImagesModels);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<MoviePersonImagesResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    public void getMoviePersonCreditsFromApi(int person_id) {
+        Call<MoviePersonCreditsResponse> moviePersonCreditsResponseCall = movieApiInterface.fetchPersonCredits(person_id);
+        moviePersonCreditsResponseCall.enqueue(new Callback<MoviePersonCreditsResponse>() {
+            @Override
+            public void onResponse(Call<MoviePersonCreditsResponse> call, Response<MoviePersonCreditsResponse> response) {
+                if (response.isSuccessful()) {
+                    MoviePersonCreditsResponse moviePersonCreditsResponse = response.body();
+                    if(moviePersonCreditsResponse!=null){
+                        List<MoviePersonCredits> moviePersonImagesModels = moviePersonCreditsResponse.getCredits();
+                        mPersonCreditsModelMovies.setValue(moviePersonImagesModels);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<MoviePersonCreditsResponse> call, Throwable t) {
             }
         });
     }

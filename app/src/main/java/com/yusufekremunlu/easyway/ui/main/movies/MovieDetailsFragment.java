@@ -1,26 +1,35 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
-import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
+import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieCastAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieVideoAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +43,8 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         super.onCreate(savedInstanceState);
         movieDetailViewModel = new ViewModelProvider(this).get(MovieDetailViewModel.class);
         movieCastAdapter = new MovieCastAdapter(new ArrayList<>(), getContext());
-        movieVideoAdapter = new MovieVideoAdapter(new ArrayList<>(),getContext());
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        movieVideoAdapter = new MovieVideoAdapter(new ArrayList<>(), getContext());
+        movieCastAdapter.setOnItemClickListener(this);
     }
 
     @Override
@@ -124,7 +129,23 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
     }
 
     @Override
-    public void onItemClick(MovieCastModel castModel) {
+    public void onItemClick(MovieCastModel movieCastModel) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("castModel", movieCastModel);
 
+        MovieApiClient.getInstance().getMoviesPersonsFromApi(movieCastModel.getId(), new MovieApiClient.MovieApiCallback() {
+            @Override
+            public void onSuccess(MoviePerson moviePerson) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("moviePerson", moviePerson);
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.action_movieDetailsFragment_to_movieCastDetails, bundle);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                // Hata durumunda yapılacak işlemler
+            }
+        });
     }
 }

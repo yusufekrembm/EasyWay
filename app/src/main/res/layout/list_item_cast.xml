@@ -7,6 +7,15 @@
     android:layout_marginEnd="14dp"
     android:clickable="true">
 
+    <ImageView
+        android:id="@+id/castImage"
+        android:layout_width="108dp"
+        android:layout_height="162dp"
+        android:contentDescription="@string/movie_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars[0]" />
+
     <TextView
         android:id="@+id/castTitleText"
         style="@style/NunitoSemiBoldStyle"
@@ -17,18 +26,9 @@
         android:lines="2"
         android:paddingTop="5dp"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/castImage"
+        app:layout_constraintEnd_toEndOf="@id/castImage"
+        app:layout_constraintTop_toBottomOf="@id/castImage"
         tools:text="Title" />
-
-    <ImageView
-        android:id="@+id/castImage"
-        android:layout_width="108dp"
-        android:layout_height="162dp"
-        android:contentDescription="@string/movie_image"
-        app:layout_constraintStart_toStartOf="@id/castTitleText"
-        app:layout_constraintTop_toBottomOf="@id/castTitleText"
-        tools:src="@tools:sample/avatars[0]" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

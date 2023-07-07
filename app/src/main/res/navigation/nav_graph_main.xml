@@ -42,5 +42,17 @@
         <action
             android:id="@+id/action_movieDetailsFragment_to_fragment_movies"
             app:destination="@id/fragment_movies" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieCastDetails"
+            app:destination="@id/movieCastDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieCastDetails"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.MovieCastDetails"
+        android:label="fragment_movie_cast_details"
+        tools:layout="@layout/fragment_movie_cast_details" >
+        <action
+            android:id="@+id/action_movieCastDetails_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
     </fragment>
 </navigation>
