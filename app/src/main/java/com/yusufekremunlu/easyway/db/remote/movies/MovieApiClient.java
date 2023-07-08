@@ -31,18 +31,22 @@ public class MovieApiClient {
     private final MutableLiveData<List<MovieVideoModel>> mVideoModelMovies;
     private final MutableLiveData<List<MoviePersonImages>> mPersonImagesModelMovies;
     private final MutableLiveData<List<MoviePersonCredits>> mPersonCreditsModelMovies;
+    private final MutableLiveData<List<MovieModel>> mDiscoverMovies;
 
     private int currentPageTrending = 1;
     private int currentPagePopular = 1;
     private int currentPageUpComing = 1;
+    private int currentPageDiscover = 1;
 
     private boolean isFetchingTrendingMovies = false;
     private boolean isFetchingPopularMovies = false;
     private boolean isFetchingUpComingMovies = false;
+    private boolean isFetchingDiscoverMovies = false;
 
     private boolean isLastPageTrending = false;
     private boolean isLastPagePopular = false;
     private boolean isLastPageUpComing = false;
+    private boolean isLastPageDiscoverMovies = false;
 
     public static MovieApiClient getInstance(){
         if(instance==null){
@@ -59,7 +63,9 @@ public class MovieApiClient {
         mVideoModelMovies = new MutableLiveData<>();
         mPersonImagesModelMovies = new MutableLiveData<>();
         mPersonCreditsModelMovies = new MutableLiveData<>();
+        mDiscoverMovies = new MutableLiveData<>();
 
+        getMovieDiscoverIDFromApi();
         getTrendingMoviesFromApi();
         getPopularMoviesFromApi();
         getUpComingMoviesFromApi();
@@ -77,6 +83,10 @@ public class MovieApiClient {
         return mUpComingMovies;
     }
 
+    public MutableLiveData<List<MovieModel>> getDiscoverMovies() {
+        return mDiscoverMovies;
+    }
+
     public MutableLiveData<List<MovieCastModel>> getCastModelMovies() {
         return mCastModelMovies;
     }
@@ -91,6 +101,13 @@ public class MovieApiClient {
         return mPersonCreditsModelMovies;
     }
 
+
+    public void loadMoreDiscoverMovies() {
+        if (!isFetchingDiscoverMovies && !isLastPageDiscoverMovies) {
+            currentPageDiscover++;
+            getMovieDiscoverIDFromApi();
+        }
+    }
 
     public void loadMoreTrendingMovies() {
         if (!isFetchingTrendingMovies && !isLastPageTrending) {
@@ -301,6 +318,38 @@ public class MovieApiClient {
             }
             @Override
             public void onFailure(Call<MoviePersonCreditsResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    private void getMovieDiscoverIDFromApi() {
+        isFetchingDiscoverMovies = true;
+        Call<MovieResponse> movieResponse = movieApiInterface.fetchDiscoverList(currentPageDiscover);
+        movieResponse.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    MovieResponse movieResponse = response.body();
+                    if (movieResponse != null) {
+                        List<MovieModel> movies = movieResponse.getMovies();
+                        if (currentPageDiscover == 1) {
+                            mDiscoverMovies.setValue(movies);
+                        } else {
+                            List<MovieModel> currentMovies = mDiscoverMovies.getValue();
+                            if (currentMovies != null) {
+                                currentMovies.addAll(movies);
+                                mDiscoverMovies.setValue(currentMovies);
+                            }
+                        }
+                        isLastPageDiscoverMovies = currentPageDiscover >= movieResponse.getTotal_pages();
+                    }
+                }
+                isFetchingDiscoverMovies = false;
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                isFetchingDiscoverMovies = false;
             }
         });
     }

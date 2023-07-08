@@ -25,6 +25,10 @@ public class MovieRepository {
         movieApiClient = MovieApiClient.getInstance();
     }
 
+    public LiveData<List<MovieModel>> getDiscoverMovies(){
+        return movieApiClient.getDiscoverMovies();
+    }
+
     public LiveData<List<MovieModel>> getTrendingMovies(){
         return movieApiClient.getTrendingMovies();
     }

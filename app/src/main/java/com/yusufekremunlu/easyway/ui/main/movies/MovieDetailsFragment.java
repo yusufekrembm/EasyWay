@@ -71,8 +71,8 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
                 RatingBar detailMovieRatingBar = view.findViewById(R.id.detailMovieRatingBar);
                 detailMovieRatingBar.setRating(movie.getVote_average() / 2);
 
-                TextView detailMovienumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
-                detailMovienumOfVotes.setText(String.valueOf(movie.getVote_count() + " votes"));
+                TextView detailMovieNumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
+                detailMovieNumOfVotes.setText(String.valueOf(movie.getVote_count() + " votes"));
 
                 TextView detailMovieOverView = view.findViewById(R.id.detailMovieOverView);
                 detailMovieOverView.setText(movie.getOverview());

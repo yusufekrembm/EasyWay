@@ -49,4 +49,8 @@ public interface MovieApiInterface {
     Call<MoviePersonCreditsResponse> fetchPersonCredits(
             @Path("person_id") int person_id
     );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/discover/movie")
+    Call<MovieResponse> fetchDiscoverList(
+            @Query("page") int page
+    );
 }

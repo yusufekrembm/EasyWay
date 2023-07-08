@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -33,6 +34,11 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
     private MoviesAdapter moviesTrending;
     private MoviesAdapter moviesPopular;
     private MoviesAdapter moviesUpComing;
+    private ProgressBar trendingMoviesProgressBar;
+    private ProgressBar popularMoviesProgressBar;
+    private ProgressBar upComingMoviesProgressBar;
+    private ProgressBar hlMovieImageProgressBar;
+
     MovieApiClient movieApiClient = MovieApiClient.getInstance();
 
     @Override
@@ -61,6 +67,16 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         trendingRecycler = view.findViewById(R.id.trendingRecyclerView);
         popularRecycler = view.findViewById(R.id.popularRecyclerView);
         upComingRecycler = view.findViewById(R.id.upcomingRecyclerView);
+
+        trendingMoviesProgressBar = view.findViewById(R.id.trendingMoviesProgressBar);
+        popularMoviesProgressBar = view.findViewById(R.id.popularMoviesProgressBar);
+        upComingMoviesProgressBar = view.findViewById(R.id.upcomingProgressBar);
+        hlMovieImageProgressBar = view.findViewById(R.id.highlighedMovieProgressBar);
+
+        trendingMoviesProgressBar.setVisibility(View.VISIBLE);
+        popularMoviesProgressBar.setVisibility(View.VISIBLE);
+        upComingMoviesProgressBar.setVisibility(View.VISIBLE);
+        hlMovieImageProgressBar.setVisibility(View.VISIBLE);
 
         TextView showAllTrendingText = view.findViewById(R.id.showAllTrendingText);
         TextView showAllPopularText = view.findViewById(R.id.showAllPopularText);
@@ -104,14 +120,17 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
                 updateUI(firstMovie);
                 goToMovieDetails(firstMovie);
             }
+            trendingMoviesProgressBar.setVisibility(View.INVISIBLE);
         });
 
         moviesViewModel.getPopularMovies().observe(getViewLifecycleOwner(), movieModels -> {
             moviesPopular.setMovieList(movieModels);
+            popularMoviesProgressBar.setVisibility(View.INVISIBLE);
         });
 
         moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
             moviesUpComing.setMovieList(movieModels);
+            upComingMoviesProgressBar.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -164,6 +183,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
         hlGenreOne.setText(genreOne);
         hlGenreSecondOne.setText(genreSecondOne);
+        hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
         goToMovieDetails(movie);
     }
     private void updateUI(MovieModel movie) {
@@ -183,6 +203,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
         String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
         hlGenreOne.setText(genreOne);
+        hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
         hlGenreSecondOne.setText(genreSecondOne);
     }
 
