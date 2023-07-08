@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+            <ImageView
+                android:id="@+id/item_movie_grid_image"
+                android:layout_width="108dp"
+                android:layout_height="162dp"
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:contentDescription="@string/movie_image"
+                android:onClick="@{() -> goToInterface.goTo(movie)}"
+                tools:src="@tools:sample/avatars[0]" />
+
+            <TextView
+                android:id="@+id/item_grid_title_text"
+                style="@style/NunitoSemiBoldStyle"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:alpha=".8"
+                android:ellipsize="end"
+                android:lines="2"
+                android:paddingTop="5dp"
+                android:text="@{movie.title}"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="@id/image"
+                tools:text="Title" />
+</LinearLayout>
+

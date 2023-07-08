@@ -124,7 +124,7 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
             movieCastAdapter.setMovieCastList(castModelList);
         });
         movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> {
-            movieVideoAdapter.setMovieVideoList(videoModelList);
+            movieVideoAdapter.setVideoModelList(videoModelList);
         });
     }
 

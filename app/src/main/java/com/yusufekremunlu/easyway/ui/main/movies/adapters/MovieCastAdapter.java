@@ -8,19 +8,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
+import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 
 public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.MovieCastViewHolder> {
 
     private List<MovieCastModel> castModelList;
     private final Context context;
-    private MovieCastAdapter.OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public MovieCastAdapter(List<MovieCastModel> castModelList, Context context) {
         this.castModelList = castModelList;
@@ -31,20 +33,20 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         void onItemClick(MovieCastModel castModel);
     }
 
-    public void setOnItemClickListener(MovieCastAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public MovieCastAdapter.MovieCastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MovieCastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_cast, parent, false);
-        return new MovieCastAdapter.MovieCastViewHolder(view);
+        return new MovieCastViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieCastAdapter.MovieCastViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieCastViewHolder holder, int position) {
         MovieCastModel movieCastModel = castModelList.get(position);
         holder.bind(movieCastModel);
         holder.itemView.setOnClickListener(v -> {
@@ -77,9 +79,45 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setMovieCastList(List<MovieCastModel> castModelList) {
-        this.castModelList = castModelList;
-        notifyDataSetChanged();
+    public void setMovieCastList(List<MovieCastModel> newCastModelList) {
+        MovieCastDiffCallback diffCallback = new MovieCastDiffCallback(castModelList, newCastModelList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        castModelList.clear();
+        castModelList.addAll(newCastModelList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    private static class MovieCastDiffCallback extends DiffUtil.Callback {
+        private final List<MovieCastModel> oldList;
+        private final List<MovieCastModel> newList;
+
+        public MovieCastDiffCallback(List<MovieCastModel> oldList, List<MovieCastModel> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            MovieCastModel oldCastModel = oldList.get(oldItemPosition);
+            MovieCastModel newCastModel = newList.get(newItemPosition);
+            return Objects.equals(oldCastModel.getId(), newCastModel.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            MovieCastModel oldCastModel = oldList.get(oldItemPosition);
+            MovieCastModel newCastModel = newList.get(newItemPosition);
+            return Objects.equals(oldCastModel, newCastModel);
+        }
     }
 }

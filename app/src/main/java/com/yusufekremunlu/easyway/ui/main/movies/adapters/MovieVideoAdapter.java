@@ -10,17 +10,21 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.MovieVideoViewHolder> {
+
     private List<MovieVideoModel> videoModelList;
     private final Context context;
-    private MovieVideoAdapter.OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public MovieVideoAdapter(List<MovieVideoModel> videoModelList, Context context) {
         this.videoModelList = videoModelList;
@@ -31,20 +35,20 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
         void onItemClick(MovieVideoModel movieVideoModel);
     }
 
-    public void setOnItemClickListener(MovieVideoAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public MovieVideoAdapter.MovieVideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MovieVideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_video, parent, false);
-        return new MovieVideoAdapter.MovieVideoViewHolder(view);
+        return new MovieVideoViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieVideoAdapter.MovieVideoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MovieVideoViewHolder holder, int position) {
         MovieVideoModel movieVideoModel = videoModelList.get(position);
         holder.bind(movieVideoModel);
         holder.itemView.setOnClickListener(v -> {
@@ -62,7 +66,6 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
     public class MovieVideoViewHolder extends RecyclerView.ViewHolder {
         ImageView movieDetailVideoImage;
         ImageButton movieDetailImageButton;
-
 
         public MovieVideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -92,9 +95,45 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setMovieVideoList(List<MovieVideoModel> videoModelList) {
-        this.videoModelList = videoModelList;
-        notifyDataSetChanged();
+    public void setVideoModelList(List<MovieVideoModel> newVideoModelList) {
+        MovieVideoModelDiffCallback diffCallback = new MovieVideoModelDiffCallback(videoModelList, newVideoModelList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        videoModelList.clear();
+        videoModelList.addAll(newVideoModelList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    private static class MovieVideoModelDiffCallback extends DiffUtil.Callback {
+        private final List<MovieVideoModel> oldList;
+        private final List<MovieVideoModel> newList;
+
+        public MovieVideoModelDiffCallback(List<MovieVideoModel> oldList, List<MovieVideoModel> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            MovieVideoModel oldVideoModel = oldList.get(oldItemPosition);
+            MovieVideoModel newVideoModel = newList.get(newItemPosition);
+            return Objects.equals(oldVideoModel.getId(), newVideoModel.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            MovieVideoModel oldVideoModel = oldList.get(oldItemPosition);
+            MovieVideoModel newVideoModel = newList.get(newItemPosition);
+            return Objects.equals(oldVideoModel, newVideoModel);
+        }
     }
 }

@@ -7,22 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonCredits;
-import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonImages;
 import com.yusufekremunlu.easyway.utils.Credentials;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonCreditsAdapter.MoviePersonCreditsViewHolder> {
+
     private List<MoviePersonCredits> creditList;
     private final Context context;
-    private MoviePersonCreditsAdapter.OnItemClickListener listener;
+    private OnItemClickListener listener;
 
     public MoviePersonCreditsAdapter(List<MoviePersonCredits> creditList, Context context) {
         this.creditList = creditList;
@@ -33,20 +33,20 @@ public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonC
         void onItemClick(MoviePersonCredits moviePersonCredits);
     }
 
-    public void setOnItemClickListener(MoviePersonCreditsAdapter.OnItemClickListener listener) {
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public MoviePersonCreditsAdapter.MoviePersonCreditsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MoviePersonCreditsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_cast, parent, false);
-        return new MoviePersonCreditsAdapter.MoviePersonCreditsViewHolder(view);
+        return new MoviePersonCreditsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MoviePersonCreditsAdapter.MoviePersonCreditsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MoviePersonCreditsViewHolder holder, int position) {
         MoviePersonCredits moviePersonCredits = creditList.get(position);
         holder.bind(moviePersonCredits);
         holder.itemView.setOnClickListener(v -> {
@@ -79,9 +79,45 @@ public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonC
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setMoviePersonCreditList(List<MoviePersonCredits> creditList) {
-        this.creditList = creditList;
-        notifyDataSetChanged();
+    public void setCreditList(List<MoviePersonCredits> newCreditList) {
+        MoviePersonCreditsDiffCallback diffCallback = new MoviePersonCreditsDiffCallback(creditList, newCreditList);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        creditList.clear();
+        creditList.addAll(newCreditList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    private static class MoviePersonCreditsDiffCallback extends DiffUtil.Callback {
+        private final List<MoviePersonCredits> oldList;
+        private final List<MoviePersonCredits> newList;
+
+        public MoviePersonCreditsDiffCallback(List<MoviePersonCredits> oldList, List<MoviePersonCredits> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldList.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newList.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            MoviePersonCredits oldCredits = oldList.get(oldItemPosition);
+            MoviePersonCredits newCredits = newList.get(newItemPosition);
+            return Objects.equals(oldCredits.getId(), newCredits.getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            MoviePersonCredits oldCredits = oldList.get(oldItemPosition);
+            MoviePersonCredits newCredits = newList.get(newItemPosition);
+            return Objects.equals(oldCredits, newCredits);
+        }
     }
 }

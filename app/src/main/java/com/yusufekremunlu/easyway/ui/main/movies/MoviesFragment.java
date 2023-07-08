@@ -62,6 +62,25 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         popularRecycler = view.findViewById(R.id.popularRecyclerView);
         upComingRecycler = view.findViewById(R.id.upcomingRecyclerView);
 
+        TextView showAllTrendingText = view.findViewById(R.id.showAllTrendingText);
+        TextView showAllPopularText = view.findViewById(R.id.showAllPopularText);
+        TextView showAllUpcomingText = view.findViewById(R.id.showAllUpcomingText);
+
+        showAllTrendingText.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+        });
+
+        showAllPopularText.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+        });
+
+        showAllUpcomingText.setOnClickListener(v -> {
+            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+        });
+
+
+
+
         LinearLayoutManager trendingLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         trendingRecycler.setLayoutManager(trendingLayoutManager);
         LinearLayoutManager popularLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);

@@ -194,7 +194,7 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/showAllPopularText"
+                                android:id="@+id/showAllTrendingText"
                                 style="@style/NunitoSemiBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -249,7 +249,7 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/showAllInTheatersText"
+                                android:id="@+id/showAllPopularText"
                                 style="@style/NunitoSemiBoldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_fragment_movies_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
+        <action
+            android:id="@+id/action_fragment_movies_to_showAllFragment"
+            app:destination="@id/showAllFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_youtube"
@@ -53,6 +56,18 @@
         tools:layout="@layout/fragment_movie_cast_details" >
         <action
             android:id="@+id/action_movieCastDetails_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showAllFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.ShowAllFragment"
+        android:label="fragment_show_all"
+        tools:layout="@layout/fragment_show_all" >
+        <action
+            android:id="@+id/action_showAllFragment_to_fragment_movies"
+            app:destination="@id/fragment_movies" />
+        <action
+            android:id="@+id/action_showAllFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
     </fragment>
 </navigation>

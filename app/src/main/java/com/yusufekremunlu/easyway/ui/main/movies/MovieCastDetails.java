@@ -90,10 +90,10 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
 
     private void observeData() {
         movieCastViewModel.getPersonImagesModelMovies().observe(getViewLifecycleOwner(), personImagesList -> {
-            moviesPersonImagesAdapter.setMoviePersonImagesList(personImagesList);
+            moviesPersonImagesAdapter.setImagesList(personImagesList);
         });
         movieCastViewModel.getPersonCreditsModelMovies().observe(getViewLifecycleOwner(), personCreditsList -> {
-            moviePersonCreditsAdapter.setMoviePersonCreditList(personCreditsList);
+            moviePersonCreditsAdapter.setCreditList(personCreditsList);
         });
     }
 
