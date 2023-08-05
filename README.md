@@ -11,7 +11,7 @@ EasyWay is an application combines weather updates, travel guides, QR code scann
 - APIs
 - SharedPreferences and more..
 
-# UI BEFORE THE INSTRUCTION
+# UI
 ![figma_design](https://github.com/yusufekrembm/EasyWay/assets/88238748/c3abc376-b6c5-42d5-a08c-ee0e7ae80246)
 
 # FIGMA PROTOTYPE
