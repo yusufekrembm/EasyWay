@@ -16,15 +16,15 @@ EasyWay is an application that combines weather updates, travel guides, QR code 
 
 - Firebase Database and Authentication: Used for database management and user authentication.
 - Google Services: Utilized for integrating various services.
-- Huawei Mobile Services (Push-Kit, Scan-Kit, Map-Kit): Integrated for providing specialized services on Huawei devices.
+- Huawei Mobile Services (Push-Kit, Scan-Kit, Map-Kit).
 - MVVM Pattern: Employed to organize and manage the application structure.
 - APIs: Utilized to fetch information from various data sources.
-- SharedPreferens: Used for local data storage and management.
+- SharedPreferences: Used for local data storage and management.
 
 ## Installation
 
 1. Clone this repository: `git clone https://github.com/YOUR_USERNAME/EasyWay.git`
-2. Store the necessary API keys in a `config` or similar file.
+2. Store the necessary API keys in a utils.class or similar file.
 3. Compile and run the application.
 
 ## Contributions
