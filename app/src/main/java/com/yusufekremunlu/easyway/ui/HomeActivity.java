@@ -42,7 +42,6 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationProcesses();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
-
     }
 
     private void bottomNavigationProcesses(){

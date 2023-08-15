@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -13,19 +15,56 @@ import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ShowAllViewHolder> {
-
-    private List<MovieModel> discoverList;
+public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ShowAllViewHolder> implements Filterable {
+    private final List<MovieModel> discoverList;
+    private List<MovieModel> filteredList;
     private final Context context;
     private OnItemClickListener listener;
 
     public ShowAllAdapter(List<MovieModel> discoverList, Context context) {
         this.discoverList = discoverList;
+        this.filteredList = discoverList;
         this.context = context;
     }
+    @Override
+    public Filter getFilter() {
+        return movieFilter;
+    }
+    private final Filter movieFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<MovieModel> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(discoverList);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                for (MovieModel movie : discoverList) {
+                    if ((movie.getTitle().toLowerCase().contains(filterPattern.toLowerCase()))) {
+                        filteredList.add(movie);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            filteredList.clear();
+            filteredList.addAll((List<MovieModel>) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
 
     public interface OnItemClickListener {
         void onItemClick(MovieModel movie);

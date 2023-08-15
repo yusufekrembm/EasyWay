@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.movies.ShowAllFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/myToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#3C3C3C"
+            app:title="Movies"
+            app:titleTextColor="@color/white"
+            tools:ignore="MissingConstraints" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/showAllRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingTop="8dp"
+            android:paddingLeft="18dp"
+            android:paddingTop="18dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myToolbar"
             app:spanCount="3"
             tools:listitem="@layout/list_item_movie_grid" />
-
 
         <ProgressBar
             android:id="@+id/moviesProgressBar"
@@ -31,12 +40,12 @@
             android:layout_width="@dimen/progress_bar_size"
             android:layout_height="@dimen/progress_bar_size"
             android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/showAllRecyclerView"
             app:layout_constraintBottom_toBottomOf="@id/showAllRecyclerView"
+            app:layout_constraintStart_toStartOf="@id/showAllRecyclerView"
             app:layout_constraintEnd_toEndOf="@id/showAllRecyclerView"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@id/showAllRecyclerView"
-            app:layout_constraintTop_toTopOf="@id/showAllRecyclerView"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</layout>

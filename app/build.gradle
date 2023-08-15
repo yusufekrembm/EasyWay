@@ -27,7 +27,18 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    viewBinding {
+        enabled = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
 }
+
+
 def fragment_version = "1.5.7"
 def nav_version = "2.5.3"
 def bom_version = "32.1.0"

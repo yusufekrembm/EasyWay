@@ -41,12 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:src="@drawable/qrcode"
+                android:backgroundTint="#A7EF0404"
                 app:layout_constraintTop_toTopOf="@id/bottomNavigationView"
                 app:layout_constraintBottom_toBottomOf="@id/bottomNavigationView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerCircle"
-                app:backgroundTint="@color/white"
                 android:contentDescription="@string/qrfloat" />
 
 

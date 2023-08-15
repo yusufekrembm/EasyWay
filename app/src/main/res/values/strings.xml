@@ -43,4 +43,6 @@
     <string name="known_for">KNOWN FOR</string>
     <string name="highlighted_movie_image">highlighted movie image</string>
     <string name="dialog_image">Dialog Image</string>
+    <string name="filter_movie">Filter Movie</string>
+    <string name="search_movie">Search Movie</string>
 </resources>
