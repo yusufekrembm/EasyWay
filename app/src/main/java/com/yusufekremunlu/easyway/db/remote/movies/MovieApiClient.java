@@ -1,9 +1,9 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
+
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
@@ -15,8 +15,15 @@ import com.yusufekremunlu.easyway.model.network.movies.MoviePersonCreditsRespons
 import com.yusufekremunlu.easyway.model.network.movies.MoviePersonImagesResponse;
 import com.yusufekremunlu.easyway.model.network.movies.MovieResponse;
 import com.yusufekremunlu.easyway.model.network.movies.VideosResponse;
+import com.yusufekremunlu.easyway.ui.AppExecutors;
 import com.yusufekremunlu.easyway.utils.builders.MovieRetrofitBuilder;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +39,7 @@ public class MovieApiClient {
     private final MutableLiveData<List<MoviePersonImages>> mPersonImagesModelMovies;
     private final MutableLiveData<List<MoviePersonCredits>> mPersonCreditsModelMovies;
     private final MutableLiveData<List<MovieModel>> mDiscoverMovies;
+    private RetrieveMoviesRunnable retrieveMoviesRunnable;
 
     private int currentPageTrending = 1;
     private int currentPagePopular = 1;
@@ -48,14 +56,14 @@ public class MovieApiClient {
     private boolean isLastPageUpComing = false;
     private boolean isLastPageDiscoverMovies = false;
 
-    public static MovieApiClient getInstance(){
-        if(instance==null){
+    public static MovieApiClient getInstance() {
+        if (instance == null) {
             instance = new MovieApiClient();
         }
         return instance;
     }
 
-    private MovieApiClient(){
+    private MovieApiClient() {
         mTrendingMovies = new MutableLiveData<>();
         mPopularMovies = new MutableLiveData<>();
         mUpComingMovies = new MutableLiveData<>();
@@ -94,9 +102,11 @@ public class MovieApiClient {
     public MutableLiveData<List<MovieVideoModel>> getVideoModelMovies() {
         return mVideoModelMovies;
     }
+
     public MutableLiveData<List<MoviePersonImages>> getPersonImagesModelMovies() {
         return mPersonImagesModelMovies;
     }
+
     public MutableLiveData<List<MoviePersonCredits>> getPersonCreditsModelMovies() {
         return mPersonCreditsModelMovies;
     }
@@ -122,6 +132,7 @@ public class MovieApiClient {
             getPopularMoviesFromApi();
         }
     }
+
     public void loadMoreUpComingMovies() {
         if (!isFetchingUpComingMovies && !isLastPageUpComing) {
             currentPageUpComing++;
@@ -232,17 +243,19 @@ public class MovieApiClient {
             public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
                 if (response.isSuccessful()) {
                     CreditsResponse movieCastResponse = response.body();
-                    if(movieCastResponse!=null){
+                    if (movieCastResponse != null) {
                         List<MovieCastModel> movieCastModels = movieCastResponse.getCasts();
                         mCastModelMovies.setValue(movieCastModels);
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<CreditsResponse> call, Throwable t) {
             }
         });
     }
+
     public void getMovieVideosFromApi(int movie_id) {
         Call<VideosResponse> movieVideos = movieApiInterface.fetchMovieVideos(movie_id);
         movieVideos.enqueue(new Callback<VideosResponse>() {
@@ -250,17 +263,19 @@ public class MovieApiClient {
             public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
                 if (response.isSuccessful()) {
                     VideosResponse movieVideosResponse = response.body();
-                    if(movieVideosResponse!=null){
+                    if (movieVideosResponse != null) {
                         List<MovieVideoModel> movieVideoModels = movieVideosResponse.getVideos();
                         mVideoModelMovies.setValue(movieVideoModels);
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<VideosResponse> call, Throwable t) {
             }
         });
     }
+
     public void getMoviesPersonsFromApi(int personId, final MovieApiCallback callback) {
         Call<MoviePerson> responseCall = movieApiInterface.fetchPersonDetails(personId);
         responseCall.enqueue(new Callback<MoviePerson>() {
@@ -280,10 +295,13 @@ public class MovieApiClient {
             }
         });
     }
+
     public interface MovieApiCallback {
         void onSuccess(MoviePerson moviePerson);
+
         void onFailure(Throwable throwable);
     }
+
     public void getMoviePersonImages(int person_id) {
         Call<MoviePersonImagesResponse> moviePersonImagesResponseCall = movieApiInterface.fetchPersonImages(person_id);
         moviePersonImagesResponseCall.enqueue(new Callback<MoviePersonImagesResponse>() {
@@ -291,12 +309,13 @@ public class MovieApiClient {
             public void onResponse(Call<MoviePersonImagesResponse> call, Response<MoviePersonImagesResponse> response) {
                 if (response.isSuccessful()) {
                     MoviePersonImagesResponse moviePersonImagesResponse = response.body();
-                    if(moviePersonImagesResponse!=null){
+                    if (moviePersonImagesResponse != null) {
                         List<MoviePersonImages> moviePersonImagesModels = moviePersonImagesResponse.getImages();
                         mPersonImagesModelMovies.setValue(moviePersonImagesModels);
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<MoviePersonImagesResponse> call, Throwable t) {
             }
@@ -310,12 +329,13 @@ public class MovieApiClient {
             public void onResponse(Call<MoviePersonCreditsResponse> call, Response<MoviePersonCreditsResponse> response) {
                 if (response.isSuccessful()) {
                     MoviePersonCreditsResponse moviePersonCreditsResponse = response.body();
-                    if(moviePersonCreditsResponse!=null){
+                    if (moviePersonCreditsResponse != null) {
                         List<MoviePersonCredits> moviePersonImagesModels = moviePersonCreditsResponse.getCredits();
                         mPersonCreditsModelMovies.setValue(moviePersonImagesModels);
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<MoviePersonCreditsResponse> call, Throwable t) {
             }
@@ -332,15 +352,18 @@ public class MovieApiClient {
                     MovieResponse movieResponse = response.body();
                     if (movieResponse != null) {
                         List<MovieModel> movies = movieResponse.getMovies();
-                        if (currentPageDiscover == 1) {
-                            mDiscoverMovies.setValue(movies);
-                        } else {
+
+                        // İlgili sayfada yeni veriler varsa ekle
+                        if (movies != null && !movies.isEmpty()) {
                             List<MovieModel> currentMovies = mDiscoverMovies.getValue();
-                            if (currentMovies != null) {
-                                currentMovies.addAll(movies);
-                                mDiscoverMovies.setValue(currentMovies);
+                            if (currentMovies == null) {
+                                currentMovies = new ArrayList<>();
                             }
+                            currentMovies.addAll(movies);
+                            mDiscoverMovies.setValue(currentMovies);
                         }
+
+                        // Tüm sayfaların alınıp alınmadığını kontrol et
                         isLastPageDiscoverMovies = currentPageDiscover >= movieResponse.getTotal_pages();
                     }
                 }
@@ -352,6 +375,79 @@ public class MovieApiClient {
                 isFetchingDiscoverMovies = false;
             }
         });
+    }
+
+    public void searchMoviesApi(String query, int pageNumber) {
+        if (retrieveMoviesRunnable != null) {
+            retrieveMoviesRunnable = null;
+        }
+        retrieveMoviesRunnable = new RetrieveMoviesRunnable(query, pageNumber);
+
+
+        final Future myHandler = AppExecutors.getInstance().netWorkIO().submit(retrieveMoviesRunnable);
+
+        AppExecutors.getInstance().netWorkIO().schedule(new Runnable() {
+            @Override
+            public void run() {
+                // Cancelling the retrofit call
+                myHandler.cancel(true);
+            }
+        }, 5000, TimeUnit.MILLISECONDS);
+
+    }
+
+    private class RetrieveMoviesRunnable implements Runnable {
+        private final String query;
+        private final int pageNumber;
+        boolean cancelRequest;
+
+        public RetrieveMoviesRunnable(String query, int pageNumber) {
+            this.query = query;
+            this.pageNumber = pageNumber;
+            cancelRequest = false;
+        }
+
+        public void run() {
+            // Getting the response objects
+            try {
+                Response response = getMovies(query, pageNumber).execute();
+                if (cancelRequest) {
+                    return;
+                }
+                if (response.code() == 200) {
+                    assert response.body() != null;
+                    List<MovieModel> list = new ArrayList<>(((MovieResponse) response.body()).getMovies());
+                    if (pageNumber == 1) {
+                        // Sending data to live data
+                        mDiscoverMovies.postValue(list);
+                    } else {
+                        List<MovieModel> currentMovies = mDiscoverMovies.getValue();
+                        assert currentMovies != null;
+                        currentMovies.addAll(list);
+                        mDiscoverMovies.postValue(currentMovies);
+                    }
+                } else {
+                    assert response.errorBody() != null;
+                    String error = response.errorBody().string();
+                    Log.v("Tag", "Error " + error);
+                    mDiscoverMovies.postValue(null);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private Call<MovieResponse> getMovies(String query, int pageNumber) {
+            return MovieRetrofitBuilder.getMovieApiInterface().searchMovie(
+                    query,
+                    pageNumber
+            );
+        }
+
+        private void cancelRequest() {
+            Log.v("Tag", "Cancelling search request");
+            cancelRequest = true;
+        }
     }
 }
 

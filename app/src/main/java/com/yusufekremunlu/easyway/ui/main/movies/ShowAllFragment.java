@@ -3,15 +3,19 @@ package com.yusufekremunlu.easyway.ui.main.movies;
 import android.annotation.SuppressLint;
 import android.graphics.Movie;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,12 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesShowAllViewModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,8 +50,8 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllAdapter = new ShowAllAdapter(new ArrayList<>(), getContext());
         showAllAdapter.setOnItemClickListener(this);
         setHasOptionsMenu(true);
-    }
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +70,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
         activity.setSupportActionBar(myToolbar);
-
+        observeAnyChange();
         return rootView;
     }
 
@@ -76,30 +82,14 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                // Metin gönderildiğinde yapılacak işlemler
+                moviesShowAllViewModel.searchMovieApi(
+                        query, 1);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    // Eğer metin boşsa, orijinal veri listesini kullan
-                    showAllAdapter.setDiscoverList(discoverListFull);
-                } else {
-                    // Metne göre filtreleme yap
-                    List<MovieModel> filteredList = new ArrayList<>();
-                    for (MovieModel item : discoverListFull) {
-                        if (item.getTitle().toLowerCase().contains(newText.toLowerCase())) {
-                            filteredList.add(item);
-                        }
-                    }
-                    showAllAdapter.setDiscoverList(filteredList);
-                }
-
-                // Adapter'i güncelle
-                showAllAdapter.notifyDataSetChanged();
-
-                return true;
+                return false;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
@@ -115,10 +105,24 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void observeAnyChange() {
+        moviesShowAllViewModel.getDiscoverMovies().observe(getViewLifecycleOwner(), new Observer<List<MovieModel>>() {
+            @Override
+            public void onChanged(List<MovieModel> movieModels) {
+                if (movieModels != null) {
+                    for (MovieModel movieModel : movieModels) {
+                        Log.v("Tag", "onChanged : " + movieModel.getTitle());
+                    }
+                }
+            }
+        });
+    }
+
     private void observeData() {
         moviesShowAllViewModel.getDiscoverMovies().observe(getViewLifecycleOwner(), movieModels -> {
-            discoverListFull = new ArrayList<>(movieModels); // Tüm verileri kaydet
-            showAllAdapter.setDiscoverList(discoverListFull); // Tüm verileri RecyclerView'a ata
+            discoverListFull = new ArrayList<>(movieModels);
+            showAllAdapter.setDiscoverList(discoverListFull);
             showAllProgressBar.setVisibility(View.INVISIBLE);
         });
     }
@@ -128,7 +132,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     movieApiClient.loadMoreDiscoverMovies();
                 }
             }

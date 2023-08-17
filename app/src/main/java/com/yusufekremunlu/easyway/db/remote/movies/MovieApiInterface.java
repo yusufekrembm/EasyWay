@@ -53,4 +53,9 @@ public interface MovieApiInterface {
     Call<MovieResponse> fetchDiscoverList(
             @Query("page") int page
     );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/search/movie")
+    Call<MovieResponse> searchMovie(
+            @Query("query") String query,
+            @Query("page") int page
+    );
 }

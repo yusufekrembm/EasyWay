@@ -29,4 +29,14 @@ public class MovieResponse {
     public List<MovieModel> getMovies() {
         return movies;
     }
+
+    @Override
+    public String toString() {
+        return "MovieResponse{" +
+                "total_results=" + total_results +
+                ", total_pages=" + total_pages +
+                ", page=" + page +
+                ", movies=" + movies +
+                '}';
+    }
 }
