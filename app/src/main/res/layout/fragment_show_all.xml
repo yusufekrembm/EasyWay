@@ -17,7 +17,6 @@
             app:titleTextColor="@color/white"
             tools:ignore="MissingConstraints" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/showAllRecyclerView"
             android:layout_width="match_parent"
@@ -40,12 +39,26 @@
             android:layout_width="@dimen/progress_bar_size"
             android:layout_height="@dimen/progress_bar_size"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/showAllRecyclerView"
             app:layout_constraintBottom_toBottomOf="@id/showAllRecyclerView"
-            app:layout_constraintStart_toStartOf="@id/showAllRecyclerView"
             app:layout_constraintEnd_toEndOf="@id/showAllRecyclerView"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/showAllRecyclerView"
+            app:layout_constraintTop_toBottomOf="@id/showAllRecyclerView"
             tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/noResultsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:text="No results found"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

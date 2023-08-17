@@ -45,4 +45,35 @@
     <string name="dialog_image">Dialog Image</string>
     <string name="filter_movie">Filter Movie</string>
     <string name="search_movie">Search Movie</string>
+    <string name="select_category">Select Category</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="oyuncu_ad">Oyuncu Adı</string>
+    <string name="filtrele">Filtrele</string>
+    <string name="select_movie_category">Select Movie Category</string>
+    <string-array name="film_categories">
+        <item>Popular</item>
+        <item>Trending</item>
+        <item>Incoming</item>
+    </string-array>
+    <string-array name="movies_categories">
+        <item>Action</item>
+        <item>Adventure</item>
+        <item>Animation</item>
+        <item>Comedy</item>
+        <item>Crime</item>
+        <item>Documentary</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>History</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Science Fiction</item>
+        <item>TV Movie</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
+    </string-array>
 </resources>

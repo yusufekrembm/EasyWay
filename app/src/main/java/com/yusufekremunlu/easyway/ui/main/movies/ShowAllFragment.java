@@ -1,7 +1,9 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.annotation.SuppressLint;
-import android.graphics.Movie;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -22,7 +25,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
@@ -50,7 +57,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllAdapter = new ShowAllAdapter(new ArrayList<>(), getContext());
         showAllAdapter.setOnItemClickListener(this);
         setHasOptionsMenu(true);
-
     }
 
     @Override
@@ -71,6 +77,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         assert activity != null;
         activity.setSupportActionBar(myToolbar);
         observeAnyChange();
+
         return rootView;
     }
 
@@ -78,20 +85,46 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.movie_filters, menu);
         MenuItem searchItem = menu.findItem(R.id.searchMovie);
+        MenuItem filterItem = menu.findItem(R.id.filterMovie);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        filterItem.setOnMenuItemClickListener(item -> {
+            showFilterPopup();
+            return false;
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                moviesShowAllViewModel.searchMovieApi(
-                        query, 1);
-                return false;
+                moviesShowAllViewModel.searchMovieApi(query, 1);
+                boolean noResults = true;
+                for (MovieModel movie : discoverListFull) {
+                    if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                        noResults = false;
+                        break;
+                    }
+                }
+
+                TextView noResultsTextView = requireView().findViewById(R.id.noResultsTextView);
+                if (noResults) {
+                    noResultsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noResultsTextView.setVisibility(View.GONE);
+                }
+
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                if (newText.isEmpty()) {
+                    showAllAdapter.setDiscoverList(discoverListFull);
+                } else {
+                    moviesShowAllViewModel.searchMovieApi(newText, 1);
+                }
+                return true;
             }
         });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -146,5 +179,63 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_showAllFragment_to_movieDetailsFragment, bundle);
     }
+    private void showFilterPopup() {
+        Dialog dialog = new Dialog(requireContext());
+        dialog.setContentView(R.layout.movie_popup_layout);
+        EditText startDateEditText = dialog.findViewById(R.id.start_date_edittext);
+        EditText endDateEditText = dialog.findViewById(R.id.end_date_edittext);
+        startDateEditText.setOnClickListener(v -> showDatePickerDialog(startDateEditText));
+        endDateEditText.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
+        SeekBar imdbRatingSeekBar = dialog.findViewById(R.id.imdb_rating_seekbar);
+        TextView imdbRangeText = dialog.findViewById(R.id.imdb_range_text);
+
+        imdbRatingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int selectedRating = progress + 1;
+                imdbRangeText.setText("IMDb Range: " + selectedRating + " - " + (selectedRating + 1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+
+
+        dialog.show();
+    }
+
+    private void showDatePickerDialog(final EditText editText) {
+        Calendar calendar = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            calendar = Calendar.getInstance();
+        }
+        int year = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            year = calendar.get(Calendar.YEAR);
+        }
+        int month = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            month = calendar.get(Calendar.MONTH);
+        }
+        int day = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            day = calendar.get(Calendar.DAY_OF_MONTH);
+        }
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                (view, year1, month1, dayOfMonth) -> {
+                    String selectedDate = (month1 + 1) + "/" + dayOfMonth + "/" + year1;
+                    editText.setText(selectedDate);
+                }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
 }
 
