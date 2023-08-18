@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,6 +187,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
         goToMovieDetails(movie);
     }
+    @SuppressLint("SetTextI18n")
     private void updateUI(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
         TextView hlTitleView = requireView().findViewById(R.id.hlMovieTitle);
@@ -199,7 +201,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
                 .into(hlImageView);
         hlTitleView.setText(movie.getTitle());
         hlRatingBar.setRating(movie.getVote_average() / 2);
-        hlNumOfVotes.setText(String.valueOf(movie.getVote_count()+" votes"));
+        hlNumOfVotes.setText(movie.getVote_count() + " votes");
         String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
         String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
         hlGenreOne.setText(genreOne);

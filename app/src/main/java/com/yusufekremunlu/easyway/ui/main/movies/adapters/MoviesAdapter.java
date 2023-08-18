@@ -87,7 +87,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         diffResult.dispatchUpdatesTo(this);
     }
 
-    private static class MovieDiffCallback extends DiffUtil.Callback {
+    static class MovieDiffCallback extends DiffUtil.Callback {
         private final List<MovieModel> oldList;
         private final List<MovieModel> newList;
 

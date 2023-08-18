@@ -5,38 +5,41 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesShowAllViewModel;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
+import com.yusufekremunlu.easyway.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,19 +51,25 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     private ShowAllAdapter showAllAdapter;
     private ProgressBar showAllProgressBar;
     private final MovieApiClient movieApiClient = MovieApiClient.getInstance();
+    private List<MovieModel> originalDiscoverListFull = new ArrayList<>();
+    private MoviesViewModel moviesViewModel;
+
 
     @SuppressLint("ResourceType")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         moviesShowAllViewModel = new ViewModelProvider(this).get(MoviesShowAllViewModel.class);
+        moviesViewModel = new ViewModelProvider(this).get(MoviesViewModel.class);
         showAllAdapter = new ShowAllAdapter(new ArrayList<>(), getContext());
         showAllAdapter.setOnItemClickListener(this);
         setHasOptionsMenu(true);
+
     }
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding binding = FragmentShowAllBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
@@ -76,13 +85,12 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
         activity.setSupportActionBar(myToolbar);
-        observeAnyChange();
-
         return rootView;
     }
 
+
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.movie_filters, menu);
         MenuItem searchItem = menu.findItem(R.id.searchMovie);
         MenuItem filterItem = menu.findItem(R.id.filterMovie);
@@ -111,17 +119,17 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
                     noResultsTextView.setVisibility(View.GONE);
                 }
 
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    showAllAdapter.setDiscoverList(discoverListFull);
+                    resetListToOriginal(); // Reset to original list when text is empty
                 } else {
                     moviesShowAllViewModel.searchMovieApi(newText, 1);
                 }
-                return true;
+                return false;
             }
         });
 
@@ -139,22 +147,14 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         return super.onOptionsItemSelected(item);
     }
 
-    private void observeAnyChange() {
-        moviesShowAllViewModel.getDiscoverMovies().observe(getViewLifecycleOwner(), new Observer<List<MovieModel>>() {
-            @Override
-            public void onChanged(List<MovieModel> movieModels) {
-                if (movieModels != null) {
-                    for (MovieModel movieModel : movieModels) {
-                        Log.v("Tag", "onChanged : " + movieModel.getTitle());
-                    }
-                }
-            }
-        });
-    }
 
     private void observeData() {
         moviesShowAllViewModel.getDiscoverMovies().observe(getViewLifecycleOwner(), movieModels -> {
-            discoverListFull = new ArrayList<>(movieModels);
+            if (originalDiscoverListFull.isEmpty()) {
+                originalDiscoverListFull.addAll(movieModels);
+            }
+            discoverListFull.clear();
+            discoverListFull.addAll(movieModels);
             showAllAdapter.setDiscoverList(discoverListFull);
             showAllProgressBar.setVisibility(View.INVISIBLE);
         });
@@ -179,6 +179,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_showAllFragment_to_movieDetailsFragment, bundle);
     }
+
     private void showFilterPopup() {
         Dialog dialog = new Dialog(requireContext());
         dialog.setContentView(R.layout.movie_popup_layout);
@@ -188,6 +189,12 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         endDateEditText.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
         SeekBar imdbRatingSeekBar = dialog.findViewById(R.id.imdb_rating_seekbar);
         TextView imdbRangeText = dialog.findViewById(R.id.imdb_range_text);
+        Button filterButton = dialog.findViewById(R.id.filter_button);
+        Button resetButton = dialog.findViewById(R.id.reset_filter);
+        Spinner categorySpinner = dialog.findViewById(R.id.category_spinner);
+        Spinner categoryMovieSpinner = dialog.findViewById(R.id.movie_category_spinner);
+        String[] categories = getResources().getStringArray(R.array.film_categories);
+        String[] categoriesMovies = getResources().getStringArray(R.array.movies_categories);
 
         imdbRatingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -206,7 +213,30 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         });
 
 
+        filterButton.setOnClickListener(v -> {
+            String selectedCategory = categorySpinner.getSelectedItem().toString();
 
+            for (String category : categories) {
+                if (selectedCategory.equals(category)) {
+                    filterMovies(selectedCategory);
+                    break;
+                }
+            }
+            String selectedMovieCategory = categoryMovieSpinner.getSelectedItem().toString();
+
+            for (String movieCat : categoriesMovies) {
+                if (selectedMovieCategory.equals(movieCat)) {
+                    filterMoviesByCategory(selectedMovieCategory);
+                    break;
+                }
+            }
+            dialog.dismiss();
+        });
+
+        resetButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            resetListToOriginal();
+        });
         dialog.show();
     }
 
@@ -235,6 +265,52 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
                 }, year, month, day);
 
         datePickerDialog.show();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void resetListToOriginal() {
+        discoverListFull.clear();
+        discoverListFull.addAll(originalDiscoverListFull);
+        showAllAdapter.setDiscoverList(discoverListFull);
+        showAllAdapter.notifyDataSetChanged();
+        showAllRecyclerView.smoothScrollToPosition(0);
+    }
+
+    private void filterMovies(String selectedCategory) {
+        List<MovieModel> filteredMovies = new ArrayList<>();
+
+        switch (selectedCategory) {
+            case "Popular":
+                filteredMovies = moviesViewModel.getPopularMovies().getValue();
+                break;
+            case "Trending":
+                filteredMovies = moviesViewModel.getTrendingMovies().getValue();
+                break;
+            case "Incoming":
+                filteredMovies = moviesViewModel.getUpComingMovies().getValue();
+                break;
+        }
+        showAllAdapter.setDiscoverList(filteredMovies);
+    }
+    private void filterMoviesByCategory(String selectedCategory) {
+        List<MovieModel> allMovies = moviesShowAllViewModel.getDiscoverMovies().getValue();
+        List<MovieModel> filteredMovies = new ArrayList<>();
+
+        assert allMovies != null;
+        for (MovieModel movie : allMovies) {
+            List<Integer> genreIds = movie.getGenre_ids();
+            if (genreIds != null) {
+                for (Integer genreId : genreIds) {
+                    String genre = Constants.getGenre(genreId);
+                    if (genre != null && genre.equalsIgnoreCase(selectedCategory)) {
+                        filteredMovies.add(movie);
+                        break;
+                    }
+                }
+            }
+        }
+
+        showAllAdapter.setDiscoverList(filteredMovies);
     }
 
 }
