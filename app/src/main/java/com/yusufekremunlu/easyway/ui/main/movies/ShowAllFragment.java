@@ -19,7 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -27,44 +26,37 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
-import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
-import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesShowAllViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
+import com.yusufekremunlu.easyway.utils.MovieListType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemClickListener {
-    private MoviesShowAllViewModel moviesShowAllViewModel;
+    private MoviesViewModel moviesViewModel;
     private RecyclerView showAllRecyclerView;
     private List<MovieModel> discoverListFull = new ArrayList<>();
     private ShowAllAdapter showAllAdapter;
     private ProgressBar showAllProgressBar;
-    private final MovieApiClient movieApiClient = MovieApiClient.getInstance();
     private List<MovieModel> originalDiscoverListFull = new ArrayList<>();
-    private MoviesViewModel moviesViewModel;
 
 
     @SuppressLint("ResourceType")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moviesShowAllViewModel = new ViewModelProvider(this).get(MoviesShowAllViewModel.class);
         moviesViewModel = new ViewModelProvider(this).get(MoviesViewModel.class);
         showAllAdapter = new ShowAllAdapter(new ArrayList<>(), getContext());
         showAllAdapter.setOnItemClickListener(this);
         setHasOptionsMenu(true);
-
     }
 
 
@@ -79,15 +71,39 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllRecyclerView.setLayoutManager(gridLayoutManager);
         showAllRecyclerView.setAdapter(showAllAdapter);
         showAllProgressBar.setVisibility(View.VISIBLE);
-        loadNextPages();
-        observeData();
+        loadMoreResults();
         Toolbar myToolbar = binding.myToolbar;
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
         activity.setSupportActionBar(myToolbar);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey("movieListType")) {
+            MovieListType movieListType = (MovieListType) bundle.getSerializable("movieListType");
+            observeDataForListType(movieListType);
+        }
         return rootView;
     }
-
+    private void observeDataForListType(MovieListType movieListType) {
+        switch (movieListType) {
+            case TRENDING:
+                moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                    showAllAdapter.setDiscoverList(movieModels);
+                });
+                break;
+            case POPULAR:
+                moviesViewModel.getPopularMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                    showAllAdapter.setDiscoverList(movieModels);
+                });
+                break;
+            case UPCOMING:
+                moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                    showAllAdapter.setDiscoverList(movieModels);
+                });
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
@@ -103,7 +119,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                moviesShowAllViewModel.searchMovieApi(query, 1);
+                moviesViewModel.searchMovieApi(query, 1);
                 boolean noResults = true;
                 for (MovieModel movie : discoverListFull) {
                     if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
@@ -125,9 +141,9 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    resetListToOriginal(); // Reset to original list when text is empty
+                    resetListToOriginal();
                 } else {
-                    moviesShowAllViewModel.searchMovieApi(newText, 1);
+                    moviesViewModel.searchMovieApi(newText, 1);
                 }
                 return false;
             }
@@ -147,30 +163,18 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void observeData() {
-        moviesShowAllViewModel.getDiscoverMovies().observe(getViewLifecycleOwner(), movieModels -> {
-            if (originalDiscoverListFull.isEmpty()) {
-                originalDiscoverListFull.addAll(movieModels);
-            }
-            discoverListFull.clear();
-            discoverListFull.addAll(movieModels);
-            showAllAdapter.setDiscoverList(discoverListFull);
-            showAllProgressBar.setVisibility(View.INVISIBLE);
-        });
-    }
-
-    private void loadNextPages() {
+    public void loadMoreResults(){
         showAllRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    movieApiClient.loadMoreDiscoverMovies();
+                if(!showAllRecyclerView.canScrollVertically(1)){
+                    moviesViewModel.searchNextPage();
                 }
             }
         });
     }
+
 
     @Override
     public void onItemClick(MovieModel movie) {
@@ -293,7 +297,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllAdapter.setDiscoverList(filteredMovies);
     }
     private void filterMoviesByCategory(String selectedCategory) {
-        List<MovieModel> allMovies = moviesShowAllViewModel.getDiscoverMovies().getValue();
+        List<MovieModel> allMovies = moviesViewModel.getDiscoverMovies().getValue();
         List<MovieModel> filteredMovies = new ArrayList<>();
 
         assert allMovies != null;

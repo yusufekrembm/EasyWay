@@ -29,8 +29,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieApiClient {
+    MovieApiInterface movieApiInterface = MovieRetrofitBuilder.buildService(MovieApiInterface.class);
     private static MovieApiClient instance;
-    private static final MovieApiInterface movieApiInterface = MovieRetrofitBuilder.getMovieApiInterface();
     private final MutableLiveData<List<MovieModel>> mTrendingMovies;
     private final MutableLiveData<List<MovieModel>> mPopularMovies;
     private final MutableLiveData<List<MovieModel>> mUpComingMovies;
@@ -40,21 +40,7 @@ public class MovieApiClient {
     private final MutableLiveData<List<MoviePersonCredits>> mPersonCreditsModelMovies;
     private final MutableLiveData<List<MovieModel>> mDiscoverMovies;
     private RetrieveMoviesRunnable retrieveMoviesRunnable;
-
-    private int currentPageTrending = 1;
-    private int currentPagePopular = 1;
-    private int currentPageUpComing = 1;
-    private int currentPageDiscover = 1;
-
-    private boolean isFetchingTrendingMovies = false;
-    private boolean isFetchingPopularMovies = false;
-    private boolean isFetchingUpComingMovies = false;
-    private boolean isFetchingDiscoverMovies = false;
-
-    private boolean isLastPageTrending = false;
-    private boolean isLastPagePopular = false;
-    private boolean isLastPageUpComing = false;
-    private boolean isLastPageDiscoverMovies = false;
+    int currentPage = 1;
 
     public static MovieApiClient getInstance() {
         if (instance == null) {
@@ -72,26 +58,25 @@ public class MovieApiClient {
         mPersonImagesModelMovies = new MutableLiveData<>();
         mPersonCreditsModelMovies = new MutableLiveData<>();
         mDiscoverMovies = new MutableLiveData<>();
-
-        getMovieDiscoverIDFromApi();
-        getTrendingMoviesFromApi();
-        getPopularMoviesFromApi();
-        getUpComingMoviesFromApi();
     }
 
     public MutableLiveData<List<MovieModel>> getTrendingMovies() {
+        getTrendingMoviesFromApi(currentPage);
         return mTrendingMovies;
     }
 
     public MutableLiveData<List<MovieModel>> getPopularMovies() {
+        getPopularMoviesFromApi(currentPage);
         return mPopularMovies;
     }
 
     public MutableLiveData<List<MovieModel>> getUpComingMovies() {
+        getUpComingMoviesFromApi(currentPage);
         return mUpComingMovies;
     }
 
     public MutableLiveData<List<MovieModel>> getDiscoverMovies() {
+        getMovieDiscoverIDFromApi(currentPage);
         return mDiscoverMovies;
     }
 
@@ -111,129 +96,52 @@ public class MovieApiClient {
         return mPersonCreditsModelMovies;
     }
 
-
-    public void loadMoreDiscoverMovies() {
-        if (!isFetchingDiscoverMovies && !isLastPageDiscoverMovies) {
-            currentPageDiscover++;
-            getMovieDiscoverIDFromApi();
-        }
-    }
-
-    public void loadMoreTrendingMovies() {
-        if (!isFetchingTrendingMovies && !isLastPageTrending) {
-            currentPageTrending++;
-            getTrendingMoviesFromApi();
-        }
-    }
-
-    public void loadMorePopularMovies() {
-        if (!isFetchingPopularMovies && !isLastPagePopular) {
-            currentPagePopular++;
-            getPopularMoviesFromApi();
-        }
-    }
-
-    public void loadMoreUpComingMovies() {
-        if (!isFetchingUpComingMovies && !isLastPageUpComing) {
-            currentPageUpComing++;
-            getUpComingMoviesFromApi();
-        }
-    }
-
-    private void getTrendingMoviesFromApi() {
-        isFetchingTrendingMovies = true;
-        Call<MovieResponse> movieResponse = movieApiInterface.fetchTrendingMovies(currentPageTrending);
-        movieResponse.enqueue(new Callback<MovieResponse>() {
+    private void getMoviesFromApi(Call<MovieResponse> call, MutableLiveData<List<MovieModel>> targetLiveData,
+                                  int currentPage) {
+        call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
                     MovieResponse movieResponse = response.body();
                     if (movieResponse != null) {
                         List<MovieModel> movies = movieResponse.getMovies();
-                        if (currentPageTrending == 1) {
-                            mTrendingMovies.setValue(movies);
+                        if (currentPage == 1) {
+                            targetLiveData.postValue(movies);
                         } else {
-                            List<MovieModel> currentMovies = mTrendingMovies.getValue();
+                            List<MovieModel> currentMovies = targetLiveData.getValue();
                             if (currentMovies != null) {
                                 currentMovies.addAll(movies);
-                                mTrendingMovies.setValue(currentMovies);
+                                targetLiveData.postValue(currentMovies);
                             }
                         }
-                        isLastPageTrending = currentPageTrending >= movieResponse.getTotal_pages();
                     }
                 }
-                isFetchingTrendingMovies = false;
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                isFetchingTrendingMovies = false;
             }
         });
     }
 
-    private void getPopularMoviesFromApi() {
-        isFetchingPopularMovies = true;
-        Call<MovieResponse> movieResponse = movieApiInterface.fetchPopularMovies(currentPagePopular);
-        movieResponse.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    MovieResponse movieResponse = response.body();
-                    if (movieResponse != null) {
-                        List<MovieModel> movies = movieResponse.getMovies();
-                        if (currentPagePopular == 1) {
-                            mPopularMovies.setValue(movies);
-                        } else {
-                            List<MovieModel> currentMovies = mPopularMovies.getValue();
-                            if (currentMovies != null) {
-                                currentMovies.addAll(movies);
-                                mPopularMovies.setValue(currentMovies);
-                            }
-                        }
-                        isLastPagePopular = currentPagePopular >= movieResponse.getTotal_pages();
-                    }
-                }
-                isFetchingPopularMovies = false;
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                isFetchingPopularMovies = false;
-            }
-        });
+    public void getTrendingMoviesFromApi(int currentPage) {
+        Call<MovieResponse> movieResponseCall = movieApiInterface.fetchTrendingMovies(currentPage);
+        getMoviesFromApi(movieResponseCall, mTrendingMovies, currentPage);
     }
 
-    private void getUpComingMoviesFromApi() {
-        isFetchingUpComingMovies = true;
-        Call<MovieResponse> movieResponse = movieApiInterface.fetchUpComingMovies(currentPageUpComing);
-        movieResponse.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    MovieResponse movieResponse = response.body();
-                    if (movieResponse != null) {
-                        List<MovieModel> movies = movieResponse.getMovies();
-                        if (currentPageUpComing == 1) {
-                            mUpComingMovies.setValue(movies);
-                        } else {
-                            List<MovieModel> currentMovies = mUpComingMovies.getValue();
-                            if (currentMovies != null) {
-                                currentMovies.addAll(movies);
-                                mUpComingMovies.setValue(currentMovies);
-                            }
-                        }
-                        isLastPageUpComing = currentPageUpComing >= movieResponse.getTotal_pages();
-                    }
-                }
-                isFetchingUpComingMovies = false;
-            }
+    public void getPopularMoviesFromApi(int currentPage) {
+        Call<MovieResponse> movieResponseCall = movieApiInterface.fetchPopularMovies(currentPage);
+        getMoviesFromApi(movieResponseCall, mPopularMovies, currentPage);
+    }
 
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                isFetchingUpComingMovies = false;
-            }
-        });
+    public void getUpComingMoviesFromApi(int currentPage) {
+        Call<MovieResponse> movieResponseCall = movieApiInterface.fetchUpComingMovies(currentPage);
+        getMoviesFromApi(movieResponseCall, mUpComingMovies, currentPage);
+    }
+
+    public void getMovieDiscoverIDFromApi(int currentPage) {
+        Call<MovieResponse> movieResponseCall = movieApiInterface.fetchDiscoverList(currentPage);
+        getMoviesFromApi(movieResponseCall, mDiscoverMovies, currentPage);
     }
 
     public void getMovieCastModelFromApi(int movie_id) {
@@ -342,41 +250,6 @@ public class MovieApiClient {
         });
     }
 
-    private void getMovieDiscoverIDFromApi() {
-        isFetchingDiscoverMovies = true;
-        Call<MovieResponse> movieResponse = movieApiInterface.fetchDiscoverList(currentPageDiscover);
-        movieResponse.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    MovieResponse movieResponse = response.body();
-                    if (movieResponse != null) {
-                        List<MovieModel> movies = movieResponse.getMovies();
-
-                        // İlgili sayfada yeni veriler varsa ekle
-                        if (movies != null && !movies.isEmpty()) {
-                            List<MovieModel> currentMovies = mDiscoverMovies.getValue();
-                            if (currentMovies == null) {
-                                currentMovies = new ArrayList<>();
-                            }
-                            currentMovies.addAll(movies);
-                            mDiscoverMovies.setValue(currentMovies);
-                        }
-
-                        // Tüm sayfaların alınıp alınmadığını kontrol et
-                        isLastPageDiscoverMovies = currentPageDiscover >= movieResponse.getTotal_pages();
-                    }
-                }
-                isFetchingDiscoverMovies = false;
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                isFetchingDiscoverMovies = false;
-            }
-        });
-    }
-
     public void searchMoviesApi(String query, int pageNumber) {
         if (retrieveMoviesRunnable != null) {
             retrieveMoviesRunnable = null;
@@ -408,7 +281,6 @@ public class MovieApiClient {
         }
 
         public void run() {
-            // Getting the response objects
             try {
                 Response response = getMovies(query, pageNumber).execute();
                 if (cancelRequest) {
@@ -418,7 +290,6 @@ public class MovieApiClient {
                     assert response.body() != null;
                     List<MovieModel> list = new ArrayList<>(((MovieResponse) response.body()).getMovies());
                     if (pageNumber == 1) {
-                        // Sending data to live data
                         mDiscoverMovies.postValue(list);
                     } else {
                         List<MovieModel> currentMovies = mDiscoverMovies.getValue();
@@ -438,7 +309,7 @@ public class MovieApiClient {
         }
 
         private Call<MovieResponse> getMovies(String query, int pageNumber) {
-            return MovieRetrofitBuilder.getMovieApiInterface().searchMovie(
+            return MovieRetrofitBuilder.buildService(MovieApiInterface.class).searchMovie(
                     query,
                     pageNumber
             );

@@ -18,12 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviesAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
+import com.yusufekremunlu.easyway.utils.MovieListType;
+
 import java.util.ArrayList;
 
 
@@ -40,8 +41,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
     private ProgressBar upComingMoviesProgressBar;
     private ProgressBar hlMovieImageProgressBar;
 
-    MovieApiClient movieApiClient = MovieApiClient.getInstance();
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +48,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         moviesTrending = new MoviesAdapter(new ArrayList<>(), getContext());
         moviesPopular = new MoviesAdapter(new ArrayList<>(), getContext());
         moviesUpComing = new MoviesAdapter(new ArrayList<>(), getContext());
-
     }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -59,7 +56,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         moviesPopular.setOnItemClickListener(this);
         moviesUpComing.setOnItemClickListener(this);
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -83,19 +79,27 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         TextView showAllPopularText = view.findViewById(R.id.showAllPopularText);
         TextView showAllUpcomingText = view.findViewById(R.id.showAllUpcomingText);
 
+
         showAllTrendingText.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.TRENDING);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
         });
 
         showAllPopularText.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.POPULAR);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
         });
 
         showAllUpcomingText.setOnClickListener(v -> {
-            Navigation.findNavController(requireView()).navigate(R.id.action_fragment_movies_to_showAllFragment);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.UPCOMING);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
         });
-
-
 
 
         LinearLayoutManager trendingLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -112,7 +116,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         observeData();
         return view;
     }
-
     private void observeData() {
         moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
             moviesTrending.setMovieList(movieModels);
@@ -134,24 +137,22 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
             upComingMoviesProgressBar.setVisibility(View.INVISIBLE);
         });
     }
-
     private void loadNextPages() {
         trendingRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollHorizontally(1)) {
-                    movieApiClient.loadMoreTrendingMovies();
+                    moviesViewModel.searchNextPageTrending();
                 }
             }
         });
-
         popularRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollHorizontally(1)) {
-                    movieApiClient.loadMorePopularMovies();
+                    moviesViewModel.searchNextPagePopular();
                 }
             }
         });
@@ -160,12 +161,11 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (!recyclerView.canScrollHorizontally(1)) {
-                    movieApiClient.loadMoreUpComingMovies();
+                    moviesViewModel.searchNextPageUnComing();
                 }
             }
         });
     }
-
     @Override
     public void onItemClick(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
@@ -208,7 +208,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
         hlGenreSecondOne.setText(genreSecondOne);
     }
-
     private void goToMovieDetails(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
         hlImageView.setOnClickListener(v -> {

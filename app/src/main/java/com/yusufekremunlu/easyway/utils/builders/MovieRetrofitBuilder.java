@@ -1,11 +1,9 @@
 package com.yusufekremunlu.easyway.utils.builders;
 
-import com.yusufekremunlu.easyway.db.remote.movies.MovieApiInterface;
+import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
 
 import java.io.IOException;
-
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,28 +11,24 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.Response;
 
-public class MovieRetrofitBuilder {
-    private static OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder()
-            .addInterceptor(new RequestInterceptor());
 
-    private static Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
+public class MovieRetrofitBuilder {
+    private static OkHttpClient okHttp = new OkHttpClient.Builder().addInterceptor(new RequestInterceptor()).build();
+    private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Credentials.MOVIE_BASE_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpBuilder.build());
+            .client(okHttp)
+            .build();
 
-    private static Retrofit retrofit = retrofitBuilder.build();
-
-    private static MovieApiInterface movieApiInterface = retrofit.create(MovieApiInterface.class);
-
-    public static MovieApiInterface getMovieApiInterface() {
-        return movieApiInterface;
+    public static <T> T buildService(Class<T> serviceType) {
+        return retrofit.create(serviceType);
     }
 
     private static class RequestInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request oldRequest = chain.request();
-            HttpUrl url = oldRequest.url().newBuilder()
+            okhttp3.HttpUrl url = oldRequest.url().newBuilder()
                     .addQueryParameter("language", "en-US")
                     .addQueryParameter("api_key", Credentials.MOVIE_API_KEY)
                     .build();
@@ -43,3 +37,4 @@ public class MovieRetrofitBuilder {
         }
     }
 }
+
