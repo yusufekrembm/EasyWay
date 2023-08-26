@@ -16,13 +16,13 @@ import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
 import java.util.Objects;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
-    private final List<MovieModel> movieList;
+public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouriteMovieHolder> {
+    private List<MovieModel> favouriteList;
     private final Context context;
-    private OnItemClickListener listener;
+    private MoviesAdapter.OnItemClickListener listener;
 
-    public MoviesAdapter(List<MovieModel> movieList, Context context) {
-        this.movieList = movieList;
+    public FavouritesAdapter(List<MovieModel> favouriteList, Context context) {
+        this.favouriteList = favouriteList;
         this.context = context;
     }
 
@@ -30,21 +30,21 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         void onItemClick(MovieModel movie);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(MoviesAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FavouritesAdapter.FavouriteMovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_movie, parent, false);
-        return new MovieViewHolder(view);
+        return new FavouritesAdapter.FavouriteMovieHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        MovieModel movie = movieList.get(position);
+    public void onBindViewHolder(@NonNull FavouritesAdapter.FavouriteMovieHolder holder, int position) {
+        MovieModel movie = favouriteList.get(position);
         holder.bind(movie);
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -55,14 +55,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
     @Override
     public int getItemCount() {
-        return movieList != null ? movieList.size() : 0;
+        return favouriteList != null ? favouriteList.size() : 0;
     }
 
-    public class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class FavouriteMovieHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView titleTextView;
 
-        public MovieViewHolder(@NonNull View itemView) {
+        public FavouriteMovieHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
             titleTextView = itemView.findViewById(R.id.titleText);
@@ -76,12 +76,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
     }
 
-    public void setMovieList(List<MovieModel> newMovieList) {
-        MovieDiffCallback diffCallback = new MovieDiffCallback(movieList, newMovieList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-        movieList.clear();
-        movieList.addAll(newMovieList);
-        diffResult.dispatchUpdatesTo(this);
+    public void setFavouriteList(List<MovieModel> newFavouriteList) {
+        favouriteList.clear();
+        favouriteList.addAll(newFavouriteList);
+        notifyDataSetChanged();
     }
 
     static class MovieDiffCallback extends DiffUtil.Callback {
@@ -118,5 +116,3 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
     }
 }
-
-

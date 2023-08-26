@@ -27,10 +27,6 @@ public class MovieRepository {
         movieApiClient = MovieApiClient.getInstance();
     }
 
-    public LiveData<List<MovieModel>> getDiscoverMovies(){
-        return movieApiClient.getDiscoverMovies();
-    }
-
     public LiveData<List<MovieModel>> getTrendingMovies(){
         return movieApiClient.getTrendingMovies();
     }
@@ -44,6 +40,7 @@ public class MovieRepository {
     public LiveData<List<MovieCastModel>> getCastModelMovies(){
         return movieApiClient.getCastModelMovies();
     }
+
     public LiveData<List<MovieVideoModel>> getVideoModelMovies(){
         return movieApiClient.getVideoModelMovies();
     }
@@ -70,10 +67,7 @@ public class MovieRepository {
         mPageNumber = pageNumber;
         movieApiClient.getUpComingMoviesFromApi(pageNumber);
     }
-    public void searchMovieApiDiscover(int pageNumber){
-        mPageNumber = pageNumber;
-        movieApiClient.getMovieDiscoverIDFromApi(pageNumber);
-    }
+
     public void searchNextPage(){
         searchMovieApi(mQuery,mPageNumber+1);
     }
@@ -85,9 +79,6 @@ public class MovieRepository {
     }
     public void searchNextPageUnComing(){
         searchMovieApiUnComing(mPageNumber+1);
-    }
-    public void searchNextPageDiscover(){
-        searchMovieApiDiscover(mPageNumber+1);
     }
 }
 

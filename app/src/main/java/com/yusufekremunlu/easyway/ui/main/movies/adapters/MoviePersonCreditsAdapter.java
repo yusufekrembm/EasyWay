@@ -80,44 +80,9 @@ public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonC
     }
 
     public void setCreditList(List<MoviePersonCredits> newCreditList) {
-        MoviePersonCreditsDiffCallback diffCallback = new MoviePersonCreditsDiffCallback(creditList, newCreditList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        notifyDataSetChanged();
         creditList.clear();
         creditList.addAll(newCreditList);
-        diffResult.dispatchUpdatesTo(this);
-    }
 
-    private static class MoviePersonCreditsDiffCallback extends DiffUtil.Callback {
-        private final List<MoviePersonCredits> oldList;
-        private final List<MoviePersonCredits> newList;
-
-        public MoviePersonCreditsDiffCallback(List<MoviePersonCredits> oldList, List<MoviePersonCredits> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            MoviePersonCredits oldCredits = oldList.get(oldItemPosition);
-            MoviePersonCredits newCredits = newList.get(newItemPosition);
-            return Objects.equals(oldCredits.getId(), newCredits.getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            MoviePersonCredits oldCredits = oldList.get(oldItemPosition);
-            MoviePersonCredits newCredits = newList.get(newItemPosition);
-            return Objects.equals(oldCredits, newCredits);
-        }
     }
 }

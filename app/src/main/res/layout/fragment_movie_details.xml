@@ -9,6 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_constraintStart_toStartOf="parent" 
+        app:layout_constraintEnd_toEndOf="parent"
         tools:visibility="visible">
 
         <ImageView
@@ -21,6 +23,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic[1]" />
+
+        <Button
+            android:id="@+id/goToFavouriteFragment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|end"
+            android:textOff=""
+            android:textOn=""
+            android:background="@drawable/baseline_remove_red_eye_24"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="@id/favouriteButtonMovie"
+            app:layout_constraintEnd_toEndOf="@id/favouriteButtonMovie" />
+
+        <ToggleButton
+            android:id="@+id/favouriteButtonMovie"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom|end"
+            android:textOff=""
+            android:textOn=""
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="@id/detailsMovieImage"
+            app:layout_constraintEnd_toEndOf="@id/detailsMovieImage" />
+
 
         <ProgressBar
             android:id="@+id/movieImageProgressBar"

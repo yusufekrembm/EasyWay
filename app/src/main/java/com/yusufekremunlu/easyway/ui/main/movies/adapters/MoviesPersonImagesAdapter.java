@@ -76,44 +76,8 @@ public class MoviesPersonImagesAdapter extends RecyclerView.Adapter<MoviesPerson
     }
 
     public void setImagesList(List<MoviePersonImages> newImagesList) {
-        MoviePersonImagesDiffCallback diffCallback = new MoviePersonImagesDiffCallback(imagesList, newImagesList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        notifyDataSetChanged();
         imagesList.clear();
         imagesList.addAll(newImagesList);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    private static class MoviePersonImagesDiffCallback extends DiffUtil.Callback {
-        private final List<MoviePersonImages> oldList;
-        private final List<MoviePersonImages> newList;
-
-        public MoviePersonImagesDiffCallback(List<MoviePersonImages> oldList, List<MoviePersonImages> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            MoviePersonImages oldImages = oldList.get(oldItemPosition);
-            MoviePersonImages newImages = newList.get(newItemPosition);
-            return Objects.equals(oldImages.getFile_path(), newImages.getFile_path());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            MoviePersonImages oldImages = oldList.get(oldItemPosition);
-            MoviePersonImages newImages = newList.get(newItemPosition);
-            return Objects.equals(oldImages, newImages);
-        }
     }
 }

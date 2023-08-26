@@ -30,11 +30,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
-import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
-import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.MovieListType;
 
 import java.util.ArrayList;
@@ -43,11 +41,8 @@ import java.util.List;
 public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemClickListener {
     private MoviesViewModel moviesViewModel;
     private RecyclerView showAllRecyclerView;
-    private List<MovieModel> discoverListFull = new ArrayList<>();
     private ShowAllAdapter showAllAdapter;
     private ProgressBar showAllProgressBar;
-    private List<MovieModel> originalDiscoverListFull = new ArrayList<>();
-
 
     @SuppressLint("ResourceType")
     @Override
@@ -71,7 +66,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllRecyclerView.setLayoutManager(gridLayoutManager);
         showAllRecyclerView.setAdapter(showAllAdapter);
         showAllProgressBar.setVisibility(View.VISIBLE);
-        loadMoreResults();
         Toolbar myToolbar = binding.myToolbar;
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
@@ -83,21 +77,25 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         }
         return rootView;
     }
+
     private void observeDataForListType(MovieListType movieListType) {
         switch (movieListType) {
             case TRENDING:
                 moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
+                    showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
                 break;
             case POPULAR:
                 moviesViewModel.getPopularMovies().observe(getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
+                    showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
                 break;
             case UPCOMING:
                 moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
+                    showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
                 break;
             default:
@@ -112,43 +110,21 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         MenuItem filterItem = menu.findItem(R.id.filterMovie);
         SearchView searchView = (SearchView) searchItem.getActionView();
         filterItem.setOnMenuItemClickListener(item -> {
-            showFilterPopup();
+
             return false;
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                moviesViewModel.searchMovieApi(query, 1);
-                boolean noResults = true;
-                for (MovieModel movie : discoverListFull) {
-                    if (movie.getTitle().toLowerCase().contains(query.toLowerCase())) {
-                        noResults = false;
-                        break;
-                    }
-                }
-
-                TextView noResultsTextView = requireView().findViewById(R.id.noResultsTextView);
-                if (noResults) {
-                    noResultsTextView.setVisibility(View.VISIBLE);
-                } else {
-                    noResultsTextView.setVisibility(View.GONE);
-                }
-
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    resetListToOriginal();
-                } else {
-                    moviesViewModel.searchMovieApi(newText, 1);
-                }
                 return false;
             }
         });
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -163,19 +139,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadMoreResults(){
-        showAllRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(!showAllRecyclerView.canScrollVertically(1)){
-                    moviesViewModel.searchNextPage();
-                }
-            }
-        });
-    }
-
-
     @Override
     public void onItemClick(MovieModel movie) {
         Bundle bundle = new Bundle();
@@ -183,139 +146,5 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_showAllFragment_to_movieDetailsFragment, bundle);
     }
-
-    private void showFilterPopup() {
-        Dialog dialog = new Dialog(requireContext());
-        dialog.setContentView(R.layout.movie_popup_layout);
-        EditText startDateEditText = dialog.findViewById(R.id.start_date_edittext);
-        EditText endDateEditText = dialog.findViewById(R.id.end_date_edittext);
-        startDateEditText.setOnClickListener(v -> showDatePickerDialog(startDateEditText));
-        endDateEditText.setOnClickListener(v -> showDatePickerDialog(endDateEditText));
-        SeekBar imdbRatingSeekBar = dialog.findViewById(R.id.imdb_rating_seekbar);
-        TextView imdbRangeText = dialog.findViewById(R.id.imdb_range_text);
-        Button filterButton = dialog.findViewById(R.id.filter_button);
-        Button resetButton = dialog.findViewById(R.id.reset_filter);
-        Spinner categorySpinner = dialog.findViewById(R.id.category_spinner);
-        Spinner categoryMovieSpinner = dialog.findViewById(R.id.movie_category_spinner);
-        String[] categories = getResources().getStringArray(R.array.film_categories);
-        String[] categoriesMovies = getResources().getStringArray(R.array.movies_categories);
-
-        imdbRatingSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int selectedRating = progress + 1;
-                imdbRangeText.setText("IMDb Range: " + selectedRating + " - " + (selectedRating + 1));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-
-
-        filterButton.setOnClickListener(v -> {
-            String selectedCategory = categorySpinner.getSelectedItem().toString();
-
-            for (String category : categories) {
-                if (selectedCategory.equals(category)) {
-                    filterMovies(selectedCategory);
-                    break;
-                }
-            }
-            String selectedMovieCategory = categoryMovieSpinner.getSelectedItem().toString();
-
-            for (String movieCat : categoriesMovies) {
-                if (selectedMovieCategory.equals(movieCat)) {
-                    filterMoviesByCategory(selectedMovieCategory);
-                    break;
-                }
-            }
-            dialog.dismiss();
-        });
-
-        resetButton.setOnClickListener(v -> {
-            dialog.dismiss();
-            resetListToOriginal();
-        });
-        dialog.show();
-    }
-
-    private void showDatePickerDialog(final EditText editText) {
-        Calendar calendar = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            calendar = Calendar.getInstance();
-        }
-        int year = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            year = calendar.get(Calendar.YEAR);
-        }
-        int month = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            month = calendar.get(Calendar.MONTH);
-        }
-        int day = 0;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-        }
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                (view, year1, month1, dayOfMonth) -> {
-                    String selectedDate = (month1 + 1) + "/" + dayOfMonth + "/" + year1;
-                    editText.setText(selectedDate);
-                }, year, month, day);
-
-        datePickerDialog.show();
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void resetListToOriginal() {
-        discoverListFull.clear();
-        discoverListFull.addAll(originalDiscoverListFull);
-        showAllAdapter.setDiscoverList(discoverListFull);
-        showAllAdapter.notifyDataSetChanged();
-        showAllRecyclerView.smoothScrollToPosition(0);
-    }
-
-    private void filterMovies(String selectedCategory) {
-        List<MovieModel> filteredMovies = new ArrayList<>();
-
-        switch (selectedCategory) {
-            case "Popular":
-                filteredMovies = moviesViewModel.getPopularMovies().getValue();
-                break;
-            case "Trending":
-                filteredMovies = moviesViewModel.getTrendingMovies().getValue();
-                break;
-            case "Incoming":
-                filteredMovies = moviesViewModel.getUpComingMovies().getValue();
-                break;
-        }
-        showAllAdapter.setDiscoverList(filteredMovies);
-    }
-    private void filterMoviesByCategory(String selectedCategory) {
-        List<MovieModel> allMovies = moviesViewModel.getDiscoverMovies().getValue();
-        List<MovieModel> filteredMovies = new ArrayList<>();
-
-        assert allMovies != null;
-        for (MovieModel movie : allMovies) {
-            List<Integer> genreIds = movie.getGenre_ids();
-            if (genreIds != null) {
-                for (Integer genreId : genreIds) {
-                    String genre = Constants.getGenre(genreId);
-                    if (genre != null && genre.equalsIgnoreCase(selectedCategory)) {
-                        filteredMovies.add(movie);
-                        break;
-                    }
-                }
-            }
-        }
-
-        showAllAdapter.setDiscoverList(filteredMovies);
-    }
-
 }
 

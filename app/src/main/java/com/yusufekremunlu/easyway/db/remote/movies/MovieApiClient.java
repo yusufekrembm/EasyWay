@@ -38,7 +38,6 @@ public class MovieApiClient {
     private final MutableLiveData<List<MovieVideoModel>> mVideoModelMovies;
     private final MutableLiveData<List<MoviePersonImages>> mPersonImagesModelMovies;
     private final MutableLiveData<List<MoviePersonCredits>> mPersonCreditsModelMovies;
-    private final MutableLiveData<List<MovieModel>> mDiscoverMovies;
     private RetrieveMoviesRunnable retrieveMoviesRunnable;
     int currentPage = 1;
 
@@ -57,7 +56,6 @@ public class MovieApiClient {
         mVideoModelMovies = new MutableLiveData<>();
         mPersonImagesModelMovies = new MutableLiveData<>();
         mPersonCreditsModelMovies = new MutableLiveData<>();
-        mDiscoverMovies = new MutableLiveData<>();
     }
 
     public MutableLiveData<List<MovieModel>> getTrendingMovies() {
@@ -73,11 +71,6 @@ public class MovieApiClient {
     public MutableLiveData<List<MovieModel>> getUpComingMovies() {
         getUpComingMoviesFromApi(currentPage);
         return mUpComingMovies;
-    }
-
-    public MutableLiveData<List<MovieModel>> getDiscoverMovies() {
-        getMovieDiscoverIDFromApi(currentPage);
-        return mDiscoverMovies;
     }
 
     public MutableLiveData<List<MovieCastModel>> getCastModelMovies() {
@@ -137,11 +130,6 @@ public class MovieApiClient {
     public void getUpComingMoviesFromApi(int currentPage) {
         Call<MovieResponse> movieResponseCall = movieApiInterface.fetchUpComingMovies(currentPage);
         getMoviesFromApi(movieResponseCall, mUpComingMovies, currentPage);
-    }
-
-    public void getMovieDiscoverIDFromApi(int currentPage) {
-        Call<MovieResponse> movieResponseCall = movieApiInterface.fetchDiscoverList(currentPage);
-        getMoviesFromApi(movieResponseCall, mDiscoverMovies, currentPage);
     }
 
     public void getMovieCastModelFromApi(int movie_id) {
@@ -288,20 +276,31 @@ public class MovieApiClient {
                 }
                 if (response.code() == 200) {
                     assert response.body() != null;
-                    List<MovieModel> list = new ArrayList<>(((MovieResponse) response.body()).getMovies());
+                    List<MovieModel> listTrending = new ArrayList<>(((MovieResponse) response.body()).getMovies());
+                    List<MovieModel> listPopular = new ArrayList<>(((MovieResponse) response.body()).getMovies());
+                    List<MovieModel> listUpcoming = new ArrayList<>(((MovieResponse) response.body()).getMovies());
                     if (pageNumber == 1) {
-                        mDiscoverMovies.postValue(list);
+                        mTrendingMovies.postValue(listTrending);
+                        mPopularMovies.postValue(listPopular);
+                        mUpComingMovies.postValue(listUpcoming);
                     } else {
-                        List<MovieModel> currentMovies = mDiscoverMovies.getValue();
-                        assert currentMovies != null;
-                        currentMovies.addAll(list);
-                        mDiscoverMovies.postValue(currentMovies);
+                        List<MovieModel> currentMoviesTrending = mTrendingMovies.getValue();
+                        List<MovieModel> currentMoviesPopular = mPopularMovies.getValue();
+                        List<MovieModel> currentMoviesUpcoming = mUpComingMovies.getValue();
+                        assert currentMoviesTrending != null;
+                        currentMoviesTrending.addAll(listTrending);
+                        assert currentMoviesPopular != null;
+                        currentMoviesPopular.addAll(listPopular);
+                        assert currentMoviesUpcoming != null;
+                        currentMoviesUpcoming.addAll(listUpcoming);
+                        mTrendingMovies.postValue(currentMoviesTrending);
+                        mPopularMovies.postValue(currentMoviesPopular);
+                        mUpComingMovies.postValue(currentMoviesUpcoming);
                     }
                 } else {
                     assert response.errorBody() != null;
                     String error = response.errorBody().string();
                     Log.v("Tag", "Error " + error);
-                    mDiscoverMovies.postValue(null);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

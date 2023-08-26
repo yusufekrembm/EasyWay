@@ -1,9 +1,14 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Movie;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,12 +16,17 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
@@ -26,22 +36,28 @@ import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieCastAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieVideoAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.OnItemClickListener {
     MovieDetailViewModel movieDetailViewModel;
+    FavouritesViewModel favouritesViewModel;
     private MovieCastAdapter movieCastAdapter;
     private MovieVideoAdapter movieVideoAdapter;
+    private boolean favouriteMovie = true;
+    MovieModel movie;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         movieDetailViewModel = new ViewModelProvider(this).get(MovieDetailViewModel.class);
+        favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewModel.class);
         movieCastAdapter = new MovieCastAdapter(new ArrayList<>(), getContext());
         movieVideoAdapter = new MovieVideoAdapter(new ArrayList<>(), getContext());
         movieCastAdapter.setOnItemClickListener(this);
@@ -53,40 +69,31 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
         Bundle args = getArguments();
         if (args != null) {
-            MovieModel movie = args.getParcelable("movie");
+            movie = args.getParcelable("movie");
             if (movie != null) {
-
                 int movieId = movie.getMovie_id();
+
                 MovieApiClient.getInstance().getMovieCastModelFromApi(movieId);
                 MovieApiClient.getInstance().getMovieVideosFromApi(movieId);
-
                 TextView detailMovieTitleText = view.findViewById(R.id.detailMovieTitleText);
                 detailMovieTitleText.setText(movie.getTitle());
-
                 ImageView detailMovieImageView = view.findViewById(R.id.detailsMovieImage);
                 Glide.with(this)
                         .load(Credentials.MOVIE_BACKDROP_URL + movie.getBackdrop_path())
                         .into(detailMovieImageView);
-
                 RatingBar detailMovieRatingBar = view.findViewById(R.id.detailMovieRatingBar);
                 detailMovieRatingBar.setRating(movie.getVote_average() / 2);
-
                 TextView detailMovieNumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
                 detailMovieNumOfVotes.setText(String.valueOf(movie.getVote_count() + " votes"));
-
                 TextView detailMovieOverView = view.findViewById(R.id.detailMovieOverView);
                 detailMovieOverView.setText(movie.getOverview());
-
                 TextView detailMovieReleasedDate = view.findViewById(R.id.detailMovieReleasedDate);
                 detailMovieReleasedDate.setText(movie.getRelease_date());
-
                 TextView detailMovieLanguageText = view.findViewById(R.id.detailMovieLanguageText);
                 detailMovieLanguageText.setText(movie.getOriginal_language().toUpperCase());
-
                 TextView detailTitleOriginal = view.findViewById(R.id.detailTitleOriginal);
                 detailTitleOriginal.setText(movie.getOriginal_title());
                 detailTitleOriginal.setMaxLines(1);
-
                 List<Integer> genreIds = movie.getGenre_ids();
                 StringBuilder genreBuilder = new StringBuilder();
                 if (genreIds != null && !genreIds.isEmpty()) {
@@ -109,12 +116,34 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         LinearLayoutManager layoutCast = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         movieCastRecycler.setLayoutManager(layoutCast);
         movieCastRecycler.setAdapter(movieCastAdapter);
-
         RecyclerView movieVideoRecycler = view.findViewById(R.id.videosRecyclerView);
         LinearLayoutManager layoutVideos = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         movieVideoRecycler.setLayoutManager(layoutVideos);
         movieVideoRecycler.setAdapter(movieVideoAdapter);
 
+        ToggleButton favouriteButton = view.findViewById(R.id.favouriteButtonMovie);
+
+        favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+        favouriteButton.setOnClickListener(v -> {
+            if(favouriteMovie){
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.baseline_check_24));
+                Toast.makeText(getContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
+                favouriteMovie = false;
+                saveState(false);
+                List<MovieModel> movieList = new ArrayList<>();
+                movieList.add(movie);
+                favouritesViewModel.setSelectedMovie(movieList);
+            } else {
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+                Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                favouriteMovie = true;
+                saveState(true);
+            }
+        });
+        Button goToFavouriteButton = view.findViewById(R.id.goToFavouriteFragment);
+
+        goToFavouriteButton.setOnClickListener(v -> Navigation.findNavController(requireView())
+                .navigate(R.id.action_movieDetailsFragment_to_favouritesFragment));
         observeData();
         return view;
     }
@@ -144,8 +173,14 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
 
             @Override
             public void onFailure(Throwable throwable) {
-                // Hata durumunda yapılacak işlemler
             }
         });
     }
+    private void saveState(boolean isFavourite) {
+        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("Favourite", Context.MODE_PRIVATE);
+        SharedPreferences.Editor aSharedPreferencesEdit = aSharedPreferences.edit();
+        aSharedPreferencesEdit.putBoolean("State", isFavourite);
+        aSharedPreferencesEdit.apply();
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
+import android.graphics.Movie;
+
+import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.model.network.movies.CreditsResponse;
 import com.yusufekremunlu.easyway.model.network.movies.MoviePersonCreditsResponse;
@@ -28,6 +31,10 @@ public interface MovieApiInterface {
     @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/upcoming")
     Call<MovieResponse> fetchUpComingMovies(
             @Query("page") int page
+    );
+    @GET("/"+Credentials.MOVIE_API_VERSION+"/movie/{id}")
+    Call<MovieModel> fetchMovieDetails(
+            @Path("id") int id
     );
     @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/{movie_id}/credits")
     Call<CreditsResponse> fetchMovieCasts(

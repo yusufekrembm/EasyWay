@@ -30,9 +30,6 @@ import java.util.ArrayList;
 
 public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClickListener {
     private MoviesViewModel moviesViewModel;
-    private RecyclerView trendingRecycler;
-    private RecyclerView popularRecycler;
-    private RecyclerView upComingRecycler;
     private MoviesAdapter moviesTrending;
     private MoviesAdapter moviesPopular;
     private MoviesAdapter moviesUpComing;
@@ -61,9 +58,9 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
 
-        trendingRecycler = view.findViewById(R.id.trendingRecyclerView);
-        popularRecycler = view.findViewById(R.id.popularRecyclerView);
-        upComingRecycler = view.findViewById(R.id.upcomingRecyclerView);
+        RecyclerView trendingRecycler = view.findViewById(R.id.trendingRecyclerView);
+        RecyclerView popularRecycler = view.findViewById(R.id.popularRecyclerView);
+        RecyclerView upComingRecycler = view.findViewById(R.id.upcomingRecyclerView);
 
         trendingMoviesProgressBar = view.findViewById(R.id.trendingMoviesProgressBar);
         popularMoviesProgressBar = view.findViewById(R.id.popularMoviesProgressBar);
@@ -112,7 +109,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         popularRecycler.setAdapter(moviesPopular);
         upComingRecycler.setAdapter(moviesUpComing);
 
-        loadNextPages();
         observeData();
         return view;
     }
@@ -135,35 +131,6 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
             moviesUpComing.setMovieList(movieModels);
             upComingMoviesProgressBar.setVisibility(View.INVISIBLE);
-        });
-    }
-    private void loadNextPages() {
-        trendingRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollHorizontally(1)) {
-                    moviesViewModel.searchNextPageTrending();
-                }
-            }
-        });
-        popularRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollHorizontally(1)) {
-                    moviesViewModel.searchNextPagePopular();
-                }
-            }
-        });
-        upComingRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollHorizontally(1)) {
-                    moviesViewModel.searchNextPageUnComing();
-                }
-            }
         });
     }
     @Override

@@ -77,7 +77,7 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
         LinearLayoutManager layoutCastPhotos = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         moviePhotosRecyclerView.setLayoutManager(layoutCastPhotos);
         moviePhotosRecyclerView.setAdapter(moviesPersonImagesAdapter);
-
+        MovieApiClient.getInstance().getMoviePersonCreditsFromApi(personId);
         RecyclerView movieKnowAsRecyclerView = view.findViewById(R.id.knownForRecyclerView);
         LinearLayoutManager layoutCastKnowFor = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         movieKnowAsRecyclerView.setLayoutManager(layoutCastKnowFor);

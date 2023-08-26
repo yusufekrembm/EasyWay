@@ -87,7 +87,6 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
                     context.startActivity(intent);
                 } else {
-                    // Youtube uygulaması yüklü değilse, Youtube'un web sitesini açabilirsiniz.
                     intent.setPackage(null);
                     context.startActivity(intent);
                 }
@@ -96,44 +95,8 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
     }
 
     public void setVideoModelList(List<MovieVideoModel> newVideoModelList) {
-        MovieVideoModelDiffCallback diffCallback = new MovieVideoModelDiffCallback(videoModelList, newVideoModelList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        notifyDataSetChanged();
         videoModelList.clear();
         videoModelList.addAll(newVideoModelList);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    private static class MovieVideoModelDiffCallback extends DiffUtil.Callback {
-        private final List<MovieVideoModel> oldList;
-        private final List<MovieVideoModel> newList;
-
-        public MovieVideoModelDiffCallback(List<MovieVideoModel> oldList, List<MovieVideoModel> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            MovieVideoModel oldVideoModel = oldList.get(oldItemPosition);
-            MovieVideoModel newVideoModel = newList.get(newItemPosition);
-            return Objects.equals(oldVideoModel.getId(), newVideoModel.getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            MovieVideoModel oldVideoModel = oldList.get(oldItemPosition);
-            MovieVideoModel newVideoModel = newList.get(newItemPosition);
-            return Objects.equals(oldVideoModel, newVideoModel);
-        }
     }
 }

@@ -51,11 +51,13 @@
     <string name="filtrele">Filtrele</string>
     <string name="select_movie_category">Select Movie Category</string>
     <string-array name="film_categories">
+        <item>Select a category</item>
         <item>Popular</item>
         <item>Trending</item>
         <item>Incoming</item>
     </string-array>
     <string-array name="movies_categories">
+        <item>Select a movie type</item>
         <item>Action</item>
         <item>Adventure</item>
         <item>Animation</item>

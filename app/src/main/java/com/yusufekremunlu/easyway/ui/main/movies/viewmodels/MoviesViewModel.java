@@ -23,9 +23,6 @@ public class MoviesViewModel extends ViewModel {
     public LiveData<List<MovieModel>> getUpComingMovies() {
         return movieRepository.getUpComingMovies();
     }
-    public LiveData<List<MovieModel>> getDiscoverMovies() {
-        return movieRepository.getDiscoverMovies();
-    }
     public void searchMovieApi(String query, int pageNumber){
         movieRepository.searchMovieApi(query, pageNumber);
     }
@@ -40,9 +37,6 @@ public class MoviesViewModel extends ViewModel {
     }
     public void searchNextPageUnComing(){
         movieRepository.searchNextPageUnComing();
-    }
-    public void searchNextPageDiscover(){
-        movieRepository.searchNextPageDiscover();
     }
 }
 

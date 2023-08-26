@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_movieDetailsFragment_to_movieCastDetails"
             app:destination="@id/movieCastDetails" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
     </fragment>
     <fragment
         android:id="@+id/movieCastDetails"
@@ -70,4 +73,9 @@
             android:id="@+id/action_showAllFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" />
 </navigation>
