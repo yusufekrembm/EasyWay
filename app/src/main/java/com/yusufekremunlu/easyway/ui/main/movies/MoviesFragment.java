@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,10 +17,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviesAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
@@ -46,6 +49,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         moviesPopular = new MoviesAdapter(new ArrayList<>(), getContext());
         moviesUpComing = new MoviesAdapter(new ArrayList<>(), getContext());
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -53,6 +57,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         moviesPopular.setOnItemClickListener(this);
         moviesUpComing.setOnItemClickListener(this);
     }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -112,6 +117,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         observeData();
         return view;
     }
+
     private void observeData() {
         moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
             moviesTrending.setMovieList(movieModels);
@@ -133,6 +139,7 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
             upComingMoviesProgressBar.setVisibility(View.INVISIBLE);
         });
     }
+
     @Override
     public void onItemClick(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
@@ -142,18 +149,24 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         TextView hlGenreOne = requireView().findViewById(R.id.hlMovieGenrePrimary);
         TextView hlGenreSecondOne = requireView().findViewById(R.id.hlMovieGenreSecondary);
         Glide.with(requireContext())
-                .load(Credentials.MOVIE_BACKDROP_URL +movie.getBackdrop_path())
+                .load(Credentials.MOVIE_BACKDROP_URL + movie.getBackdrop_path())
                 .into(hlImageView);
         hlTitleView.setText(movie.getTitle());
-        hlRatingBar.setRating(movie.getVote_average()/2);
+        hlRatingBar.setRating(movie.getVote_average() / 2);
         hlNumOfVotes.setText(String.valueOf(movie.getVote_count()));
         String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
-        String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
         hlGenreOne.setText(genreOne);
-        hlGenreSecondOne.setText(genreSecondOne);
+
+        if (movie.getGenre_ids().size() > 1) {
+            String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
+            hlGenreSecondOne.setText(genreSecondOne);
+        } else {
+            hlGenreSecondOne.setText("");
+        }
         hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
         goToMovieDetails(movie);
     }
+
     @SuppressLint("SetTextI18n")
     private void updateUI(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
@@ -170,11 +183,18 @@ public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClic
         hlRatingBar.setRating(movie.getVote_average() / 2);
         hlNumOfVotes.setText(movie.getVote_count() + " votes");
         String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
-        String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
         hlGenreOne.setText(genreOne);
+
+        if (movie.getGenre_ids().size() > 1) {
+            String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
+            hlGenreSecondOne.setText(genreSecondOne);
+        } else {
+            hlGenreSecondOne.setText("");
+        }
+
         hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
-        hlGenreSecondOne.setText(genreSecondOne);
     }
+
     private void goToMovieDetails(MovieModel movie) {
         ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
         hlImageView.setOnClickListener(v -> {

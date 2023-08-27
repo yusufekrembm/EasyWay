@@ -11,28 +11,25 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
 import java.util.Objects;
 
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouriteMovieHolder> {
-    private List<MovieModel> favouriteList;
+    private List<MovieFav> favouriteList;
     private final Context context;
-    private MoviesAdapter.OnItemClickListener listener;
 
-    public FavouritesAdapter(List<MovieModel> favouriteList, Context context) {
+    public FavouritesAdapter(List<MovieFav> favouriteList, Context context) {
         this.favouriteList = favouriteList;
         this.context = context;
     }
 
     public interface OnItemClickListener {
-        void onItemClick(MovieModel movie);
+        void onItemClick(MovieFav movie);
     }
 
-    public void setOnItemClickListener(MoviesAdapter.OnItemClickListener listener) {
-        this.listener = listener;
-    }
 
     @NonNull
     @Override
@@ -43,14 +40,9 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavouritesAdapter.FavouriteMovieHolder holder, int position) {
-        MovieModel movie = favouriteList.get(position);
+    public void onBindViewHolder(@NonNull FavouriteMovieHolder holder, int position) {
+        MovieFav movie = favouriteList.get(position);
         holder.bind(movie);
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(movie);
-            }
-        });
     }
 
     @Override
@@ -68,51 +60,17 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
             titleTextView = itemView.findViewById(R.id.titleText);
         }
 
-        public void bind(MovieModel movie) {
+        public void bind(MovieFav movie) {
             Glide.with(context)
-                    .load(Credentials.MOVIE_BASE_POSTER_URL + movie.getPoster_path())
+                    .load(Credentials.MOVIE_BASE_POSTER_URL + movie.backdrop_path)
                     .into(imageView);
-            titleTextView.setText(movie.getTitle());
+            titleTextView.setText(movie.title);
         }
     }
 
-    public void setFavouriteList(List<MovieModel> newFavouriteList) {
+    public void setFavouriteList(List<MovieFav> newFavouriteList) {
         favouriteList.clear();
         favouriteList.addAll(newFavouriteList);
         notifyDataSetChanged();
-    }
-
-    static class MovieDiffCallback extends DiffUtil.Callback {
-        private final List<MovieModel> oldList;
-        private final List<MovieModel> newList;
-
-        public MovieDiffCallback(List<MovieModel> oldList, List<MovieModel> newList) {
-            this.oldList = oldList;
-            this.newList = newList;
-        }
-
-        @Override
-        public int getOldListSize() {
-            return oldList.size();
-        }
-
-        @Override
-        public int getNewListSize() {
-            return newList.size();
-        }
-
-        @Override
-        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            MovieModel oldMovie = oldList.get(oldItemPosition);
-            MovieModel newMovie = newList.get(newItemPosition);
-            return Objects.equals(oldMovie.getMovie_id(), newMovie.getMovie_id());
-        }
-
-        @Override
-        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            MovieModel oldMovie = oldList.get(oldItemPosition);
-            MovieModel newMovie = newList.get(newItemPosition);
-            return Objects.equals(oldMovie, newMovie);
-        }
     }
 }

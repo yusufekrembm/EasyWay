@@ -32,12 +32,14 @@ import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieCastAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieVideoAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
 
@@ -50,14 +52,13 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
     FavouritesViewModel favouritesViewModel;
     private MovieCastAdapter movieCastAdapter;
     private MovieVideoAdapter movieVideoAdapter;
-    private boolean favouriteMovie = true;
     MovieModel movie;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         movieDetailViewModel = new ViewModelProvider(this).get(MovieDetailViewModel.class);
-        favouritesViewModel = new ViewModelProvider(requireActivity()).get(FavouritesViewModel.class);
+        favouritesViewModel = new ViewModelProvider(this, new ViewModelFactory(requireActivity().getApplication())).get(FavouritesViewModel.class);
         movieCastAdapter = new MovieCastAdapter(new ArrayList<>(), getContext());
         movieVideoAdapter = new MovieVideoAdapter(new ArrayList<>(), getContext());
         movieCastAdapter.setOnItemClickListener(this);
@@ -123,28 +124,30 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
 
         ToggleButton favouriteButton = view.findViewById(R.id.favouriteButtonMovie);
 
-        favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
         favouriteButton.setOnClickListener(v -> {
-            if(favouriteMovie){
-                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.baseline_check_24));
-                Toast.makeText(getContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
-                favouriteMovie = false;
-                saveState(false);
-                List<MovieModel> movieList = new ArrayList<>();
-                movieList.add(movie);
-                favouritesViewModel.setSelectedMovie(movieList);
+            boolean isFavourite = readState(movie.getMovie_id());
+            if (!isFavourite) {
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_check_24));
+                Toast.makeText(getContext(), "Added to favourites", Toast.LENGTH_SHORT).show();
+                MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path());
+                favouritesViewModel.insertFavMovie(favMovie);
+                saveState(movie.getMovie_id(), true);
             } else {
                 favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
                 Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
-                favouriteMovie = true;
-                saveState(true);
+                MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path());
+                favouritesViewModel.deleteFavMovie(favMovie);
+                saveState(movie.getMovie_id(), false);
             }
         });
+
+
         Button goToFavouriteButton = view.findViewById(R.id.goToFavouriteFragment);
 
         goToFavouriteButton.setOnClickListener(v -> Navigation.findNavController(requireView())
                 .navigate(R.id.action_movieDetailsFragment_to_favouritesFragment));
         observeData();
+
         return view;
     }
 
@@ -176,11 +179,42 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
             }
         });
     }
-    private void saveState(boolean isFavourite) {
-        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("Favourite", Context.MODE_PRIVATE);
+
+    private void saveState(int movieId, boolean isFavourite) {
+        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
         SharedPreferences.Editor aSharedPreferencesEdit = aSharedPreferences.edit();
-        aSharedPreferencesEdit.putBoolean("State", isFavourite);
+        aSharedPreferencesEdit.putBoolean(getFavouriteKey(movieId), isFavourite);
         aSharedPreferencesEdit.apply();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        boolean isFavourite = readState(movie.getMovie_id());
+        if (!isFavourite) {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.baseline_add_24));
+        }
+        else {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(),R.drawable.baseline_check_24));
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        boolean isFavourite = readState(movie.getMovie_id());
+        if (!isFavourite) {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+        } else {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_check_24));
+        }
+    }
+
+    private boolean readState(int movieId) {
+        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
+        return aSharedPreferences.getBoolean(getFavouriteKey(movieId), false);
+    }
+
+    private String getFavouriteKey(int movieId) {
+        return "favState_" + movieId;
+    }
 }
