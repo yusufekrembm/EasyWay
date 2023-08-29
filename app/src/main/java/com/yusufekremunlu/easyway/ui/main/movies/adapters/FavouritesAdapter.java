@@ -7,19 +7,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
-import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
-import java.util.Objects;
 
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouriteMovieHolder> {
     private List<MovieFav> favouriteList;
     private final Context context;
+    private OnItemClickListener listener;
 
     public FavouritesAdapter(List<MovieFav> favouriteList, Context context) {
         this.favouriteList = favouriteList;
@@ -27,9 +25,11 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     }
 
     public interface OnItemClickListener {
-        void onItemClick(MovieFav movie);
+        void onItemClick(MovieFav moviefav);
     }
-
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -40,9 +40,14 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FavouriteMovieHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FavouritesAdapter.FavouriteMovieHolder holder, int position) {
         MovieFav movie = favouriteList.get(position);
         holder.bind(movie);
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(movie);
+            }
+        });
     }
 
     @Override

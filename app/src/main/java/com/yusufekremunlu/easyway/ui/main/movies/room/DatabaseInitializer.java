@@ -9,8 +9,7 @@ public class DatabaseInitializer {
 
     public static MovieRoomDatabase getInstance(Context context) {
         if (movieDatabase == null) {
-            movieDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                            MovieRoomDatabase.class, "movie_database")
+            movieDatabase = Room.databaseBuilder(context, MovieRoomDatabase.class, "watch_lists")
                     .build();
         }
         return movieDatabase;

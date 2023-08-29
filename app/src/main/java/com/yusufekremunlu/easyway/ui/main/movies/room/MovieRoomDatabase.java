@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
 import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
 
 
@@ -17,8 +18,7 @@ public abstract class MovieRoomDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (MovieRoomDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    MovieRoomDatabase.class, "movie_database")
+                    INSTANCE = Room.databaseBuilder(context, MovieRoomDatabase.class, "watch-lists")
                             .build();
                 }
             }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -112,8 +113,6 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-
 
     @Override
     public void onItemClick(MoviePersonCredits moviePersonCredits) {

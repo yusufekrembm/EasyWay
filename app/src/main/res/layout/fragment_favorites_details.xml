@@ -4,14 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.movies.MovieDetailsFragment">
+    tools:context=".ui.main.movies.FavouritesDetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintStart_toStartOf="parent" 
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/myToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#3C3C3C"
+            app:title="Movies"
+            app:titleTextColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/detailsMovieImage"
@@ -21,21 +27,8 @@
             app:layout_constraintBottom_toTopOf="@id/topGuideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myToolbar"
             tools:src="@tools:sample/backgrounds/scenic[1]" />
-
-        <Button
-            android:id="@+id/goToFavouriteFragment"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom|end"
-            android:textOff=""
-            android:textOn=""
-            android:background="@drawable/baseline_remove_red_eye_24"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="30dp"
-            app:layout_constraintBottom_toBottomOf="@id/favouriteButtonMovie"
-            app:layout_constraintEnd_toEndOf="@id/favouriteButtonMovie" />
 
         <ToggleButton
             android:id="@+id/favouriteButtonMovie"

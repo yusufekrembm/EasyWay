@@ -77,5 +77,21 @@
         android:id="@+id/favouritesFragment"
         android:name="com.yusufekremunlu.easyway.ui.main.movies.FavouritesFragment"
         android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" />
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_favouritesDetailFragment"
+            app:destination="@id/favouritesDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesDetailFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.FavouritesDetailFragment"
+        android:label="fragment_favorites_details"
+        tools:layout="@layout/fragment_favorites_details" >
+        <action
+            android:id="@+id/action_favouritesDetailFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
+    </fragment>
 </navigation>

@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+
 import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
 import com.yusufekremunlu.easyway.ui.main.movies.room.MovieDao;
 import com.yusufekremunlu.easyway.ui.main.movies.room.MovieRoomDatabase;
 
-import java.io.Closeable;
 import java.util.List;
 
 public class FavouritesViewModel extends ViewModel {

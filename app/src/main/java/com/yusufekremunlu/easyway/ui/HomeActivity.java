@@ -63,7 +63,25 @@ public class HomeActivity extends AppCompatActivity {
                 if (destination.getId() == R.id.showAllFragment) {
                     bottomNav.setVisibility(View.GONE);
                     fab.setVisibility(View.GONE);
-                } else {
+                }
+                else if (destination.getId() == R.id.favouritesFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.movieDetailsFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.movieCastDetails) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.favouritesDetailFragment) {
+                bottomNav.setVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
+            }
+
+                else {
                     fab.setVisibility(View.VISIBLE);
                     bottomNav.setVisibility(View.VISIBLE);
                 }
