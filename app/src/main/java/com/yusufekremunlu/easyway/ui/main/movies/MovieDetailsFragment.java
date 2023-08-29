@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -86,6 +87,8 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
                 TextView detailTitleOriginal = view.findViewById(R.id.detailTitleOriginal);
                 detailTitleOriginal.setText(movie.getOriginal_title());
                 detailTitleOriginal.setMaxLines(1);
+                Toolbar myToolbar = view.findViewById(R.id.myToolbar);
+                myToolbar.setTitle("Movie Detail : " + movie.getTitle());
                 List<Integer> genreIds = movie.getGenre_ids();
                 StringBuilder genreBuilder = new StringBuilder();
                 if (genreIds != null && !genreIds.isEmpty()) {
@@ -118,13 +121,13 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         favouriteButton.setOnClickListener(v -> {
             boolean isFavourite = readState(movie.getMovie_id());
             if (!isFavourite) {
-                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_check_24));
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
                 Toast.makeText(getContext(), "Added to watch list", Toast.LENGTH_SHORT).show();
                 MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path(),movie.getOriginal_language(),movie.getOriginal_title(),movie.getOverview(),movie.getBackdrop_path(),movie.getRelease_date(),movie.getVote_average(),movie.getVote_count());
                 favouritesViewModel.insertFavMovie(favMovie);
                 saveState(movie.getMovie_id(), true);
             } else {
-                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
                 Toast.makeText(getContext(), "Removed from watch list", Toast.LENGTH_SHORT).show();
                 MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path(),movie.getOriginal_language(),movie.getOriginal_title(),movie.getOverview(),movie.getBackdrop_path(),movie.getRelease_date(),movie.getVote_average(),movie.getVote_count());
                 favouritesViewModel.deleteFavMovie(favMovie);
@@ -181,9 +184,9 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         if (movie != null) {
             boolean isFavourite = readState(movie.getMovie_id());
             if (!isFavourite) {
-                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
             } else {
-                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_check_24));
+                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
             }
         }
     }
@@ -193,9 +196,9 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         super.onPause();
         boolean isFavourite = readState(movie.getMovie_id());
         if (!isFavourite) {
-            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_add_24));
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
         } else {
-            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.baseline_check_24));
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
         }
     }
 
