@@ -1,21 +1,15 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +37,8 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     private RecyclerView showAllRecyclerView;
     private ShowAllAdapter showAllAdapter;
     private ProgressBar showAllProgressBar;
+    private MovieListType currentListType;
+    private boolean isSearchQueryActive = false;
 
     @SuppressLint("ResourceType")
     @Override
@@ -70,15 +66,23 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         assert activity != null;
         activity.setSupportActionBar(myToolbar);
+        getCurrentListType();
+        return rootView;
+    }
+
+    private MovieListType getCurrentListType() {
         Bundle bundle = getArguments();
         if (bundle != null && bundle.containsKey("movieListType")) {
             MovieListType movieListType = (MovieListType) bundle.getSerializable("movieListType");
             observeDataForListType(movieListType);
         }
-        return rootView;
+        return MovieListType.TRENDING;
     }
 
+
     private void observeDataForListType(MovieListType movieListType) {
+        currentListType = movieListType;
+
         switch (movieListType) {
             case TRENDING:
                 moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
@@ -101,7 +105,10 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
             default:
                 break;
         }
+        showAllRecyclerView.removeOnScrollListener(scrollListener);
+        showAllRecyclerView.addOnScrollListener(scrollListener);
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
@@ -109,23 +116,59 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         MenuItem searchItem = menu.findItem(R.id.searchMovie);
         MenuItem filterItem = menu.findItem(R.id.filterMovie);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        filterItem.setOnMenuItemClickListener(item -> {
-
-            return false;
-        });
+        filterItem.setOnMenuItemClickListener(item -> false);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
+                moviesViewModel.searchMovieApi(query, 1);
+                isSearchQueryActive = true;
+                loadMoreSearchList();
+                showAllRecyclerView.removeOnScrollListener(scrollListener);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                MovieListType listType = getCurrentListType();
+                if (newText.isEmpty()) {
+                    isSearchQueryActive = false;
+                    showAllRecyclerView.addOnScrollListener(scrollListener);
+                    List<MovieModel> movieList;
+                    switch (listType) {
+                        case POPULAR:
+                            movieList = moviesViewModel.getPopularMovies().getValue();
+                            break;
+                        case TRENDING:
+                            movieList = moviesViewModel.getTrendingMovies().getValue();
+                            break;
+                        case UPCOMING:
+                            movieList = moviesViewModel.getUpComingMovies().getValue();
+                            break;
+                        default:
+                            movieList = new ArrayList<>();
+                            break;
+                    }
+                    showAllAdapter.setDiscoverList(movieList);
+                    showAllRecyclerView.removeOnScrollListener(scrollListener);
+                }
                 return false;
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void loadMoreSearchList() {
+        showAllRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!showAllRecyclerView.canScrollVertically(1)){
+                    moviesViewModel.searchNextPage();
+                }
+            }
+        });
     }
 
     @Override
@@ -146,5 +189,22 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         Navigation.findNavController(requireView())
                 .navigate(R.id.action_showAllFragment_to_movieDetailsFragment, bundle);
     }
+
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            if (!recyclerView.canScrollVertically(1)) {
+                if (currentListType == MovieListType.TRENDING) {
+                    moviesViewModel.searchNextPageTrending();
+                } else if (currentListType == MovieListType.POPULAR) {
+                    moviesViewModel.searchNextPagePopular();
+                } else if (currentListType == MovieListType.UPCOMING) {
+                    moviesViewModel.searchNextPageUnComing();
+                }
+            }
+        }
+    };
 }
+
 

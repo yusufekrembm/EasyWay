@@ -1,5 +1,5 @@
 package com.yusufekremunlu.easyway.utils;
 
 public enum MovieListType {
-    TRENDING, POPULAR, UPCOMING
+    TRENDING, POPULAR, UPCOMING,SEARCH
 }
