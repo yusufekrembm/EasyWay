@@ -82,6 +82,19 @@ public class FavouritesDetailFragment extends Fragment {
                 toolbar.setTitle("Watch List : "+movieFav.getTitle());
             }
         }
+        ToggleButton favouriteButton = view.findViewById(R.id.favouriteButtonMovie);
+        favouriteButton.setOnClickListener(v -> {
+            boolean isFavourite = readState(movieFav.getUid());
+            if (!isFavourite) {
+            } else {
+                favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
+                Toast.makeText(getContext(), "Removed from watch list", Toast.LENGTH_SHORT).show();
+                MovieFav favMovie = new MovieFav(movieFav.getUid(),movieFav.getTitle(),movieFav.getPoster_path(),movieFav.getOriginal_language(),movieFav.getOriginal_title(),movieFav.getOverview(),movieFav.getBackdrop_path(),movieFav.getRelease_date(),movieFav.getVote_average(),movieFav.getVote_count());
+                favouritesViewModel.deleteFavMovie(favMovie);
+                saveState(movieFav.getUid(), false);
+            }
+        });
+
         RecyclerView movieCastRecycler = view.findViewById(R.id.castRecyclerView);
         LinearLayoutManager layoutCast = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         movieCastRecycler.setLayoutManager(layoutCast);
@@ -102,5 +115,43 @@ public class FavouritesDetailFragment extends Fragment {
             movieVideoAdapter.setVideoModelList(videoModelList);
         });
     }
+    private void saveState(int movieId, boolean isFavourite) {
+        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
+        SharedPreferences.Editor aSharedPreferencesEdit = aSharedPreferences.edit();
+        aSharedPreferencesEdit.putBoolean(getFavouriteKey(movieId), isFavourite);
+        aSharedPreferencesEdit.apply();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (movieFav != null) {
+            boolean isFavourite = readState(movieFav.getUid());
+            if (!isFavourite) {
+                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
+            } else {
+                requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        boolean isFavourite = readState(movieFav.getUid());
+        if (!isFavourite) {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
+        } else {
+            requireView().findViewById(R.id.favouriteButtonMovie).setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
+        }
+    }
+
+    private boolean readState(int movieId) {
+        SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
+        return aSharedPreferences.getBoolean(getFavouriteKey(movieId), false);
+    }
+
+    private String getFavouriteKey(int movieId) {
+        return "favState_" + movieId;
+    }
 }

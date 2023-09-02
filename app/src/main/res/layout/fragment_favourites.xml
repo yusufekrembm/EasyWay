@@ -15,7 +15,8 @@
             android:background="#3C3C3C"
             app:title="My Watch List"
             app:titleTextColor="@color/white"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints">
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favouritesRecyclerView"
@@ -50,9 +51,9 @@
             android:id="@+id/noResultsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_centerInParent="true"
-            android:text="No Results"
+            android:layout_gravity="center"
+            android:text="No Result please go back add some movie"
             android:textSize="18sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"

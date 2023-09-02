@@ -1,17 +1,21 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -21,15 +25,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
+import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieCastViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.MovieListType;
-
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemClickListener {
@@ -38,7 +44,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     private ShowAllAdapter showAllAdapter;
     private ProgressBar showAllProgressBar;
     private MovieListType currentListType;
-    private boolean isSearchQueryActive = false;
 
     @SuppressLint("ResourceType")
     @Override
@@ -85,19 +90,19 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
 
         switch (movieListType) {
             case TRENDING:
-                moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                moviesViewModel.getTrendingMovies().observe(requireParentFragment().getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
                     showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
                 break;
             case POPULAR:
-                moviesViewModel.getPopularMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                moviesViewModel.getPopularMovies().observe(requireParentFragment().getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
                     showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
                 break;
             case UPCOMING:
-                moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+                moviesViewModel.getUpComingMovies().observe(requireParentFragment().getViewLifecycleOwner(), movieModels -> {
                     showAllAdapter.setDiscoverList(movieModels);
                     showAllProgressBar.setVisibility(View.INVISIBLE);
                 });
@@ -114,16 +119,13 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.movie_filters, menu);
         MenuItem searchItem = menu.findItem(R.id.searchMovie);
-        MenuItem filterItem = menu.findItem(R.id.filterMovie);
         SearchView searchView = (SearchView) searchItem.getActionView();
-        filterItem.setOnMenuItemClickListener(item -> false);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
             public boolean onQueryTextSubmit(String query) {
                 moviesViewModel.searchMovieApi(query, 1);
-                isSearchQueryActive = true;
                 loadMoreSearchList();
                 showAllRecyclerView.removeOnScrollListener(scrollListener);
                 return false;
@@ -133,7 +135,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
             public boolean onQueryTextChange(String newText) {
                 MovieListType listType = getCurrentListType();
                 if (newText.isEmpty()) {
-                    isSearchQueryActive = false;
                     showAllRecyclerView.addOnScrollListener(scrollListener);
                     List<MovieModel> movieList;
                     switch (listType) {
@@ -176,8 +177,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         int itemId = item.getItemId();
         if (itemId == R.id.searchMovie) {
             return true;
-        } else if (itemId == R.id.filterMovie) {
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -190,7 +189,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
                 .navigate(R.id.action_showAllFragment_to_movieDetailsFragment, bundle);
     }
 
-    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             super.onScrollStateChanged(recyclerView, newState);

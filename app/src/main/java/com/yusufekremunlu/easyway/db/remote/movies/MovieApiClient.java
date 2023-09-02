@@ -29,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieApiClient {
-    MovieApiInterface movieApiInterface = MovieRetrofitBuilder.buildService(MovieApiInterface.class);
+    static MovieApiInterface movieApiInterface = MovieRetrofitBuilder.buildService(MovieApiInterface.class);
     private static MovieApiClient instance;
     private final MutableLiveData<List<MovieModel>> mTrendingMovies;
     private final MutableLiveData<List<MovieModel>> mPopularMovies;
@@ -172,7 +172,7 @@ public class MovieApiClient {
         });
     }
 
-    public void getMoviesPersonsFromApi(int personId, final MovieApiCallback callback) {
+    public static void getMoviesPersonsFromApi(int personId, final MovieApiCallback callback) {
         Call<MoviePerson> responseCall = movieApiInterface.fetchPersonDetails(personId);
         responseCall.enqueue(new Callback<MoviePerson>() {
             @Override

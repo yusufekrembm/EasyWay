@@ -84,6 +84,9 @@
         <action
             android:id="@+id/action_favouritesFragment_to_favouritesDetailFragment"
             app:destination="@id/favouritesDetailFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_fragment_movies"
+            app:destination="@id/fragment_movies" />
     </fragment>
     <fragment
         android:id="@+id/favouritesDetailFragment"

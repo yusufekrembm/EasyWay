@@ -6,8 +6,4 @@
         android:icon="@drawable/baseline_search_24"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
-    <item android:id="@+id/filterMovie"
-        android:icon="@drawable/baseline_filter_alt_24"
-        android:title="@string/filter_movie"
-        app:showAsAction="ifRoom"/>
 </menu>

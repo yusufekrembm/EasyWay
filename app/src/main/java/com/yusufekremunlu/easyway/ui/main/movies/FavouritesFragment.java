@@ -40,11 +40,23 @@ public class FavouritesFragment extends Fragment implements FavouritesAdapter.On
         favouritesRecyclerView = view.findViewById(R.id.favouritesRecyclerView);
         favouritesRecyclerView.setLayoutManager(gridLayoutManager);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
+
+        TextView noResultTextView = view.findViewById(R.id.noResultsTextView);
+
         favouritesViewModel.getFavouriteMovies().observe(getViewLifecycleOwner(), favouriteMovies -> {
-            favouritesAdapter.setFavouriteList(favouriteMovies);
+            if (favouriteMovies.isEmpty()) {
+                noResultTextView.setVisibility(View.VISIBLE);
+                favouritesRecyclerView.setVisibility(View.GONE);
+            } else {
+                noResultTextView.setVisibility(View.GONE);
+                favouritesRecyclerView.setVisibility(View.VISIBLE);
+                favouritesAdapter.setFavouriteList(favouriteMovies);
+            }
         });
+
         return view;
     }
+
 
     @Override
     public void onItemClick(MovieFav moviefav) {
