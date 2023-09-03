@@ -1,66 +1,210 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
+import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviesAdapter;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
+import com.yusufekremunlu.easyway.utils.Constants;
+import com.yusufekremunlu.easyway.utils.Credentials;
+import com.yusufekremunlu.easyway.utils.MovieListType;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MoviesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class MoviesFragment extends Fragment {
+import java.util.ArrayList;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public MoviesFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MoviesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MoviesFragment newInstance(String param1, String param2) {
-        MoviesFragment fragment = new MoviesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+public class MoviesFragment extends Fragment implements MoviesAdapter.OnItemClickListener {
+    private MoviesViewModel moviesViewModel;
+    private MoviesAdapter moviesTrending;
+    private MoviesAdapter moviesPopular;
+    private MoviesAdapter moviesUpComing;
+    private ProgressBar trendingMoviesProgressBar;
+    private ProgressBar popularMoviesProgressBar;
+    private ProgressBar upComingMoviesProgressBar;
+    private ProgressBar hlMovieImageProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        moviesViewModel = new ViewModelProvider(this).get(MoviesViewModel.class);
+        moviesTrending = new MoviesAdapter(new ArrayList<>(), getContext());
+        moviesPopular = new MoviesAdapter(new ArrayList<>(), getContext());
+        moviesUpComing = new MoviesAdapter(new ArrayList<>(), getContext());
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies, container, false);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        moviesTrending.setOnItemClickListener(this);
+        moviesPopular.setOnItemClickListener(this);
+        moviesUpComing.setOnItemClickListener(this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_movies, container, false);
+
+        RecyclerView trendingRecycler = view.findViewById(R.id.trendingRecyclerView);
+        RecyclerView popularRecycler = view.findViewById(R.id.popularRecyclerView);
+        RecyclerView upComingRecycler = view.findViewById(R.id.upcomingRecyclerView);
+
+        trendingMoviesProgressBar = view.findViewById(R.id.trendingMoviesProgressBar);
+        popularMoviesProgressBar = view.findViewById(R.id.popularMoviesProgressBar);
+        upComingMoviesProgressBar = view.findViewById(R.id.upcomingProgressBar);
+        hlMovieImageProgressBar = view.findViewById(R.id.highlighedMovieProgressBar);
+
+        trendingMoviesProgressBar.setVisibility(View.VISIBLE);
+        popularMoviesProgressBar.setVisibility(View.VISIBLE);
+        upComingMoviesProgressBar.setVisibility(View.VISIBLE);
+        hlMovieImageProgressBar.setVisibility(View.VISIBLE);
+
+        TextView showAllTrendingText = view.findViewById(R.id.showAllTrendingText);
+        TextView showAllPopularText = view.findViewById(R.id.showAllPopularText);
+        TextView showAllUpcomingText = view.findViewById(R.id.showAllUpcomingText);
+
+
+        showAllTrendingText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.TRENDING);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
+        });
+
+        showAllPopularText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.POPULAR);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
+        });
+
+        showAllUpcomingText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("movieListType", MovieListType.UPCOMING);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_showAllFragment, bundle);
+        });
+
+
+        LinearLayoutManager trendingLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        trendingRecycler.setLayoutManager(trendingLayoutManager);
+        LinearLayoutManager popularLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        popularRecycler.setLayoutManager(popularLayoutManager);
+        LinearLayoutManager upComingLayoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        upComingRecycler.setLayoutManager(upComingLayoutManager);
+        trendingRecycler.setAdapter(moviesTrending);
+        popularRecycler.setAdapter(moviesPopular);
+        upComingRecycler.setAdapter(moviesUpComing);
+
+        observeData();
+        return view;
+    }
+
+    private void observeData() {
+        moviesViewModel.getTrendingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+            moviesTrending.setMovieList(movieModels);
+            if (movieModels.size() > 0) {
+                MovieModel firstMovie = movieModels.get(0);
+                updateUI(firstMovie);
+                goToMovieDetails(firstMovie);
+            }
+            trendingMoviesProgressBar.setVisibility(View.INVISIBLE);
+        });
+
+        moviesViewModel.getPopularMovies().observe(getViewLifecycleOwner(), movieModels -> {
+            moviesPopular.setMovieList(movieModels);
+            popularMoviesProgressBar.setVisibility(View.INVISIBLE);
+        });
+
+        moviesViewModel.getUpComingMovies().observe(getViewLifecycleOwner(), movieModels -> {
+            moviesUpComing.setMovieList(movieModels);
+            upComingMoviesProgressBar.setVisibility(View.INVISIBLE);
+        });
+    }
+
+    @Override
+    public void onItemClick(MovieModel movie) {
+        ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
+        TextView hlTitleView = requireView().findViewById(R.id.hlMovieTitle);
+        RatingBar hlRatingBar = requireView().findViewById(R.id.hlRatingBar);
+        TextView hlNumOfVotes = requireView().findViewById(R.id.hlNumOfVotes);
+        TextView hlGenreOne = requireView().findViewById(R.id.hlMovieGenrePrimary);
+        TextView hlGenreSecondOne = requireView().findViewById(R.id.hlMovieGenreSecondary);
+        Glide.with(requireContext())
+                .load(Credentials.MOVIE_BACKDROP_URL + movie.getBackdrop_path())
+                .into(hlImageView);
+        hlTitleView.setText(movie.getTitle());
+        hlRatingBar.setRating(movie.getVote_average() / 2);
+        hlNumOfVotes.setText(String.valueOf(movie.getVote_count()));
+        String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
+        hlGenreOne.setText(genreOne);
+
+        if (movie.getGenre_ids().size() > 1) {
+            String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
+            hlGenreSecondOne.setText(genreSecondOne);
+        } else {
+            hlGenreSecondOne.setText("");
+        }
+        hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
+        goToMovieDetails(movie);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateUI(MovieModel movie) {
+        ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
+        TextView hlTitleView = requireView().findViewById(R.id.hlMovieTitle);
+        RatingBar hlRatingBar = requireView().findViewById(R.id.hlRatingBar);
+        TextView hlNumOfVotes = requireView().findViewById(R.id.hlNumOfVotes);
+        TextView hlGenreOne = requireView().findViewById(R.id.hlMovieGenrePrimary);
+        TextView hlGenreSecondOne = requireView().findViewById(R.id.hlMovieGenreSecondary);
+
+        Glide.with(this)
+                .load(Credentials.MOVIE_BACKDROP_URL + movie.getBackdrop_path())
+                .into(hlImageView);
+        hlTitleView.setText(movie.getTitle());
+        hlRatingBar.setRating(movie.getVote_average() / 2);
+        hlNumOfVotes.setText(movie.getVote_count() + " votes");
+        String genreOne = Constants.getGenre(movie.getGenre_ids().get(0));
+        hlGenreOne.setText(genreOne);
+
+        if (movie.getGenre_ids().size() > 1) {
+            String genreSecondOne = Constants.getGenre(movie.getGenre_ids().get(1));
+            hlGenreSecondOne.setText(genreSecondOne);
+        } else {
+            hlGenreSecondOne.setText("");
+        }
+
+        hlMovieImageProgressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void goToMovieDetails(MovieModel movie) {
+        ImageView hlImageView = requireView().findViewById(R.id.hlMovieImage);
+        hlImageView.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("movie", movie);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_fragment_movies_to_movieDetailsFragment, bundle);
+        });
     }
 }
+
+
+

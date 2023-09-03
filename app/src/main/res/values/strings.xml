@@ -21,8 +21,61 @@
     <string name="weak">Weak</string>
     <string name="showpassword">showPassword</string>
     <string name="default_web_client_id">52590881501-uu9r5iok1570jicu5disujjkf1ccvh9f.apps.googleusercontent.com</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="qrfloat">qrFloat</string>
+    <string name="title_home">Home</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_tv_shows">TV Shows</string>
+    <string name="popular">Popular</string>
+    <string name="show_all">Show all</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="in_theaters">In Theaters</string>
+    <string name="movie_image">movie image</string>
+    <string name="tv_image">tv show image</string>
+    <string name="cast_image">cast image</string>
+    <string name="video">video</string>
+    <string name="videos">VIDEOS</string>
+    <string name="cast">CAST</string>
+    <string name="person_image">person image</string>
+    <string name="biography">BIOGRAPHY</string>
+    <string name="photos">PHOTOS</string>
+    <string name="known_for">KNOWN FOR</string>
+    <string name="highlighted_movie_image">highlighted movie image</string>
+    <string name="dialog_image">Dialog Image</string>
+    <string name="filter_movie">Filter Movie</string>
+    <string name="search_movie">Search Movie</string>
+    <string name="select_category">Select Category</string>
+    <string name="select_date_range">Select Date Range</string>
+    <string name="oyuncu_ad">Oyuncu Adı</string>
+    <string name="filtrele">Filtrele</string>
+    <string name="select_movie_category">Select Movie Category</string>
+    <string-array name="film_categories">
+        <item>Select a category</item>
+        <item>Popular</item>
+        <item>Trending</item>
+        <item>Incoming</item>
+    </string-array>
+    <string-array name="movies_categories">
+        <item>Select a movie type</item>
+        <item>Action</item>
+        <item>Adventure</item>
+        <item>Animation</item>
+        <item>Comedy</item>
+        <item>Crime</item>
+        <item>Documentary</item>
+        <item>Drama</item>
+        <item>Family</item>
+        <item>Fantasy</item>
+        <item>History</item>
+        <item>Horror</item>
+        <item>Music</item>
+        <item>Mystery</item>
+        <item>Romance</item>
+        <item>Science Fiction</item>
+        <item>TV Movie</item>
+        <item>Thriller</item>
+        <item>War</item>
+        <item>Western</item>
+    </string-array>
 </resources>

@@ -1,0 +1,68 @@
+package com.yusufekremunlu.easyway.db.remote.movies;
+
+import android.graphics.Movie;
+
+import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
+import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
+import com.yusufekremunlu.easyway.model.network.movies.CreditsResponse;
+import com.yusufekremunlu.easyway.model.network.movies.MoviePersonCreditsResponse;
+import com.yusufekremunlu.easyway.model.network.movies.MoviePersonImagesResponse;
+import com.yusufekremunlu.easyway.model.network.movies.MovieResponse;
+import com.yusufekremunlu.easyway.model.network.movies.VideosResponse;
+import com.yusufekremunlu.easyway.utils.Credentials;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
+public interface MovieApiInterface {
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/trending/movie/day")
+    Call<MovieResponse> fetchTrendingMovies(
+            @Query("page") int page
+    );
+
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/popular")
+    Call<MovieResponse> fetchPopularMovies(
+            @Query("page") int page
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/upcoming")
+    Call<MovieResponse> fetchUpComingMovies(
+            @Query("page") int page
+    );
+    @GET("/"+Credentials.MOVIE_API_VERSION+"/movie/{id}")
+    Call<MovieModel> fetchMovieDetails(
+            @Path("id") int id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/{movie_id}/credits")
+    Call<CreditsResponse> fetchMovieCasts(
+            @Path("movie_id") int movie_id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/movie/{movie_id}/videos")
+    Call<VideosResponse> fetchMovieVideos(
+            @Path("movie_id") int movie_id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/person/{person_id}")
+    Call<MoviePerson> fetchPersonDetails(
+            @Path("person_id") int person_id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/person/{person_id}/images")
+    Call<MoviePersonImagesResponse> fetchPersonImages(
+            @Path("person_id") int person_id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/person/{person_id}/movie_credits")
+    Call<MoviePersonCreditsResponse> fetchPersonCredits(
+            @Path("person_id") int person_id
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/discover/movie")
+    Call<MovieResponse> fetchDiscoverList(
+            @Query("page") int page
+    );
+    @GET("/" + Credentials.MOVIE_API_VERSION + "/search/movie")
+    Call<MovieResponse> searchMovie(
+            @Query("query") String query,
+            @Query("page") int page
+    );
+}

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -27,7 +28,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
-import com.huawei.hms.ml.scan.HmsScanAnalyzer;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
 import com.yusufekremunlu.easyway.R;
 
@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         bottomNavigationProcesses();
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setVisibility(View.VISIBLE);
     }
 
     private void bottomNavigationProcesses(){
@@ -51,8 +53,40 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNav, navController);
         bottomNav.setItemIconTintList(null);
 
-        // FloatingActionButton'ı tanımlayın ve görünümü bulun
         FloatingActionButton fab = findViewById(R.id.fab);
+
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller,
+                                             @NonNull NavDestination destination,
+                                             @Nullable Bundle arguments) {
+                if (destination.getId() == R.id.showAllFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.favouritesFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.movieDetailsFragment) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.movieCastDetails) {
+                    bottomNav.setVisibility(View.GONE);
+                    fab.setVisibility(View.GONE);
+                }
+                else if (destination.getId() == R.id.favouritesDetailFragment) {
+                bottomNav.setVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
+            }
+
+                else {
+                    fab.setVisibility(View.VISIBLE);
+                    bottomNav.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         fab.setOnClickListener(v -> {
             if (hasCameraPermission()) {
@@ -62,6 +96,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+
     private boolean hasCameraPermission() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
