@@ -35,8 +35,30 @@ Feel free to contribute by adding new features, fixing bugs, or enhancing docume
 
 If you have any questions or suggestions, please reach out to us yusufekremunlu@gmail.com
 
-# UI
-![figma_design](https://github.com/yusufekrembm/EasyWay/assets/88238748/c3abc376-b6c5-42d5-a08c-ee0e7ae80246)
+## UI
 
-# FIGMA PROTOTYPE
-https://www.figma.com/proto/uPO5ZlznTAcf2GfmsKFXxO/EasyWay-Application?type=design&node-id=3-142&scaling=scale-down&page-id=0%3A1&starting-point-node-id=3%3A64
+# Auth Side
+<p float="left">
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/9d136611-05e5-4bb9-bb3c-30bf08a2f911" width="200" />
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/acbd2988-b1ef-4acc-98d4-4b4e00461fb3" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/c868321c-df53-44fb-b7f8-7ca2e7dbd77d" width="200" /> 
+</p>
+
+# Movie Side
+<p float="left">
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/6eff548e-bd14-435f-8393-7fbc0ecfcb48" width="200" />
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/28d378a9-5711-4b5e-8d2c-1c59eefd3f04" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/41d91c4a-c636-4a3a-ba7a-b4003fbe6179" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/561d2cb2-81da-4dbc-9344-3cbe56d17bee" width="200" />
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/609913d0-0ca7-4b23-955f-fb1bcacf8820" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/0c9ca04b-e104-4454-abe2-52ca47b46661" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/666f85b5-527d-4baa-9855-655c850881ca" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/100ee7dc-d9bd-42f7-ac23-179d06d2567b" width="200" /> 
+</p>
+
+# QR Side
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/08503109-08b3-4976-b44a-ba7952855d7d" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/0d7f647b-7558-460e-a2db-00a69d667275" width="200" /> 
+
+
+
