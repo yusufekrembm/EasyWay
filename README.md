@@ -37,14 +37,14 @@ If you have any questions or suggestions, please reach out to us yusufekremunlu@
 
 ## UI
 
-# Auth Side
+# Auth 
 <p float="left">
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/9d136611-05e5-4bb9-bb3c-30bf08a2f911" width="200" />
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/acbd2988-b1ef-4acc-98d4-4b4e00461fb3" width="200" /> 
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/c868321c-df53-44fb-b7f8-7ca2e7dbd77d" width="200" /> 
 </p>
 
-# Movie Side
+# Movie 
 <p float="left">
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/6eff548e-bd14-435f-8393-7fbc0ecfcb48" width="200" />
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/28d378a9-5711-4b5e-8d2c-1c59eefd3f04" width="200" /> 
@@ -56,7 +56,7 @@ If you have any questions or suggestions, please reach out to us yusufekremunlu@
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/100ee7dc-d9bd-42f7-ac23-179d06d2567b" width="200" /> 
 </p>
 
-# QR Side
+# QR 
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/08503109-08b3-4976-b44a-ba7952855d7d" width="200" /> 
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/0d7f647b-7558-460e-a2db-00a69d667275" width="200" /> 
 
