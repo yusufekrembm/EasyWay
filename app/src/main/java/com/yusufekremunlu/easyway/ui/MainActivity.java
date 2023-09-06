@@ -18,9 +18,8 @@ public class MainActivity extends AppCompatActivity {
         String savedPassword = sharedPreferences.getString("password", "");
 
         if (!TextUtils.isEmpty(savedEmail) && !TextUtils.isEmpty(savedPassword)) {
-            // Kullanıcı giriş bilgileri mevcut, otomatik olarak ana ekrana yönlendir.
             startActivity(new Intent(this, HomeActivity.class));
-            finish(); // Bu, geri tuşuna basıldığında Login sayfasına geri dönmemek için kullanılır.
+            finish();
             return;
         }
         setContentView(R.layout.activity_main);

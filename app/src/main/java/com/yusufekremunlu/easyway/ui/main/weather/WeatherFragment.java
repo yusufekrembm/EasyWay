@@ -1,66 +1,187 @@
 package com.yusufekremunlu.easyway.ui.main.weather;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
-
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.android.material.textfield.TextInputEditText;
+import com.squareup.picasso.Picasso;
 import com.yusufekremunlu.easyway.R;
+import com.yusufekremunlu.easyway.model.entity.weather.WeatherRVModel;
+import com.yusufekremunlu.easyway.ui.main.weather.adapters.WeatherRVAdapter;
+import com.yusufekremunlu.easyway.utils.Credentials;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WeatherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 public class WeatherFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public WeatherFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WeatherFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static WeatherFragment newInstance(String param1, String param2) {
-        WeatherFragment fragment = new WeatherFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    ArrayList<WeatherRVModel> weatherRVModelArrayList;
+    WeatherRVAdapter weatherRVAdapter;
+    LocationManager locationManager;
+    int PERMISSION_CODE = 1;
+    TextView cityNameIV;
+    ProgressBar loadingPB;
+    RelativeLayout homeRL;
+    ImageView searchIV;
+    TextView temperatureIV;
+    ImageView iconIV;
+    TextView conditionIV;
+    ImageView backIV;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View view = inflater.inflate(R.layout.fragment_weather, container, false);
+        RecyclerView weatherRV = view.findViewById(R.id.idRvWeather);
+        TextInputEditText cityEdt = view.findViewById(R.id.idEdtCity);
+        backIV = view.findViewById(R.id.idIVBack);
+        conditionIV = view.findViewById(R.id.idTVCondition);
+        iconIV = view.findViewById(R.id.idIVIcon);
+        searchIV = view.findViewById(R.id.idIVSearch);
+        cityNameIV = view.findViewById(R.id.idTVCityName);
+        loadingPB = view.findViewById(R.id.idPLoading);
+        homeRL = view.findViewById(R.id.idRLHome);
+        temperatureIV = view.findViewById(R.id.idTVTemperature);
+
+        weatherRVModelArrayList = new ArrayList<>();
+        weatherRVAdapter = new WeatherRVAdapter(weatherRVModelArrayList,requireContext());
+        weatherRV.setAdapter(weatherRVAdapter);
+
+        locationManager= (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (location != null) {
+            String cityName = getCityName(location.getLongitude(), location.getLatitude());
+            getWeatherInfo(cityName);
+            searchIV.setOnClickListener(v -> {
+                String city = cityEdt.getText().toString();
+                if(city.isEmpty()){
+                    Toast.makeText(requireContext(),"Please enter city Name", Toast.LENGTH_SHORT).show();
+                } else {
+                    cityNameIV.setText(cityName);
+                    getWeatherInfo(city);
+                }
+            });
+        } else {
+            Toast.makeText(requireContext(), "Konum bilgisi alınamadı. Konum servislerinizi açın.", Toast.LENGTH_SHORT).show();
+        }
+
+        return view;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(requireContext(), "Permission granted..", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(requireContext(), "Permission denied. Please provide the permissions", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+
+    private String getCityName(double longitude, double latitude){
+        String cityName = "Not found";
+        Geocoder gcd = new Geocoder(requireContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = gcd.getFromLocation(latitude,longitude,10);
+            for(Address adr : addresses){
+                if(adr!=null){
+                    String city = adr.getLocality();
+                    if(city!=null && !city.equals("")){
+                        cityName = city;
+                    } else {
+                        Log.d("TAG","CITY NOT FOUND");
+                    }
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return cityName;
+    }
+    private void getWeatherInfo(String cityName){
+        String url = ""+Credentials.WEATHER_BASE_API_URL+"/"+Credentials.WEATHER_API_VERSION+"/forecast.json?key="+ Credentials.WEATHER_API_KEY+"&q="+cityName+"&days=1&aqi=yes&alerts=yes";
+        cityNameIV.setText(cityName);
+        RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(JSONObject response) {
+                loadingPB.setVisibility(View.GONE);
+                homeRL.setVisibility(View.VISIBLE);
+                weatherRVModelArrayList.clear();
+                try {
+                    String temperature = response.getJSONObject("current").getString("temp_c");
+                    temperatureIV.setText(temperature + "°C");
+                    int isDay = response.getJSONObject("current").getInt("is_day");
+                    String condition = response.getJSONObject("current").getJSONObject("condition").getString("text");
+                    String conditionIcon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
+                    Picasso.get().load("http:".concat(conditionIcon)).into(iconIV);
+                    conditionIV.setText(condition);
+                    if(isDay==1){
+                        Picasso.get().load("https://images.unsplash.com/photo-1558486012-817176f84c6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1340&q=80").into(backIV);
+                    } else {
+                        Picasso.get().load("https://images.unsplash.com/photo-1505322022379-7c3353ee6291?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80").into(backIV);
+                    }
+
+                    JSONObject forecastObj = response.getJSONObject("forecast");
+                    JSONObject forecastO  = forecastObj.getJSONArray("forecastday").getJSONObject(0);
+                    JSONArray hourArray = forecastO.getJSONArray("hour");
+
+                    for(int i = 0 ; i<hourArray.length();i++){
+                        JSONObject hourObj = hourArray.getJSONObject(i);
+                        String time = hourObj.getString("time");
+                        String temper = hourObj.getString("temp_c");
+                        String img = hourObj.getJSONObject("condition").getString("icon");
+                        String wind = hourObj.getString("wind_kph");
+                        weatherRVModelArrayList.add(new WeatherRVModel(time,temper,img,wind));
+                    }
+                    weatherRVAdapter.notifyDataSetChanged();
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }, error -> Toast.makeText(requireContext(),"Please enter valid city name..",Toast.LENGTH_SHORT).show());
+        requestQueue.add(jsonObjectRequest);
     }
 }
