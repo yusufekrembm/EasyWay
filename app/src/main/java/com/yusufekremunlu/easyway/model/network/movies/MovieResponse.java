@@ -1,5 +1,7 @@
 package com.yusufekremunlu.easyway.model.network.movies;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import java.util.List;

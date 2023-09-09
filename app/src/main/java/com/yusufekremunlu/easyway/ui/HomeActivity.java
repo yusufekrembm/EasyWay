@@ -30,7 +30,6 @@ import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
     private static final int CAMERA_REQ_CODE = 100;
-    private static final int STORAGE_REQ_CODE = 101;
     private static final int PERMISSIONS_LENGTH = 2;
     private static final int REQUEST_CODE_SCAN = 1;
 
@@ -69,7 +68,11 @@ public class HomeActivity extends AppCompatActivity {
             } else if (destination.getId() == R.id.favouritesDetailFragment) {
                 bottomNav.setVisibility(View.GONE);
                 fab.setVisibility(View.GONE);
-            } else {
+            }
+            else if (destination.getId() == R.id.homeFragmentDetails) {
+                bottomNav.setVisibility(View.GONE);
+                fab.setVisibility(View.GONE);
+            }  else {
                 fab.setVisibility(View.VISIBLE);
                 bottomNav.setVisibility(View.VISIBLE);
             }
