@@ -44,6 +44,16 @@ If you have any questions or suggestions, please reach out to us yusufekremunlu@
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/c868321c-df53-44fb-b7f8-7ca2e7dbd77d" width="200" /> 
 </p>
 
+# News
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/fa58ed70-6236-47aa-9b27-5175d732c55f" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/9a20a397-8ca2-4090-b7d7-1e1cfa2b199d" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/15876db2-c2eb-40b4-909f-106ba2a49040" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/7761415c-759b-4f18-87c3-972ba6575cd6" width="200" /> 
+
+# Weather
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/2fff550b-f5b9-4ce6-92af-a10fc7e5942a" width="200" /> 
+  <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/3153122b-6fb8-40c2-8fea-25d8fc51ff63" width="200" /> 
+
 # Movie 
 <p float="left">
   <img src="https://github.com/yusufekrembm/EasyWay/assets/88238748/6eff548e-bd14-435f-8393-7fbc0ecfcb48" width="200" />
