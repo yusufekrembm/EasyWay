@@ -35,7 +35,6 @@ import java.util.List;
 public class HomeFragment extends Fragment implements SelectListener,View.OnClickListener{
     private NewsViewModel newsViewModel;
     private NewsAdapter newsAdapter;
-    ProgressDialog progressDialog;
 
     Button cat_btn1,cat_btn2,cat_btn3,cat_btn4,cat_btn5,cat_btn6,cat_btn7;
     @Override
@@ -116,22 +115,10 @@ public class HomeFragment extends Fragment implements SelectListener,View.OnClic
     }
     private void observeData() {
         newsViewModel.getTopHeadNews().observe(getViewLifecycleOwner(), newsHeadlines -> {
-            progressDialog = new ProgressDialog(requireContext());
-            progressDialog.setTitle("Fetching news");
-            progressDialog.show();
             newsAdapter.updateData(newsHeadlines);
-            if(newsAdapter!=null){
-                progressDialog.dismiss();
-            }
         });
         newsViewModel.getEverythingNews().observe(getViewLifecycleOwner(), newsHeadlines -> {
-            progressDialog = new ProgressDialog(requireContext());
-            progressDialog.setTitle("Fetching news");
-            progressDialog.show();
             newsAdapter.updateData(newsHeadlines);
-            if(newsAdapter!=null){
-                progressDialog.dismiss();
-            }
         });
     }
 
@@ -139,7 +126,6 @@ public class HomeFragment extends Fragment implements SelectListener,View.OnClic
     public void onClick(View v) {
         Button button = (Button) v;
         String category = button.getText().toString();
-        progressDialog.setTitle("Fetching new articles of "+ category);
         newsViewModel.setCategory(category);
     }
 
