@@ -24,7 +24,7 @@ EasyWay is an application that combines weather updates, travel guides, QR code 
 ## Installation
 
 1. Clone this repository: `git clone https://github.com/YOUR_USERNAME/EasyWay.git`
-2. Store the necessary API keys in a utils.class or similar file.
+2. Store the necessary API keys in a Credentials.class.
 3. Compile and run the application.
 
 ## Contributions
