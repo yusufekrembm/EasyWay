@@ -111,8 +111,6 @@ public class HomeFragment extends Fragment implements SelectListener,View.OnClic
                 return false;
             }
         });
-
-
         observeData();
         return view;
     }

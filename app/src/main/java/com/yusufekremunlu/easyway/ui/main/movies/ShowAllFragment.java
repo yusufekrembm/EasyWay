@@ -206,4 +206,3 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
     };
 }
 
-
