@@ -27,4 +27,12 @@ public class Constants {
 
         return genreMap.get(id);
     }
+    public static String getNews(String countryCode) {
+        HashMap<String, String> newsMap = new HashMap<>();
+        newsMap.put("us", "United Stated Top News");
+        newsMap.put("fr", "France Top News");
+        newsMap.put("de", "Germany Top News");
+        newsMap.put("tr", "Turkey Top News");
+        return newsMap.get(countryCode);
+    }
 }

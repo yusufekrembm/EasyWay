@@ -9,7 +9,11 @@
         android:id="@+id/fragment_home"
         android:name="com.yusufekremunlu.easyway.ui.main.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragment_home_to_homeFragmentDetails"
+            app:destination="@id/homeFragmentDetails" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_weather"
         android:name="com.yusufekremunlu.easyway.ui.main.weather.WeatherFragment"
@@ -97,4 +101,9 @@
             android:id="@+id/action_favouritesDetailFragment_to_favouritesFragment"
             app:destination="@id/favouritesFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/homeFragmentDetails"
+        android:name="com.yusufekremunlu.easyway.ui.main.home.HomeFragmentDetails"
+        android:label="fragment_home_details"
+        tools:layout="@layout/fragment_home_details" />
 </navigation>

@@ -99,12 +99,12 @@ public class MovieApiClient {
                     if (movieResponse != null) {
                         List<MovieModel> movies = movieResponse.getMovies();
                         if (currentPage == 1) {
-                            targetLiveData.postValue(movies);
+                            targetLiveData.setValue(movies);
                         } else {
                             List<MovieModel> currentMovies = targetLiveData.getValue();
                             if (currentMovies != null) {
                                 currentMovies.addAll(movies);
-                                targetLiveData.postValue(currentMovies);
+                                targetLiveData.setValue(currentMovies);
                             }
                         }
                     }
@@ -280,9 +280,9 @@ public class MovieApiClient {
                     List<MovieModel> listPopular = new ArrayList<>(((MovieResponse) response.body()).getMovies());
                     List<MovieModel> listUpcoming = new ArrayList<>(((MovieResponse) response.body()).getMovies());
                     if (pageNumber == 1) {
-                        mTrendingMovies.postValue(listTrending);
-                        mPopularMovies.postValue(listPopular);
-                        mUpComingMovies.postValue(listUpcoming);
+                        mTrendingMovies.setValue(listTrending);
+                        mPopularMovies.setValue(listPopular);
+                        mUpComingMovies.setValue(listUpcoming);
                     } else {
                         List<MovieModel> currentMoviesTrending = mTrendingMovies.getValue();
                         List<MovieModel> currentMoviesPopular = mPopularMovies.getValue();
@@ -293,9 +293,9 @@ public class MovieApiClient {
                         currentMoviesPopular.addAll(listPopular);
                         assert currentMoviesUpcoming != null;
                         currentMoviesUpcoming.addAll(listUpcoming);
-                        mTrendingMovies.postValue(currentMoviesTrending);
-                        mPopularMovies.postValue(currentMoviesPopular);
-                        mUpComingMovies.postValue(currentMoviesUpcoming);
+                        mTrendingMovies.setValue(currentMoviesTrending);
+                        mPopularMovies.setValue(currentMoviesPopular);
+                        mUpComingMovies.setValue(currentMoviesUpcoming);
                     }
                 } else {
                     assert response.errorBody() != null;
