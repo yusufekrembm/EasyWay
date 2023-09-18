@@ -10,7 +10,7 @@ import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 import java.util.List;
 
 public class MovieDetailViewModel extends ViewModel {
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     public MovieDetailViewModel() {
         movieRepository = MovieRepository.getInstance();

@@ -1,5 +1,7 @@
 package com.yusufekremunlu.easyway.ui;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,23 +12,24 @@ import androidx.navigation.ui.NavigationUI;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.huawei.hmf.tasks.OnFailureListener;
+import com.huawei.hmf.tasks.OnSuccessListener;
+import com.huawei.hmf.tasks.Task;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.aaid.entity.AAIDResult;
+import com.huawei.hms.common.ApiException;
 import com.huawei.hms.hmsscankit.ScanUtil;
 import com.huawei.hms.ml.scan.HmsScan;
 import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
-import com.huawei.hms.ml.scan.HmsScanFrame;
-import com.huawei.hms.ml.scan.HmsScanFrameOptions;
 import com.yusufekremunlu.easyway.R;
-
-import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
     private static final int CAMERA_REQ_CODE = 100;
@@ -40,6 +43,8 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationProcesses();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setVisibility(View.VISIBLE);
+        getAAID();
+        getToken();
     }
 
     private void bottomNavigationProcesses() {
@@ -132,8 +137,6 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     }
-
-
     private void openWebPage(String url) {
         if (url != null && !url.isEmpty()) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -141,5 +144,47 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+    }
+    public void getAAID() {
+        Task<AAIDResult> idResult = HmsInstanceId.getInstance(getApplicationContext()).getAAID();
+        idResult.addOnSuccessListener(new OnSuccessListener<AAIDResult>() {
+            @Override
+            public void onSuccess(AAIDResult aaidResult) {
+                // Called when the AAID is obtained.
+                String aaid = aaidResult.getId();
+                Log.d(TAG, "getAAID success:" + aaid );
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                // Called when the AAID fails to be obtained.
+                Log.d(TAG, "getAAID failure:" + e);
+            }
+        });
+    }
+    private void getToken() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String appId = "108599129";
+
+                    // Set tokenScope to HCM.
+                    String tokenScope = "HCM";
+                    String token = HmsInstanceId.getInstance(getApplicationContext()).getToken(appId, tokenScope);
+                    Log.i(TAG, "get token: " + token);
+
+                    // Check whether the token is null.
+                    if(!TextUtils.isEmpty(token)) {
+                        sendRegTokenToServer(token);
+                    }
+                } catch (ApiException e) {
+                    Log.e(TAG, "get token failed, " + e);
+                }
+            }
+        }.start();
+    }
+    private void sendRegTokenToServer(String token) {
+        Log.i(TAG, "sending token to server. token:" + token);
     }
 }

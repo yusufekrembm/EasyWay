@@ -1,9 +1,7 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
 import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
-
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
@@ -17,13 +15,11 @@ import com.yusufekremunlu.easyway.model.network.movies.MovieResponse;
 import com.yusufekremunlu.easyway.model.network.movies.VideosResponse;
 import com.yusufekremunlu.easyway.ui.AppExecutors;
 import com.yusufekremunlu.easyway.utils.builders.MovieRetrofitBuilder;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

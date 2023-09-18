@@ -6,7 +6,14 @@ plugins {
 android {
     namespace 'com.yusufekremunlu.easyway'
     compileSdk 33
-
+    signingConfigs {
+        config {
+            keyAlias 'developer'
+            keyPassword '12345678'
+            storeFile file('C:\\Users\\yusuf\\OneDrive\\Desktop\\Projects\\EasyWay\\developer-kits.jks')
+            storePassword '12345678'
+        }
+    }
     defaultConfig {
         applicationId "com.yusufekremunlu.easyway"
         minSdk 21
@@ -19,8 +26,12 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {
@@ -44,7 +55,6 @@ def nav_version = "2.5.3"
 def bom_version = "32.1.0"
 def room_version = "2.5.2"
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -67,6 +77,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
     //Huawei Mobile Services
     implementation 'com.huawei.hms:scanplus:2.11.0.300'
+    implementation 'com.huawei.hms:push:6.11.0.300'
+    implementation 'com.huawei.hms:hmscoreinstaller:6.7.0.300'
     //Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
@@ -82,5 +94,5 @@ dependencies {
     implementation "com.android.volley:volley:1.2.1"
     //Youtube
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.0'
-
 }
+apply plugin: 'com.huawei.agconnect'
