@@ -2,11 +2,7 @@ package com.yusufekremunlu.easyway.model.entity.news;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 public class Source implements Parcelable {
     private String id;

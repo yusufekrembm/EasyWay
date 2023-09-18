@@ -36,9 +36,11 @@ public class HuaweiMessageService extends HmsMessageService {
             processWithin10s(message);
         }
     }
+
     private void startWorkManagerJob(RemoteMessage message) {
         Log.d(TAG, "Start new job processing.");
     }
+
     private void processWithin10s(RemoteMessage message) {
         Log.d(TAG, "Processing now.");
     }

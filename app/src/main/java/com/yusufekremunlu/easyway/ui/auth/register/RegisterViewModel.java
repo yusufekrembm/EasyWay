@@ -1,11 +1,9 @@
 package com.yusufekremunlu.easyway.ui.auth.register;
 
 import android.app.Activity;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +14,6 @@ import com.yusufekremunlu.easyway.utils.Utils;
 
 public class RegisterViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
-
     private final MutableLiveData<Boolean> signInTwitterSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> signInTwitterError = new MutableLiveData<>();
     private final MutableLiveData<Boolean> signInGithubSuccess = new MutableLiveData<>();

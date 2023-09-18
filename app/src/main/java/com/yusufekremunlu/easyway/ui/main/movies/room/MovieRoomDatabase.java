@@ -4,9 +4,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-
 import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
-
 
 @Database(entities = {MovieFav.class}, version = 1)
 public abstract class MovieRoomDatabase extends RoomDatabase {

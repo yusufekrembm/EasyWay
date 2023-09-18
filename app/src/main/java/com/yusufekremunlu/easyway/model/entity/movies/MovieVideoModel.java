@@ -2,7 +2,6 @@ package com.yusufekremunlu.easyway.model.entity.movies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
 
 public class MovieVideoModel implements Parcelable {

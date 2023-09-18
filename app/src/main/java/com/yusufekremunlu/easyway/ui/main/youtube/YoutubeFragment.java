@@ -9,14 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.model.entity.youtube.YoutubeItemModel;
 import com.yusufekremunlu.easyway.ui.main.youtube.adapters.YoutubeAdapter;
 import com.yusufekremunlu.easyway.ui.main.youtube.viewmodels.YoutubeViewModel;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class YoutubeFragment extends Fragment {
     private YoutubeViewModel youtubeViewModel;
@@ -26,7 +22,7 @@ public class YoutubeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         youtubeViewModel = new ViewModelProvider(this).get(YoutubeViewModel.class);
-        youtubeAdapter = new YoutubeAdapter(getContext(),new ArrayList<>());
+        youtubeAdapter = new YoutubeAdapter(getContext(), new ArrayList<>());
     }
 
     @Override
@@ -34,7 +30,7 @@ public class YoutubeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_youtube, container, false);
         RecyclerView youtubeRecyclerView = view.findViewById(R.id.recyclerYoutubeVideos);
-        GridLayoutManager newsLayoutManager = new GridLayoutManager(requireContext(),1);
+        GridLayoutManager newsLayoutManager = new GridLayoutManager(requireContext(), 1);
         youtubeRecyclerView.setLayoutManager(newsLayoutManager);
         youtubeRecyclerView.setAdapter(youtubeAdapter);
 
@@ -54,6 +50,7 @@ public class YoutubeFragment extends Fragment {
         observeData();
         return view;
     }
+
     private void observeData() {
         youtubeViewModel.getYoutubeVideos().observe(getViewLifecycleOwner(), youtubeItemModelList -> {
             youtubeAdapter.updateData(youtubeItemModelList);

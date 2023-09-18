@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.weather.WeatherRVModel;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,7 +29,7 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.Weat
     @Override
     public WeatherViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.weather_rv_item ,parent, false);
+                .inflate(R.layout.weather_rv_item, parent, false);
         return new WeatherViewHolder(view);
     }
 
@@ -46,7 +45,7 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.Weat
     }
 
     public class WeatherViewHolder extends RecyclerView.ViewHolder {
-        TextView time,temperature,windSpeed;
+        TextView time, temperature, windSpeed;
         ImageView conditionIcon;
 
         public WeatherViewHolder(@NonNull View itemView) {
@@ -58,15 +57,15 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.Weat
         }
 
         public void bind(WeatherRVModel weatherRVModel) {
-            temperature.setText(weatherRVModel.getTemperature()+"°C");
-            windSpeed.setText(weatherRVModel.getWindSpeed()+"Km/h");
+            temperature.setText(weatherRVModel.getTemperature() + "°C");
+            windSpeed.setText(weatherRVModel.getWindSpeed() + "Km/h");
             Picasso.get().load("http:".concat(weatherRVModel.getIcon())).into(conditionIcon);
             SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             SimpleDateFormat output = new SimpleDateFormat("hh:mm aa");
-            try{
-                Date t  = input.parse(weatherRVModel.getTime());
+            try {
+                Date t = input.parse(weatherRVModel.getTime());
                 time.setText(output.format(t));
-            } catch (ParseException e){
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }

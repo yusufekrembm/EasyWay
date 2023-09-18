@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebViewClient;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.yusufekremunlu.easyway.R;
@@ -32,8 +29,8 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull YoutubeViewHolder holder, int position) {
         YoutubeItemModel youtubeItemModel = youtubeItemModelList.get(position);
-        String youtubeVideoUrl = "https://www.youtube.com/embed/"+youtubeItemModel.getId().getVideoId();
-        holder.youtubeWebView.loadData("<iframe width=\"100%\" height=\"100%\" src=\""+ youtubeVideoUrl+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
+        String youtubeVideoUrl = "https://www.youtube.com/embed/" + youtubeItemModel.getId().getVideoId();
+        holder.youtubeWebView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"" + youtubeVideoUrl + "\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
     }
 
     @Override

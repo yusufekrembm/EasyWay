@@ -3,9 +3,6 @@ package com.yusufekremunlu.easyway.model.entity.news;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class NewsHeadlines implements Parcelable {
     private Source source;
     private Object author;

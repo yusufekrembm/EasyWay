@@ -2,17 +2,13 @@ package com.yusufekremunlu.easyway.ui.main.home.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.squareup.picasso.Picasso;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.news.NewsHeadlines;
 import com.yusufekremunlu.easyway.ui.main.home.SelectListener;
-
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {

@@ -1,6 +1,5 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +7,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.MovieCastViewHolder> {
-
     private List<MovieCastModel> castModelList;
     private final Context context;
     private OnItemClickListener listener;
@@ -40,8 +35,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
     @NonNull
     @Override
     public MovieCastViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_cast, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_cast, parent, false);
         return new MovieCastViewHolder(view);
     }
 
@@ -72,9 +66,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         }
 
         public void bind(MovieCastModel castModel) {
-            Glide.with(context)
-                    .load(Credentials.MOVIE_PROFILE_URL + castModel.getProfile_path())
-                    .into(castImage);
+            Glide.with(context).load(Credentials.MOVIE_PROFILE_URL + castModel.getProfile_path()).into(castImage);
             castTitleText.setText(castModel.getName());
         }
     }

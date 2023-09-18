@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,7 +28,6 @@ import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.ArrayList;
 import androidx.appcompat.widget.Toolbar;
-
 
 public class FavouritesDetailFragment extends Fragment {
     private MovieCastAdapter movieCastAdapter;
@@ -79,7 +77,7 @@ public class FavouritesDetailFragment extends Fragment {
                 detailTitleOriginal.setText(movieFav.getOriginal_title());
                 detailTitleOriginal.setMaxLines(1);
                 Toolbar toolbar = view.findViewById(R.id.myToolbar);
-                toolbar.setTitle("Watch List : "+movieFav.getTitle());
+                toolbar.setTitle("Watch List : " + movieFav.getTitle());
             }
         }
         ToggleButton favouriteButton = view.findViewById(R.id.favouriteButtonMovie);
@@ -89,7 +87,7 @@ public class FavouritesDetailFragment extends Fragment {
             } else {
                 favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
                 Toast.makeText(getContext(), "Removed from watch list", Toast.LENGTH_SHORT).show();
-                MovieFav favMovie = new MovieFav(movieFav.getUid(),movieFav.getTitle(),movieFav.getPoster_path(),movieFav.getOriginal_language(),movieFav.getOriginal_title(),movieFav.getOverview(),movieFav.getBackdrop_path(),movieFav.getRelease_date(),movieFav.getVote_average(),movieFav.getVote_count());
+                MovieFav favMovie = new MovieFav(movieFav.getUid(), movieFav.getTitle(), movieFav.getPoster_path(), movieFav.getOriginal_language(), movieFav.getOriginal_title(), movieFav.getOverview(), movieFav.getBackdrop_path(), movieFav.getRelease_date(), movieFav.getVote_average(), movieFav.getVote_count());
                 favouritesViewModel.deleteFavMovie(favMovie);
                 saveState(movieFav.getUid(), false);
             }
@@ -107,6 +105,7 @@ public class FavouritesDetailFragment extends Fragment {
         observeData();
         return view;
     }
+
     private void observeData() {
         movieDetailViewModel.getCastModelMovies().observe(getViewLifecycleOwner(), castModelList -> {
             movieCastAdapter.setMovieCastList(castModelList);
@@ -115,6 +114,7 @@ public class FavouritesDetailFragment extends Fragment {
             movieVideoAdapter.setVideoModelList(videoModelList);
         });
     }
+
     private void saveState(int movieId, boolean isFavourite) {
         SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
         SharedPreferences.Editor aSharedPreferencesEdit = aSharedPreferences.edit();

@@ -6,20 +6,20 @@
     <item android:gravity="center">
         <shape android:shape="rectangle">
             <gradient
-                android:startColor="#000000"
+                android:angle="270"
                 android:endColor="#F857A6"
-                android:type="linear"
-                android:angle="270" />
+                android:startColor="#000000"
+                android:type="linear" />
         </shape>
     </item>
 
     <!-- Metin -->
     <item android:gravity="center">
         <bitmap
-            android:src="@drawable/sign_easyway_logo"
             android:gravity="center"
             android:scaleX="0.5"
-            android:scaleY="0.5" />
+            android:scaleY="0.5"
+            android:src="@drawable/sign_easyway_logo" />
     </item>
 
 </layer-list>

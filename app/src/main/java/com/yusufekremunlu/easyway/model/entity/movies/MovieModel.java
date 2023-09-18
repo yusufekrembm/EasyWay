@@ -2,11 +2,8 @@ package com.yusufekremunlu.easyway.model.entity.movies;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
-
 import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class MovieModel implements Parcelable {

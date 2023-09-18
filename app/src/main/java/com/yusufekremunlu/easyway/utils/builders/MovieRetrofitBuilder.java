@@ -1,8 +1,6 @@
 package com.yusufekremunlu.easyway.utils.builders;
 
-import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
-
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -10,7 +8,6 @@ import okhttp3.Request;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.Response;
-
 
 public class MovieRetrofitBuilder {
     private static OkHttpClient okHttp = new OkHttpClient.Builder().addInterceptor(new RequestInterceptor()).build();

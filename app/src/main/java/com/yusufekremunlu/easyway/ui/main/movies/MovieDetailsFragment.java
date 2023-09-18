@@ -3,7 +3,6 @@ package com.yusufekremunlu.easyway.ui.main.movies;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -11,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
@@ -36,7 +33,6 @@ import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;
 import com.yusufekremunlu.easyway.utils.Constants;
 import com.yusufekremunlu.easyway.utils.Credentials;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,13 +119,13 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
             if (!isFavourite) {
                 favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.heart_fill));
                 Toast.makeText(getContext(), "Added to watch list", Toast.LENGTH_SHORT).show();
-                MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path(),movie.getOriginal_language(),movie.getOriginal_title(),movie.getOverview(),movie.getBackdrop_path(),movie.getRelease_date(),movie.getVote_average(),movie.getVote_count());
+                MovieFav favMovie = new MovieFav(movie.getMovie_id(), movie.getTitle(), movie.getPoster_path(), movie.getOriginal_language(), movie.getOriginal_title(), movie.getOverview(), movie.getBackdrop_path(), movie.getRelease_date(), movie.getVote_average(), movie.getVote_count());
                 favouritesViewModel.insertFavMovie(favMovie);
                 saveState(movie.getMovie_id(), true);
             } else {
                 favouriteButton.setBackground(ContextCompat.getDrawable(requireContext(), R.drawable.empty_heart));
                 Toast.makeText(getContext(), "Removed from watch list", Toast.LENGTH_SHORT).show();
-                MovieFav favMovie = new MovieFav(movie.getMovie_id(),movie.getTitle(),movie.getPoster_path(),movie.getOriginal_language(),movie.getOriginal_title(),movie.getOverview(),movie.getBackdrop_path(),movie.getRelease_date(),movie.getVote_average(),movie.getVote_count());
+                MovieFav favMovie = new MovieFav(movie.getMovie_id(), movie.getTitle(), movie.getPoster_path(), movie.getOriginal_language(), movie.getOriginal_title(), movie.getOverview(), movie.getBackdrop_path(), movie.getRelease_date(), movie.getVote_average(), movie.getVote_count());
                 favouritesViewModel.deleteFavMovie(favMovie);
                 saveState(movie.getMovie_id(), false);
             }

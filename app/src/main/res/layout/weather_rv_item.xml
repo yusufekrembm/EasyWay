@@ -2,38 +2,38 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="100dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="4dp"
-    app:cardElevation="6dp"
-    app:cardCornerRadius="10dp"
     android:background="@android:color/transparent"
-    android:layout_height="wrap_content">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="6dp">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/weather_card_back">
 
         <TextView
+            android:id="@+id/idIVTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/idIVTime"
             android:gravity="center"
             android:padding="4dp"
-            android:text="time"
-            android:textColor="@color/white"
-            android:textAlignment="center">
-        </TextView>
+            android:text="@string/time"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+
         <TextView
+            android:id="@+id/idIVTemperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/idIVTemperature"
-            android:gravity="center"
-            android:text="20"
-            android:textAlignment="center"
-            android:textSize="20sp"
             android:layout_below="@id/idIVTime"
-            android:textColor="@color/white">
-        </TextView>
+            android:gravity="center"
+            android:text="@string/_20"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/idIVCondition"
@@ -54,17 +54,13 @@
             android:id="@+id/idIVWindSpeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:layout_below="@+id/idIVCondition"
             android:layout_centerHorizontal="true"
+            android:layout_margin="4dp"
             android:gravity="center"
             android:padding="3dp"
-            android:layout_margin="4dp"
-            android:layout_below="@+id/idIVCondition"
-            android:textColor="@color/white"
-            android:text="13">
-
-        </TextView>
-
-
+            android:text="@string/_13"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

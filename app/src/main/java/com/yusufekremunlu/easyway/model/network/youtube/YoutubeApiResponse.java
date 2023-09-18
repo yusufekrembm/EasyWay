@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.yusufekremunlu.easyway.model.entity.youtube.YoutubeItemModel;
 import com.yusufekremunlu.easyway.model.entity.youtube.YoutubePageInfo;
-
 import java.util.List;
 
 public class YoutubeApiResponse {

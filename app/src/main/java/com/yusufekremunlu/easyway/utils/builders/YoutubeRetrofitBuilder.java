@@ -1,11 +1,8 @@
 package com.yusufekremunlu.easyway.utils.builders;
 
 import androidx.annotation.NonNull;
-
 import com.yusufekremunlu.easyway.utils.Credentials;
-
 import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

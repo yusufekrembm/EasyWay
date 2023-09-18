@@ -5,19 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieFav;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.FavouritesAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;
-
 import java.util.ArrayList;
 
 public class FavouritesFragment extends Fragment implements FavouritesAdapter.OnItemClickListener {

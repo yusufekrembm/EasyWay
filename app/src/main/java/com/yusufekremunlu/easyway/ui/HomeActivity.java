@@ -1,7 +1,6 @@
 package com.yusufekremunlu.easyway.ui;
 
 import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -73,11 +72,10 @@ public class HomeActivity extends AppCompatActivity {
             } else if (destination.getId() == R.id.favouritesDetailFragment) {
                 bottomNav.setVisibility(View.GONE);
                 fab.setVisibility(View.GONE);
-            }
-            else if (destination.getId() == R.id.homeFragmentDetails) {
+            } else if (destination.getId() == R.id.homeFragmentDetails) {
                 bottomNav.setVisibility(View.GONE);
                 fab.setVisibility(View.GONE);
-            }  else {
+            } else {
                 fab.setVisibility(View.VISIBLE);
                 bottomNav.setVisibility(View.VISIBLE);
             }
@@ -137,6 +135,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     }
+
     private void openWebPage(String url) {
         if (url != null && !url.isEmpty()) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -145,6 +144,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
     public void getAAID() {
         Task<AAIDResult> idResult = HmsInstanceId.getInstance(getApplicationContext()).getAAID();
         idResult.addOnSuccessListener(new OnSuccessListener<AAIDResult>() {
@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onSuccess(AAIDResult aaidResult) {
                 // Called when the AAID is obtained.
                 String aaid = aaidResult.getId();
-                Log.d(TAG, "getAAID success:" + aaid );
+                Log.d(TAG, "getAAID success:" + aaid);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -162,6 +162,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
     private void getToken() {
         new Thread() {
             @Override
@@ -175,7 +176,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.i(TAG, "get token: " + token);
 
                     // Check whether the token is null.
-                    if(!TextUtils.isEmpty(token)) {
+                    if (!TextUtils.isEmpty(token)) {
                         sendRegTokenToServer(token);
                     }
                 } catch (ApiException e) {
@@ -184,6 +185,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         }.start();
     }
+
     private void sendRegTokenToServer(String token) {
         Log.i(TAG, "sending token to server. token:" + token);
     }

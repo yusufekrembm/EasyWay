@@ -1,7 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.room;
 
 import android.content.Context;
-
 import androidx.room.Room;
 
 public class DatabaseInitializer {

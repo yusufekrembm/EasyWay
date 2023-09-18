@@ -15,8 +15,7 @@
             android:background="#3C3C3C"
             app:title="My Watch List"
             app:titleTextColor="@color/white"
-            tools:ignore="MissingConstraints">
-        </androidx.appcompat.widget.Toolbar>
+            tools:ignore="MissingConstraints" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favouritesRecyclerView"

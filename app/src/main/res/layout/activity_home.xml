@@ -8,15 +8,17 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
 
         <fragment
             android:id="@+id/navHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph_main"
-            app:defaultNavHost="true" />
+            tools:ignore="FragmentTagUsage" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,28 +28,29 @@
                 android:id="@+id/bottomNavigationView"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_background"
                 app:itemActiveIndicatorStyle="@color/black"
                 app:itemIconSize="25dp"
                 app:itemTextColor="@color/white"
-                android:background="@drawable/rounded_background"
-                android:layout_margin="10dp"
-                android:layout_alignParentBottom="true"
-                app:menu="@menu/bottom_nav_menu"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:menu="@menu/bottom_nav_menu" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:src="@drawable/qrcode"
                 android:backgroundTint="#A7EF0404"
-                app:layout_constraintTop_toTopOf="@id/bottomNavigationView"
+                android:contentDescription="@string/qrfloat"
+                android:src="@drawable/qrcode"
                 app:layout_constraintBottom_toBottomOf="@id/bottomNavigationView"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/bottomNavigationView"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerCircle"
-                android:contentDescription="@string/qrfloat" />
+                tools:ignore="ImageContrastCheck" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

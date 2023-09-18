@@ -1,8 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.home;
 
 import static com.yusufekremunlu.easyway.utils.Constants.getNews;
-
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -22,26 +18,23 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.yusufekremunlu.easyway.R;
-import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.news.NewsHeadlines;
 import com.yusufekremunlu.easyway.ui.main.home.adapters.NewsAdapter;
 import com.yusufekremunlu.easyway.ui.main.home.viewmodels.NewsViewModel;
-import com.yusufekremunlu.easyway.utils.MovieListType;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-public class HomeFragment extends Fragment implements SelectListener,View.OnClickListener{
+public class HomeFragment extends Fragment implements SelectListener, View.OnClickListener {
     private NewsViewModel newsViewModel;
     private NewsAdapter newsAdapter;
 
-    Button cat_btn1,cat_btn2,cat_btn3,cat_btn4,cat_btn5,cat_btn6,cat_btn7;
+    Button cat_btn1, cat_btn2, cat_btn3, cat_btn4, cat_btn5, cat_btn6, cat_btn7;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         newsViewModel = new ViewModelProvider(this).get(NewsViewModel.class);
-        newsAdapter = new NewsAdapter(getContext(),new ArrayList<>(),this);
+        newsAdapter = new NewsAdapter(getContext(), new ArrayList<>(), this);
 
     }
 
@@ -78,7 +71,7 @@ public class HomeFragment extends Fragment implements SelectListener,View.OnClic
         });
 
         RecyclerView newsRecyclerView = view.findViewById(R.id.recyclerNewsCategoryHeader);
-        GridLayoutManager newsLayoutManager = new GridLayoutManager(requireContext(),1);
+        GridLayoutManager newsLayoutManager = new GridLayoutManager(requireContext(), 1);
         newsRecyclerView.setLayoutManager(newsLayoutManager);
         newsRecyclerView.setAdapter(newsAdapter);
 
@@ -113,6 +106,7 @@ public class HomeFragment extends Fragment implements SelectListener,View.OnClic
         observeData();
         return view;
     }
+
     private void observeData() {
         newsViewModel.getTopHeadNews().observe(getViewLifecycleOwner(), newsHeadlines -> {
             newsAdapter.updateData(newsHeadlines);

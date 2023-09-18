@@ -32,7 +32,6 @@ import com.google.android.gms.tasks.Task;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.utils.Utils;
 
-
 public class RegisterFragment extends Fragment {
     private EditText signUpEmail;
     private EditText signUpPassword;
@@ -79,11 +78,11 @@ public class RegisterFragment extends Fragment {
         twitterButton.setOnClickListener(v -> signInTwitter());
         githubButton.setOnClickListener(v -> signInGithub());
         //Utils usage
-        Utils.showPassword(showPasswordButton,signUpPassword);
-        Utils.showPassword(showRePasswordButton,rePasswordSignUp);
-        Utils.setBackButtonClickListener(backButton,requireActivity());
-        Utils.setupNextFocus(signUpEmail,signUpPassword);
-        Utils.setupNextFocus(signUpPassword,rePasswordSignUp);
+        Utils.showPassword(showPasswordButton, signUpPassword);
+        Utils.showPassword(showRePasswordButton, rePasswordSignUp);
+        Utils.setBackButtonClickListener(backButton, requireActivity());
+        Utils.setupNextFocus(signUpEmail, signUpPassword);
+        Utils.setupNextFocus(signUpPassword, rePasswordSignUp);
         Utils.setupHideKeyboardOnEnter(rePasswordSignUp);
         Utils.calculateStrengthPassword(signUpPassword, strengthPassword, strengthText);
         view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(), view));
@@ -108,7 +107,7 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-    private void signInTwitter(){
+    private void signInTwitter() {
         twitterButton.setOnClickListener(v -> registerViewModel.signInWithTwitter(getActivity()));
 
         registerViewModel.getSignInTwitterSuccess().observe(getViewLifecycleOwner(), success -> {
@@ -124,7 +123,7 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-    private void signInGithub(){
+    private void signInGithub() {
         githubButton.setOnClickListener(v -> registerViewModel.signInWithGithub(getActivity()));
 
 
@@ -157,7 +156,7 @@ public class RegisterFragment extends Fragment {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
-                            registerViewModel.signInWithGoogle(getActivity(),account);
+                            registerViewModel.signInWithGoogle(getActivity(), account);
                         } catch (ApiException e) {
                             // Oturum açma başarısız oldu
                         }

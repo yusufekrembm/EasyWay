@@ -7,6 +7,7 @@ import java.util.List;
 public class MoviePersonImagesResponse {
     @SerializedName("profiles")
     private List<MoviePersonImages> results;
+
     public List<MoviePersonImages> getImages() {
         return results;
     }

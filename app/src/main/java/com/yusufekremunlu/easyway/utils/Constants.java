@@ -27,6 +27,7 @@ public class Constants {
 
         return genreMap.get(id);
     }
+
     public static String getNews(String countryCode) {
         HashMap<String, String> newsMap = new HashMap<>();
         newsMap.put("us", "United Stated Top News");

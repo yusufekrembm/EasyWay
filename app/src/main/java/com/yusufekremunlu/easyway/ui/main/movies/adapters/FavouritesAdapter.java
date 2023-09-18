@@ -27,6 +27,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
     public interface OnItemClickListener {
         void onItemClick(MovieFav moviefav);
     }
+
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }

@@ -34,7 +34,6 @@ import com.google.android.gms.tasks.Task;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.utils.Utils;
 
-
 public class LoginFragment extends Fragment {
     private EditText emailEditText, passwordEditText;
     private LoginViewModel loginViewModel;
@@ -81,12 +80,12 @@ public class LoginFragment extends Fragment {
         githubLogin.setOnClickListener(v -> signInGithub());
         signInGoogle();
         //Utils usage
-        Utils.showPassword(showPasswordButton,passwordEditText);
-        Utils.setBackButtonClickListener(backButton,getActivity());
-        Utils.setupNextFocus(emailEditText,passwordEditText);
+        Utils.showPassword(showPasswordButton, passwordEditText);
+        Utils.setBackButtonClickListener(backButton, getActivity());
+        Utils.setupNextFocus(emailEditText, passwordEditText);
         Utils.setupHideKeyboardOnEnter(passwordEditText);
-        Utils.setCheckBoxTextColors(rememberMeCheckbox,Color.rgb(255, 165, 0),Color.rgb(255, 165, 0));
-        view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(),view));
+        Utils.setCheckBoxTextColors(rememberMeCheckbox, Color.rgb(255, 165, 0), Color.rgb(255, 165, 0));
+        view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(), view));
 
         return view;
     }

@@ -23,6 +23,7 @@
             android:layout_weight="2"
             android:background="@color/white"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/text_title"
                 android:layout_width="match_parent"
@@ -33,24 +34,25 @@
                 android:textStyle="bold">
 
             </TextView>
+
             <TextView
                 android:id="@+id/text_source"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
                 android:maxLines="1"
                 android:textColor="#1f3cd0"
                 android:textSize="18sp"
-                android:layout_marginTop="6dp"
                 android:textStyle="bold" />
-            
+
         </LinearLayout>
+
         <ImageView
             android:id="@+id/img_headline"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:src="@drawable/baseline_image_24"
-            android:layout_height="match_parent">
-        </ImageView>
+            android:src="@drawable/baseline_image_24"></ImageView>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

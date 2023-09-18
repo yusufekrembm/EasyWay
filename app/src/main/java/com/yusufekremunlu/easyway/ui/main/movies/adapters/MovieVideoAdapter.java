@@ -1,6 +1,5 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,15 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieVideoModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.MovieVideoViewHolder> {
 
@@ -75,7 +71,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
 
         public void bind(MovieVideoModel videoModel) {
             Glide.with(context)
-                    .load(Credentials.MOVIE_YT_IMG_URL + videoModel.getKey()+"/maxresdefault.jpg")
+                    .load(Credentials.MOVIE_YT_IMG_URL + videoModel.getKey() + "/maxresdefault.jpg")
                     .into(movieDetailVideoImage);
             movieDetailImageButton.setOnClickListener(v -> {
                 String youtubeUrl = Credentials.MOVIE_YT_WATCH_URL + videoModel.getKey();

@@ -20,22 +20,28 @@ public class MoviesViewModel extends ViewModel {
     public LiveData<List<MovieModel>> getPopularMovies() {
         return movieRepository.getPopularMovies();
     }
+
     public LiveData<List<MovieModel>> getUpComingMovies() {
         return movieRepository.getUpComingMovies();
     }
-    public void searchMovieApi(String query, int pageNumber){
+
+    public void searchMovieApi(String query, int pageNumber) {
         movieRepository.searchMovieApi(query, pageNumber);
     }
-    public void searchNextPage(){
+
+    public void searchNextPage() {
         movieRepository.searchNextPage();
     }
-    public void searchNextPageTrending(){
+
+    public void searchNextPageTrending() {
         movieRepository.searchNextPageTrending();
     }
-    public void searchNextPagePopular(){
+
+    public void searchNextPagePopular() {
         movieRepository.searchNextPagePopular();
     }
-    public void searchNextPageUnComing(){
+
+    public void searchNextPageUnComing() {
         movieRepository.searchNextPageUnComing();
     }
 }

@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.squareup.picasso.Picasso;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.news.NewsHeadlines;
 
 public class HomeFragmentDetails extends Fragment {
     NewsHeadlines newsHeadlines;
-    TextView txt_title,txt_author,txt_time,txt_detail,txt_content,txt_url;
+    TextView txt_title, txt_author, txt_time, txt_detail, txt_content, txt_url;
     ImageView img_news;
 
 

@@ -18,9 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import androidx.fragment.app.FragmentActivity;
-
 import com.yusufekremunlu.easyway.ui.HomeActivity;
 
 public class Utils {
@@ -147,6 +145,7 @@ public class Utils {
 
         return passwordStrength;
     }
+
     public static void setCheckBoxTextColors(CheckBox checkBox, int checkedColor, int uncheckedColor) {
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{

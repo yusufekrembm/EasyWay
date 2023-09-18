@@ -17,6 +17,7 @@ public class YoutubeViewModel extends ViewModel {
         }
         return mYoutubeVideos;
     }
+
     public void setQuery(String query) {
         mQuery = query;
         mYoutubeVideos = YoutubeRepository.getInstance().getAllYoutubeVideosFromApi(mQuery);

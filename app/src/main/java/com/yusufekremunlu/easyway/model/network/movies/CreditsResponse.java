@@ -7,6 +7,7 @@ import java.util.List;
 public class CreditsResponse {
     @SerializedName("cast")
     private List<MovieCastModel> casts;
+
     public List<MovieCastModel> getCasts() {
         return casts;
     }

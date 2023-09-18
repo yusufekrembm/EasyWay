@@ -3,7 +3,6 @@ package com.yusufekremunlu.easyway.ui.auth.login;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.utils.Utils;
 
@@ -47,9 +45,9 @@ public class ForgotPassword extends Fragment {
         //Functions
         sendEmailLinkForgotPassword();
         //Utils usage
-        Utils.setBackButtonClickListener(backButton,getActivity());
+        Utils.setBackButtonClickListener(backButton, getActivity());
         Utils.setupHideKeyboardOnEnter(forgotEmailText);
-        view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(),view));
+        view.setOnClickListener(v -> Utils.hideKeyboard(requireContext(), view));
         return view;
     }
 

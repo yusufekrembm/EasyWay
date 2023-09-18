@@ -24,7 +24,7 @@
             android:id="@+id/idIVBack"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/idTVCityName"
@@ -68,13 +68,14 @@
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <ImageView
+                android:id="@+id/idIVSearch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:id="@+id/idIVSearch"
-                android:layout_margin="10dp"
                 android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
                 android:background="@android:color/transparent"
                 android:src="@drawable/baseline_search_24"
                 app:tint="@color/white" />
@@ -116,11 +117,11 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:textSize="24sp"
             android:text="Condition"
-            android:textStyle="bold"
             android:textAlignment="center"
-            android:textColor="@color/black">
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold">
 
         </TextView>
 
@@ -133,9 +134,9 @@
             android:layout_marginTop="20dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="0dp"
-            android:textSize="20sp"
             android:text="Today's Weather Forecast"
             android:textColor="@color/black"
+            android:textSize="20sp"
             android:textStyle="bold"></TextView>
 
 
@@ -143,10 +144,10 @@
             android:id="@+id/idRvWeather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:layout_below="@id/idTodaysText"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/weather_rv_item" />

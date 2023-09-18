@@ -1,7 +1,6 @@
 package com.yusufekremunlu.easyway.db.repository.news;
 
 import androidx.lifecycle.MutableLiveData;
-
 import com.yusufekremunlu.easyway.db.remote.news.NewsApiInterface;
 import com.yusufekremunlu.easyway.model.entity.news.NewsHeadlines;
 import com.yusufekremunlu.easyway.model.network.news.NewsApiResponse;
@@ -23,6 +22,7 @@ public class NewsRepository {
         }
         return instance;
     }
+
     private NewsRepository() {
         mTopHeadNews = new MutableLiveData<>();
         mEverythingNews = new MutableLiveData<>();
@@ -33,7 +33,7 @@ public class NewsRepository {
         newsApiResponseCall.enqueue(new Callback<NewsApiResponse>() {
             @Override
             public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     NewsApiResponse newsApiResponse = response.body();
                     if (newsApiResponse != null) {
                         List<NewsHeadlines> newsHeadlinesModels = newsApiResponse.getArticles();
@@ -49,12 +49,13 @@ public class NewsRepository {
         });
         return mTopHeadNews;
     }
+
     public MutableLiveData<List<NewsHeadlines>> getEverythingNewsFromApi(String query) {
         Call<NewsApiResponse> newsApiResponseCall = newsApiInterface.callEverything(query);
         newsApiResponseCall.enqueue(new Callback<NewsApiResponse>() {
             @Override
             public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     NewsApiResponse newsApiResponse = response.body();
                     if (newsApiResponse != null) {
                         List<NewsHeadlines> newsHeadlinesModels = newsApiResponse.getArticles();

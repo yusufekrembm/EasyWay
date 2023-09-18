@@ -1,14 +1,11 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +14,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
-import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
-import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonCredits;
 import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonImages;
-import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieCastAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviePersonCreditsAdapter;
-import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieVideoAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MoviesPersonImagesAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieCastViewModel;
 import com.yusufekremunlu.easyway.utils.Credentials;
-
 import java.util.ArrayList;
 
-public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdapter.OnItemClickListener,MoviePersonCreditsAdapter.OnItemClickListener {
+public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdapter.OnItemClickListener, MoviePersonCreditsAdapter.OnItemClickListener {
     private MoviePerson moviePerson;
     MovieCastViewModel movieCastViewModel;
     private MoviesPersonImagesAdapter moviesPersonImagesAdapter;
@@ -65,9 +57,6 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
                     .load(Credentials.MOVIE_PROFILE_URL + moviePerson.getProfile_path())
                     .into(moviePersonImage);
         }
-
-
-
 
 
         Bundle args = getArguments();

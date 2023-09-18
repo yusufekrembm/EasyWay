@@ -1,7 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.viewmodels;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;

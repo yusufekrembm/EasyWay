@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class YoutubeThumbnails {
-
     @SerializedName("default")
     @Expose
     private YoutubeDefault _default;

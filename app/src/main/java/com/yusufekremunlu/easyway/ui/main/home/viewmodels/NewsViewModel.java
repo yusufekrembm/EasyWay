@@ -20,6 +20,7 @@ public class NewsViewModel extends ViewModel {
         }
         return mTopHeadNews;
     }
+
     public LiveData<List<NewsHeadlines>> getEverythingNews() {
         if (mEverythingNews == null) {
             mEverythingNews = NewsRepository.getInstance().getEverythingNewsFromApi(mQuery);
@@ -36,6 +37,7 @@ public class NewsViewModel extends ViewModel {
         selectedCategory = category;
         mTopHeadNews = NewsRepository.getInstance().getTopHeadNewsFromApi(selectedCountry, selectedCategory);
     }
+
     public void setQuery(String query) {
         mQuery = query;
         mTopHeadNews = NewsRepository.getInstance().getEverythingNewsFromApi(mQuery);

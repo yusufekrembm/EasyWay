@@ -10,7 +10,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -35,7 +33,6 @@ import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.weather.WeatherRVModel;
 import com.yusufekremunlu.easyway.ui.main.weather.adapters.WeatherRVAdapter;
 import com.yusufekremunlu.easyway.utils.Credentials;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +54,7 @@ public class WeatherFragment extends Fragment {
     ImageView iconIV;
     TextView conditionIV;
     ImageView backIV;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +76,12 @@ public class WeatherFragment extends Fragment {
         temperatureIV = view.findViewById(R.id.idTVTemperature);
 
         weatherRVModelArrayList = new ArrayList<>();
-        weatherRVAdapter = new WeatherRVAdapter(weatherRVModelArrayList,requireContext());
+        weatherRVAdapter = new WeatherRVAdapter(weatherRVModelArrayList, requireContext());
         weatherRV.setAdapter(weatherRVAdapter);
 
-        locationManager= (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+        locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
@@ -91,8 +89,8 @@ public class WeatherFragment extends Fragment {
             getWeatherInfo(cityName);
             searchIV.setOnClickListener(v -> {
                 String city = cityEdt.getText().toString();
-                if(city.isEmpty()){
-                    Toast.makeText(requireContext(),"Please enter city Name", Toast.LENGTH_SHORT).show();
+                if (city.isEmpty()) {
+                    Toast.makeText(requireContext(), "Please enter city Name", Toast.LENGTH_SHORT).show();
                 } else {
                     cityNameIV.setText(cityName);
                     getWeatherInfo(city);
@@ -119,28 +117,29 @@ public class WeatherFragment extends Fragment {
     }
 
 
-    private String getCityName(double longitude, double latitude){
+    private String getCityName(double longitude, double latitude) {
         String cityName = "Not found";
         Geocoder gcd = new Geocoder(requireContext(), Locale.getDefault());
         try {
-            List<Address> addresses = gcd.getFromLocation(latitude,longitude,10);
-            for(Address adr : addresses){
-                if(adr!=null){
+            List<Address> addresses = gcd.getFromLocation(latitude, longitude, 10);
+            for (Address adr : addresses) {
+                if (adr != null) {
                     String city = adr.getLocality();
-                    if(city!=null && !city.equals("")){
+                    if (city != null && !city.equals("")) {
                         cityName = city;
                     } else {
-                        Log.d("TAG","CITY NOT FOUND");
+                        Log.d("TAG", "CITY NOT FOUND");
                     }
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return cityName;
     }
-    private void getWeatherInfo(String cityName){
-        String url = ""+Credentials.WEATHER_BASE_API_URL+"/"+Credentials.WEATHER_API_VERSION+"/forecast.json?key="+ Credentials.WEATHER_API_KEY+"&q="+cityName+"&days=1&aqi=yes&alerts=yes";
+
+    private void getWeatherInfo(String cityName) {
+        String url = "" + Credentials.WEATHER_BASE_API_URL + "/" + Credentials.WEATHER_API_VERSION + "/forecast.json?key=" + Credentials.WEATHER_API_KEY + "&q=" + cityName + "&days=1&aqi=yes&alerts=yes";
         cityNameIV.setText(cityName);
         RequestQueue requestQueue = Volley.newRequestQueue(requireContext());
 
@@ -159,30 +158,30 @@ public class WeatherFragment extends Fragment {
                     String conditionIcon = response.getJSONObject("current").getJSONObject("condition").getString("icon");
                     Picasso.get().load("http:".concat(conditionIcon)).into(iconIV);
                     conditionIV.setText(condition);
-                    if(isDay==1){
+                    if (isDay == 1) {
                         Picasso.get().load("https://images.unsplash.com/photo-1558486012-817176f84c6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1340&q=80").into(backIV);
                     } else {
                         Picasso.get().load("https://images.unsplash.com/photo-1505322022379-7c3353ee6291?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80").into(backIV);
                     }
 
                     JSONObject forecastObj = response.getJSONObject("forecast");
-                    JSONObject forecastO  = forecastObj.getJSONArray("forecastday").getJSONObject(0);
+                    JSONObject forecastO = forecastObj.getJSONArray("forecastday").getJSONObject(0);
                     JSONArray hourArray = forecastO.getJSONArray("hour");
 
-                    for(int i = 0 ; i<hourArray.length();i++){
+                    for (int i = 0; i < hourArray.length(); i++) {
                         JSONObject hourObj = hourArray.getJSONObject(i);
                         String time = hourObj.getString("time");
                         String temper = hourObj.getString("temp_c");
                         String img = hourObj.getJSONObject("condition").getString("icon");
                         String wind = hourObj.getString("wind_kph");
-                        weatherRVModelArrayList.add(new WeatherRVModel(time,temper,img,wind));
+                        weatherRVModelArrayList.add(new WeatherRVModel(time, temper, img, wind));
                     }
                     weatherRVAdapter.notifyDataSetChanged();
-                } catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }, error -> Toast.makeText(requireContext(),"Please enter valid city name..",Toast.LENGTH_SHORT).show());
+        }, error -> Toast.makeText(requireContext(), "Please enter valid city name..", Toast.LENGTH_SHORT).show());
         requestQueue.add(jsonObjectRequest);
     }
 }

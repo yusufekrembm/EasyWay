@@ -2,22 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/fragment_home"
-        android:title="Home"
+        android:title="@string/home"
         android:icon="@drawable/homepagelogo" />
     <item
         android:id="@+id/fragment_weather"
-        android:title="Weather"
+        android:title="@string/weather"
         android:icon="@drawable/clouds"/>
     <item
         android:id="@+id/fragment_qr"
         android:title="" />
     <item
         android:id="@+id/fragment_movies"
-        android:title="Movies"
+        android:title="@string/movies"
         android:icon="@drawable/movieslogo"/>
 
     <item
         android:id="@+id/fragment_youtube"
-        android:title="Youtube"
+        android:title="@string/youtube"
         android:icon="@drawable/youtube" />
 </menu>

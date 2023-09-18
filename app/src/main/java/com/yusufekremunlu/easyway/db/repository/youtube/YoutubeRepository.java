@@ -21,6 +21,7 @@ public class YoutubeRepository {
         }
         return instance;
     }
+
     private YoutubeRepository() {
         mYoutubeVideos = new MutableLiveData<>();
     }
@@ -30,7 +31,7 @@ public class YoutubeRepository {
         youtubeApiResponseCall.enqueue(new Callback<YoutubeApiResponse>() {
             @Override
             public void onResponse(Call<YoutubeApiResponse> call, Response<YoutubeApiResponse> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     YoutubeApiResponse youtubeApiResponse = response.body();
                     if (youtubeApiResponse != null) {
                         List<YoutubeItemModel> youtubeItemModelList = youtubeApiResponse.getYoutubeItemModelList();

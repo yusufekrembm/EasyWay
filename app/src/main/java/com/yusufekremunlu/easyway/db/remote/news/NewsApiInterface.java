@@ -11,6 +11,7 @@ public interface NewsApiInterface {
     Call<NewsApiResponse> callEverything(
             @Query("q") String query
     );
+
     @GET("/" + Credentials.NEWS_API_VERSION + "/top-headlines")
     Call<NewsApiResponse> callHeadlines(
             @Query("pageSize") int pageSize,

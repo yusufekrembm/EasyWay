@@ -1,8 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,12 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -27,15 +20,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.databinding.FragmentShowAllBinding;
-import com.yusufekremunlu.easyway.db.remote.movies.MovieApiClient;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
-import com.yusufekremunlu.easyway.model.entity.movies.MoviePerson;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.ShowAllAdapter;
-import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieCastViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MoviesViewModel;
 import com.yusufekremunlu.easyway.utils.MovieListType;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemClickListener {
@@ -165,7 +154,7 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(!showAllRecyclerView.canScrollVertically(1)){
+                if (!showAllRecyclerView.canScrollVertically(1)) {
                     moviesViewModel.searchNextPage();
                 }
             }
