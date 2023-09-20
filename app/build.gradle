@@ -10,7 +10,7 @@ android {
         config {
             keyAlias 'developer'
             keyPassword '12345678'
-            storeFile file('C:\\Users\\yusuf\\OneDrive\\Desktop\\Projects\\EasyWay\\developer-kits.jks')
+            storeFile file('C:\\Users\\yusuf\\Desktop\\Projects\\EasyWay\\developer-kits.jks')
             storePassword '12345678'
         }
     }
@@ -64,7 +64,6 @@ def gson_converter_version = "2.9.0"
 def glide_version = "4.12.0"
 def picasso_version = "2.8"
 def volley_version = "1.2.1"
-def youtubePlayer_version = "11.0.0"
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
@@ -103,7 +102,5 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasso_version"
     //Volley
     implementation "com.android.volley:volley:$volley_version"
-    //Youtube
-    implementation "com.pierfrancescosoffritti.androidyoutubeplayer:core:$youtubePlayer_version"
 }
 apply plugin: 'com.huawei.agconnect'

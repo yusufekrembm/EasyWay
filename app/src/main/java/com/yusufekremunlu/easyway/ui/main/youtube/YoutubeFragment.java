@@ -34,6 +34,7 @@ public class YoutubeFragment extends Fragment {
         youtubeRecyclerView.setLayoutManager(newsLayoutManager);
         youtubeRecyclerView.setAdapter(youtubeAdapter);
 
+
         SearchView searchViewYoutube = view.findViewById(R.id.search_view_youtube);
         searchViewYoutube.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

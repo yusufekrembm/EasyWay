@@ -3,25 +3,31 @@ package com.yusufekremunlu.easyway.ui.main.weather;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -33,9 +39,11 @@ import com.yusufekremunlu.easyway.R;
 import com.yusufekremunlu.easyway.model.entity.weather.WeatherRVModel;
 import com.yusufekremunlu.easyway.ui.main.weather.adapters.WeatherRVAdapter;
 import com.yusufekremunlu.easyway.utils.Credentials;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +55,9 @@ public class WeatherFragment extends Fragment {
     LocationManager locationManager;
     int PERMISSION_CODE = 1;
     TextView cityNameIV;
-    ProgressBar loadingPB;
     RelativeLayout homeRL;
     ImageView searchIV;
+    TextView cityEdt;
     TextView temperatureIV;
     ImageView iconIV;
     TextView conditionIV;
@@ -65,13 +73,12 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
         RecyclerView weatherRV = view.findViewById(R.id.idRvWeather);
-        TextInputEditText cityEdt = view.findViewById(R.id.idEdtCity);
         backIV = view.findViewById(R.id.idIVBack);
+        cityEdt = view.findViewById(R.id.idEdtCity);
         conditionIV = view.findViewById(R.id.idTVCondition);
         iconIV = view.findViewById(R.id.idIVIcon);
         searchIV = view.findViewById(R.id.idIVSearch);
         cityNameIV = view.findViewById(R.id.idTVCityName);
-        loadingPB = view.findViewById(R.id.idPLoading);
         homeRL = view.findViewById(R.id.idRLHome);
         temperatureIV = view.findViewById(R.id.idTVTemperature);
 
@@ -79,11 +86,24 @@ public class WeatherFragment extends Fragment {
         weatherRVAdapter = new WeatherRVAdapter(weatherRVModelArrayList, requireContext());
         weatherRV.setAdapter(weatherRVAdapter);
 
+        Button enableLocationBtn = view.findViewById(R.id.idBtnEnableLocation);
+        ;
+        enableLocationBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        });
+
         locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+        if (checkPermissions()) {
+            getLocation();
+        } else {
+            enableLocationBtn.setVisibility(View.VISIBLE);
+            enableLocationBtn.setOnClickListener(v -> {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_CODE);
+            });
         }
-        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             String cityName = getCityName(location.getLongitude(), location.getLatitude());
             getWeatherInfo(cityName);
@@ -108,12 +128,11 @@ public class WeatherFragment extends Fragment {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireContext(), "Permission granted..", Toast.LENGTH_SHORT).show();
+                getLocation();
             } else {
                 Toast.makeText(requireContext(), "Permission denied. Please provide the permissions", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
 
 
@@ -147,7 +166,6 @@ public class WeatherFragment extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(JSONObject response) {
-                loadingPB.setVisibility(View.GONE);
                 homeRL.setVisibility(View.VISIBLE);
                 weatherRVModelArrayList.clear();
                 try {
@@ -183,5 +201,28 @@ public class WeatherFragment extends Fragment {
             }
         }, error -> Toast.makeText(requireContext(), "Please enter valid city name..", Toast.LENGTH_SHORT).show());
         requestQueue.add(jsonObjectRequest);
+    }
+
+    private void getLocation() {
+        @SuppressLint("MissingPermission") Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (location != null) {
+            String cityName = getCityName(location.getLongitude(), location.getLatitude());
+            getWeatherInfo(cityName);
+        } else {
+            Toast.makeText(requireContext(), "Konum bilgisi alınamadı. Konum servislerinizi açın.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (checkPermissions()) {
+            getLocation();
+        }
     }
 }

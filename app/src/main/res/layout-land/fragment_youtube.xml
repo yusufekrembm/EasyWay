@@ -23,18 +23,17 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/searchYoutubeVideosCardView"
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_margin="14dp"
             app:cardElevation="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/myToolbar"
             app:layout_constraintTop_toBottomOf="@id/myToolbar">
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_view_youtube"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
                 app:defaultQueryHint="Search News..."
                 app:iconifiedByDefault="false">
 
@@ -43,11 +42,14 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerYoutubeVideos"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
             android:padding="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/searchYoutubeVideosCardView"
-            tools:layout_editor_absoluteX="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+            app:layout_constraintStart_toEndOf="@+id/searchYoutubeVideosCardView"
+            app:layout_constraintTop_toBottomOf="@+id/myToolbar"
             tools:listitem="@layout/list_item_youtube_video" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

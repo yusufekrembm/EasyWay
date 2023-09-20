@@ -26,18 +26,16 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder> {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    @Override
     public void onBindViewHolder(@NonNull YoutubeViewHolder holder, int position) {
         YoutubeItemModel youtubeItemModel = youtubeItemModelList.get(position);
-        String youtubeVideoUrl = "https://www.youtube.com/embed/" + youtubeItemModel.getId().getVideoId();
-        holder.youtubeWebView.loadData("<iframe width=\"100%\" height=\"100%\" src=\"" + youtubeVideoUrl + "\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
+        String youtubeVideoUrl = "https://www.youtube.com/embed/"+youtubeItemModel.getId().getVideoId();
+        holder.youtubeWebView.loadData("<iframe width=\"100%\" height=\"100%\" src=\""+ youtubeVideoUrl+"\" frameborder=\"0\" allowfullscreen></iframe>", "text/html", "utf-8");
     }
 
     @Override
     public int getItemCount() {
         return youtubeItemModelList.size();
     }
-
     public void updateData(List<YoutubeItemModel> newData) {
         youtubeItemModelList.clear();
         youtubeItemModelList.addAll(newData);

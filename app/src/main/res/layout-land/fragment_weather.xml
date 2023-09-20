@@ -7,7 +7,6 @@
     android:background="@color/black"
     tools:context=".ui.main.weather.WeatherFragment">
 
-
     <Button
         android:id="@+id/idBtnEnableLocation"
         android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         android:layout_centerInParent="true" />
-
 
     <RelativeLayout
         android:id="@+id/idRLHome"
@@ -33,19 +31,20 @@
 
         <TextView
             android:id="@+id/idTVCityName"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:padding="20dp"
             android:text="City Name"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/idLLEdt"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/idTVCityName"
             android:orientation="horizontal"
@@ -90,7 +89,7 @@
             android:id="@+id/idTVTemperature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/idLLEdt"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
@@ -99,7 +98,7 @@
             android:padding="5dp"
             android:text="23"
             android:textColor="@color/white"
-            android:textSize="70sp" />
+            android:textSize="55sp" />
 
         <ImageView
             android:id="@+id/idIVIcon"
@@ -134,8 +133,9 @@
             android:id="@+id/idTodaysText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/idTVCondition"
-            android:layout_marginStart="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="500dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="0dp"
@@ -150,7 +150,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/idTodaysText"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="500dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:orientation="horizontal"

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    tools:context=".ui.main.movies.MoviesFragment">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_weight="0.4"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/myToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#1f3cd0"
+            app:title="Home News"
+            app:titleTextColor="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/toolBarRelativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end">
+
+                <Spinner
+                    android:id="@+id/spinnerCountry"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/baseline_filter_alt_24" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:text="Home News"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="134dp"
+            android:layout_height="50dp"
+            android:layout_margin="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/cat_btn_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Business"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Entertainment"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="General"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Health"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Science"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Sports"
+                    android:textSize="12sp"></Button>
+
+                <Button
+                    android:id="@+id/cat_btn_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:padding="6dp"
+                    android:text="Technology"
+                    android:textSize="12sp"></Button>
+            </LinearLayout>
+        </HorizontalScrollView>
+        <ImageView
+            android:id="@+id/backGroundId"
+            android:background="@drawable/easyway_logo"
+            android:layout_margin="25dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
+
+        </ImageView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="14dp"
+            app:cardElevation="8dp">
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:defaultQueryHint="Search News..."
+                app:iconifiedByDefault="false">
+
+            </androidx.appcompat.widget.SearchView>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerNewsCategoryHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            tools:listitem="@layout/headline_news_items" />
+    </LinearLayout>
+</LinearLayout>
