@@ -1,39 +1,106 @@
 plugins {
     id 'com.android.application'
+    id 'com.google.gms.google-services'
 }
 
 android {
     namespace 'com.yusufekremunlu.easyway'
     compileSdk 33
-
+    signingConfigs {
+        config {
+            keyAlias 'developer'
+            keyPassword '12345678'
+            storeFile file('C:\\Users\\yusuf\\Desktop\\Projects\\EasyWay\\developer-kits.jks')
+            storePassword '12345678'
+        }
+    }
     defaultConfig {
         applicationId "com.yusufekremunlu.easyway"
         minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
+        resConfigs "en", "zh-rCN"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+            signingConfig signingConfigs.config
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    viewBinding {
+        enabled = true
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
 }
 
+def fragment_version = "1.5.7"
+def nav_version = "2.5.3"
+def bom_version = "32.1.0"
+def room_version = "2.5.2"
+def view_model_version = "2.3.1"
+def lifecycle_extension_version = "2.2.0"
+def google_play_services_version = "20.5.0"
+def huawei_scanKit_version = "2.11.0.300"
+def huawei_pushKit_version = "6.11.0.300"
+def hms_core_installer_version = "6.7.0.300"
+def retrofit_version = "2.9.0"
+def gson_converter_version = "2.9.0"
+def glide_version = "4.12.0"
+def picasso_version = "2.8"
+def volley_version = "1.2.1"
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // Java language implementation
+    implementation "androidx.fragment:fragment:$fragment_version"
+    // Java language implementation
+    implementation "androidx.navigation:navigation-fragment:$nav_version"
+    implementation "androidx.navigation:navigation-ui:$nav_version"
+    // Firebase implementation
+    implementation platform("com.google.firebase:firebase-bom:$bom_version")
+    implementation 'com.google.firebase:firebase-auth'
+    // ViewModel implementation
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$view_model_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extension_version"
+    //Google Play services
+    implementation "com.google.android.gms:play-services-auth:$google_play_services_version"
+    //Huawei Mobile Services
+    implementation "com.huawei.hms:scanplus:$huawei_scanKit_version"
+    implementation "com.huawei.hms:push:$huawei_pushKit_version"
+    implementation "com.huawei.hms:hmscoreinstaller:$hms_core_installer_version"
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$gson_converter_version"
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide_version"
+    //Room
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    //Picasso
+    implementation "com.squareup.picasso:picasso:$picasso_version"
+    //Volley
+    implementation "com.android.volley:volley:$volley_version"
 }
+apply plugin: 'com.huawei.agconnect'

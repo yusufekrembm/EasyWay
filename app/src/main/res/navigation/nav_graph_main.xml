@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/fragment_home">
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.yusufekremunlu.easyway.ui.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_fragment_home_to_homeFragmentDetails"
+            app:destination="@id/homeFragmentDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_weather"
+        android:name="com.yusufekremunlu.easyway.ui.main.weather.WeatherFragment"
+        android:label="fragment_weather"
+        tools:layout="@layout/fragment_weather" />
+    <fragment
+        android:id="@+id/fragment_qr"
+        android:name="com.yusufekremunlu.easyway.ui.main.qr.QrFragment"
+        android:label="fragment_qr"
+        tools:layout="@layout/fragment_qr" />
+    <fragment
+        android:id="@+id/fragment_movies"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.MoviesFragment"
+        android:label="fragment_movies"
+        tools:layout="@layout/fragment_movies" >
+        <action
+            android:id="@+id/action_fragment_movies_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+        <action
+            android:id="@+id/action_fragment_movies_to_showAllFragment"
+            app:destination="@id/showAllFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_youtube"
+        android:name="com.yusufekremunlu.easyway.ui.main.youtube.YoutubeFragment"
+        android:label="fragment_youtube"
+        tools:layout="@layout/fragment_youtube" />
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.MovieDetailsFragment"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details" >
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_fragment_movies"
+            app:destination="@id/fragment_movies" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieCastDetails"
+            app:destination="@id/movieCastDetails" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieCastDetails"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.MovieCastDetails"
+        android:label="fragment_movie_cast_details"
+        tools:layout="@layout/fragment_movie_cast_details" >
+        <action
+            android:id="@+id/action_movieCastDetails_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showAllFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.ShowAllFragment"
+        android:label="fragment_show_all"
+        tools:layout="@layout/fragment_show_all" >
+        <action
+            android:id="@+id/action_showAllFragment_to_fragment_movies"
+            app:destination="@id/fragment_movies" />
+        <action
+            android:id="@+id/action_showAllFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_favouritesDetailFragment"
+            app:destination="@id/favouritesDetailFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_fragment_movies"
+            app:destination="@id/fragment_movies" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesDetailFragment"
+        android:name="com.yusufekremunlu.easyway.ui.main.movies.FavouritesDetailFragment"
+        android:label="fragment_favorites_details"
+        tools:layout="@layout/fragment_favorites_details" >
+        <action
+            android:id="@+id/action_favouritesDetailFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragmentDetails"
+        android:name="com.yusufekremunlu.easyway.ui.main.home.HomeFragmentDetails"
+        android:label="fragment_home_details"
+        tools:layout="@layout/fragment_home_details" />
+</navigation>
