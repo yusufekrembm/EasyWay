@@ -14,6 +14,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.yusufekremunlu.easyway.utils.Utils;
 
+import java.util.Objects;
+
 public class LoginViewModel extends ViewModel {
     private final FirebaseAuth mAuth;
     private final MutableLiveData<Boolean> signInGithubSuccess = new MutableLiveData<>();
@@ -47,12 +49,11 @@ public class LoginViewModel extends ViewModel {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        mAuth.getCurrentUser();
                         Utils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
-                    } else {
-                        // Oturum açma başarısız
-                    }
+                    }  // Oturum açma başarısız
+
                 });
     }
 
@@ -68,9 +69,7 @@ public class LoginViewModel extends ViewModel {
                             Utils.startHomeActivity(activity);
                         })
                 .addOnFailureListener(
-                        e -> {
-                            signInTwitterError.setValue(e.getMessage());
-                        });
+                        e -> signInTwitterError.setValue(e.getMessage()));
     }
 
     public void signInWithGithub(Activity activity) {
@@ -118,7 +117,7 @@ public class LoginViewModel extends ViewModel {
                         Toast.makeText(context, "Şifre sıfırlama e-postası gönderildi.", Toast.LENGTH_SHORT).show();
                     } else {
                         // Şifre sıfırlama e-postası gönderilirken bir hata oluştu
-                        String errorMessage = task.getException().getMessage();
+                        String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
                         Toast.makeText(context, "Şifre sıfırlama e-postası gönderilirken hata oluştu: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 });

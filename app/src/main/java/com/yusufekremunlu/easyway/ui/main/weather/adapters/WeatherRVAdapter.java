@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.weather.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,11 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.Weat
         return weatherRVModelList.size();
     }
 
-    public class WeatherViewHolder extends RecyclerView.ViewHolder {
+    public Context getContext() {
+        return context;
+    }
+
+    public static class WeatherViewHolder extends RecyclerView.ViewHolder {
         TextView time, temperature, windSpeed;
         ImageView conditionIcon;
 
@@ -56,14 +61,16 @@ public class WeatherRVAdapter extends RecyclerView.Adapter<WeatherRVAdapter.Weat
             conditionIcon = itemView.findViewById(R.id.idIVCondition);
         }
 
+        @SuppressLint("SetTextI18n")
         public void bind(WeatherRVModel weatherRVModel) {
             temperature.setText(weatherRVModel.getTemperature() + "°C");
             windSpeed.setText(weatherRVModel.getWindSpeed() + "Km/h");
             Picasso.get().load("http:".concat(weatherRVModel.getIcon())).into(conditionIcon);
-            SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-            SimpleDateFormat output = new SimpleDateFormat("hh:mm aa");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat input = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat output = new SimpleDateFormat("hh:mm aa");
             try {
                 Date t = input.parse(weatherRVModel.getTime());
+                assert t != null;
                 time.setText(output.format(t));
             } catch (ParseException e) {
                 e.printStackTrace();

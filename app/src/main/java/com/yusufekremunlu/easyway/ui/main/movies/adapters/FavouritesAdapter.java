@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
 
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.FavouriteMovieHolder> {
-    private List<MovieFav> favouriteList;
+    private final List<MovieFav> favouriteList;
     private final Context context;
     private OnItemClickListener listener;
 
@@ -74,6 +75,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setFavouriteList(List<MovieFav> newFavouriteList) {
         favouriteList.clear();
         favouriteList.addAll(newFavouriteList);

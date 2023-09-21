@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.MovieVideoViewHolder> {
 
-    private List<MovieVideoModel> videoModelList;
+    private final List<MovieVideoModel> videoModelList;
     private final Context context;
     private OnItemClickListener listener;
 
@@ -90,6 +91,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Mo
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setVideoModelList(List<MovieVideoModel> newVideoModelList) {
         notifyDataSetChanged();
         videoModelList.clear();

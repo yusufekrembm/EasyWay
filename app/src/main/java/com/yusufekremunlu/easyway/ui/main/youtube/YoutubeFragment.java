@@ -33,8 +33,6 @@ public class YoutubeFragment extends Fragment {
         GridLayoutManager newsLayoutManager = new GridLayoutManager(requireContext(), 1);
         youtubeRecyclerView.setLayoutManager(newsLayoutManager);
         youtubeRecyclerView.setAdapter(youtubeAdapter);
-
-
         SearchView searchViewYoutube = view.findViewById(R.id.search_view_youtube);
         searchViewYoutube.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -53,8 +51,6 @@ public class YoutubeFragment extends Fragment {
     }
 
     private void observeData() {
-        youtubeViewModel.getYoutubeVideos().observe(getViewLifecycleOwner(), youtubeItemModelList -> {
-            youtubeAdapter.updateData(youtubeItemModelList);
-        });
+        youtubeViewModel.getYoutubeVideos().observe(getViewLifecycleOwner(), youtubeItemModelList -> youtubeAdapter.updateData(youtubeItemModelList));
     }
 }

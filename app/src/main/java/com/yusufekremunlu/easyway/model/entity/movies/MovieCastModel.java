@@ -10,13 +10,7 @@ public class MovieCastModel implements Parcelable {
     @SerializedName("name")
     private String name;
     @SerializedName("profile_path")
-    private String profile_path;
-
-    public MovieCastModel(int id, String name, String profile_path) {
-        this.id = id;
-        this.name = name;
-        this.profile_path = profile_path;
-    }
+    private final String profile_path;
 
     protected MovieCastModel(Parcel in) {
         id = in.readInt();
@@ -68,7 +62,4 @@ public class MovieCastModel implements Parcelable {
         return profile_path;
     }
 
-    public void setProfile_path(String profile_path) {
-        this.profile_path = profile_path;
-    }
 }

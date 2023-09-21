@@ -15,6 +15,7 @@
         android:background="#624FCA"
         android:text="Enable Location"
         android:textColor="#FFFFFF"
+        android:visibility="visible"
         android:textSize="30sp"
         android:layout_centerInParent="true" />
 

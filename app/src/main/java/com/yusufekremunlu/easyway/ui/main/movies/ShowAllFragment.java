@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -41,7 +45,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         moviesViewModel = new ViewModelProvider(this).get(MoviesViewModel.class);
         showAllAdapter = new ShowAllAdapter(new ArrayList<>(), getContext());
         showAllAdapter.setOnItemClickListener(this);
-        setHasOptionsMenu(true);
     }
 
 
@@ -103,50 +106,58 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         showAllRecyclerView.addOnScrollListener(scrollListener);
     }
 
-
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.movie_filters, menu);
-        MenuItem searchItem = menu.findItem(R.id.searchMovie);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(new MenuProvider() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                moviesViewModel.searchMovieApi(query, 1);
-                loadMoreSearchList();
-                showAllRecyclerView.removeOnScrollListener(scrollListener);
-                return false;
-            }
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.movie_filters, menu);
+                MenuItem searchItem = menu.findItem(R.id.searchMovie);
+                SearchView searchView = (SearchView) searchItem.getActionView();
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                MovieListType listType = getCurrentListType();
-                if (newText.isEmpty()) {
-                    showAllRecyclerView.addOnScrollListener(scrollListener);
-                    List<MovieModel> movieList;
-                    switch (listType) {
-                        case POPULAR:
-                            movieList = moviesViewModel.getPopularMovies().getValue();
-                            break;
-                        case TRENDING:
-                            movieList = moviesViewModel.getTrendingMovies().getValue();
-                            break;
-                        case UPCOMING:
-                            movieList = moviesViewModel.getUpComingMovies().getValue();
-                            break;
-                        default:
-                            movieList = new ArrayList<>();
-                            break;
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        moviesViewModel.searchMovieApi(query, 1);
+                        loadMoreSearchList();
+                        showAllRecyclerView.removeOnScrollListener(scrollListener);
+                        return false;
                     }
-                    showAllAdapter.setDiscoverList(movieList);
-                    showAllRecyclerView.removeOnScrollListener(scrollListener);
-                }
-                return false;
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        MovieListType listType = getCurrentListType();
+                        if (newText.isEmpty()) {
+                            showAllRecyclerView.addOnScrollListener(scrollListener);
+                            List<MovieModel> movieList;
+                            switch (listType) {
+                                case POPULAR:
+                                    movieList = moviesViewModel.getPopularMovies().getValue();
+                                    break;
+                                case TRENDING:
+                                    movieList = moviesViewModel.getTrendingMovies().getValue();
+                                    break;
+                                case UPCOMING:
+                                    movieList = moviesViewModel.getUpComingMovies().getValue();
+                                    break;
+                                default:
+                                    movieList = new ArrayList<>();
+                                    break;
+                            }
+                            showAllAdapter.setDiscoverList(movieList);
+                            showAllRecyclerView.removeOnScrollListener(scrollListener);
+                        }
+                        return false;
+                    }
+                });
             }
-        });
-        super.onCreateOptionsMenu(menu, inflater);
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return menuItem.getItemId() == R.id.searchMovie;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     private void loadMoreSearchList() {
@@ -161,14 +172,6 @@ public class ShowAllFragment extends Fragment implements ShowAllAdapter.OnItemCl
         });
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.searchMovie) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onItemClick(MovieModel movie) {

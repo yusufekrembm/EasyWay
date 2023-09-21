@@ -60,6 +60,7 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
 
 
         Bundle args = getArguments();
+        assert args != null;
         MoviePerson moviePerson = args.getParcelable("moviePerson");
         int personId = moviePerson.getId();
         MovieApiClient.getInstance().getMoviePersonImages(personId);
@@ -78,12 +79,8 @@ public class MovieCastDetails extends Fragment implements MoviesPersonImagesAdap
     }
 
     private void observeData() {
-        movieCastViewModel.getPersonImagesModelMovies().observe(getViewLifecycleOwner(), personImagesList -> {
-            moviesPersonImagesAdapter.setImagesList(personImagesList);
-        });
-        movieCastViewModel.getPersonCreditsModelMovies().observe(getViewLifecycleOwner(), personCreditsList -> {
-            moviePersonCreditsAdapter.setCreditList(personCreditsList);
-        });
+        movieCastViewModel.getPersonImagesModelMovies().observe(getViewLifecycleOwner(), personImagesList -> moviesPersonImagesAdapter.setImagesList(personImagesList));
+        movieCastViewModel.getPersonCreditsModelMovies().observe(getViewLifecycleOwner(), personCreditsList -> moviePersonCreditsAdapter.setCreditList(personCreditsList));
     }
 
     @Override

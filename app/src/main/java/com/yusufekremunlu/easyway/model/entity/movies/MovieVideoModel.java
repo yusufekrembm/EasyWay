@@ -12,12 +12,6 @@ public class MovieVideoModel implements Parcelable {
     @SerializedName("name")
     private String name;
 
-    public MovieVideoModel(String id, String key, String name) {
-        this.id = id;
-        this.key = key;
-        this.name = name;
-    }
-
     protected MovieVideoModel(Parcel in) {
         id = in.readString();
         key = in.readString();
@@ -58,10 +52,6 @@ public class MovieVideoModel implements Parcelable {
 
     public String getKey() {
         return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public String getName() {

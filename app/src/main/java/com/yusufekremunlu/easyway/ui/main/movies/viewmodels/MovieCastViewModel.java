@@ -8,7 +8,7 @@ import com.yusufekremunlu.easyway.model.entity.movies.MoviePersonImages;
 import java.util.List;
 
 public class MovieCastViewModel extends ViewModel {
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     public MovieCastViewModel() {
         movieRepository = MovieRepository.getInstance();

@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieCastAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.adapters.MovieVideoAdapter;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.FavouritesViewModel;
 import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.MovieDetailViewModel;
-import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;;
+import com.yusufekremunlu.easyway.ui.main.movies.viewmodels.ViewModelFactory;
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.ArrayList;
 import androidx.appcompat.widget.Toolbar;
@@ -45,6 +46,7 @@ public class FavouritesDetailFragment extends Fragment {
         movieVideoAdapter = new MovieVideoAdapter(new ArrayList<>(), getContext());
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorites_details, container, false);
@@ -66,7 +68,7 @@ public class FavouritesDetailFragment extends Fragment {
                 RatingBar detailMovieRatingBar = view.findViewById(R.id.detailMovieRatingBar);
                 detailMovieRatingBar.setRating(movieFav.getVote_average() / 2);
                 TextView detailMovieNumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
-                detailMovieNumOfVotes.setText(String.valueOf(movieFav.getVote_count() + " votes"));
+                detailMovieNumOfVotes.setText(movieFav.getVote_count() + " votes");
                 TextView detailMovieOverView = view.findViewById(R.id.detailMovieOverView);
                 detailMovieOverView.setText(movieFav.getOverview());
                 TextView detailMovieReleasedDate = view.findViewById(R.id.detailMovieReleasedDate);
@@ -89,7 +91,7 @@ public class FavouritesDetailFragment extends Fragment {
                 Toast.makeText(getContext(), "Removed from watch list", Toast.LENGTH_SHORT).show();
                 MovieFav favMovie = new MovieFav(movieFav.getUid(), movieFav.getTitle(), movieFav.getPoster_path(), movieFav.getOriginal_language(), movieFav.getOriginal_title(), movieFav.getOverview(), movieFav.getBackdrop_path(), movieFav.getRelease_date(), movieFav.getVote_average(), movieFav.getVote_count());
                 favouritesViewModel.deleteFavMovie(favMovie);
-                saveState(movieFav.getUid(), false);
+                saveState(movieFav.getUid());
             }
         });
 
@@ -107,18 +109,14 @@ public class FavouritesDetailFragment extends Fragment {
     }
 
     private void observeData() {
-        movieDetailViewModel.getCastModelMovies().observe(getViewLifecycleOwner(), castModelList -> {
-            movieCastAdapter.setMovieCastList(castModelList);
-        });
-        movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> {
-            movieVideoAdapter.setVideoModelList(videoModelList);
-        });
+        movieDetailViewModel.getCastModelMovies().observe(getViewLifecycleOwner(), castModelList -> movieCastAdapter.setMovieCastList(castModelList));
+        movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> movieVideoAdapter.setVideoModelList(videoModelList));
     }
 
-    private void saveState(int movieId, boolean isFavourite) {
+    private void saveState(int movieId) {
         SharedPreferences aSharedPreferences = requireContext().getSharedPreferences("FavouriteMovies", Context.MODE_PRIVATE);
         SharedPreferences.Editor aSharedPreferencesEdit = aSharedPreferences.edit();
-        aSharedPreferencesEdit.putBoolean(getFavouriteKey(movieId), isFavourite);
+        aSharedPreferencesEdit.putBoolean(getFavouriteKey(movieId), false);
         aSharedPreferencesEdit.apply();
     }
 

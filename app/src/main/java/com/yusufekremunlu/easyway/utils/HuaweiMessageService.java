@@ -27,21 +27,12 @@ public class HuaweiMessageService extends HmsMessageService {
                 + "\n getTtl: " + message.getTtl()
                 + "\n getToken: " + message.getToken());
 
-        Boolean judgeWhetherIn10s = false;
         // If the message is not processed within 10 seconds, create a job to process it.
-        if (judgeWhetherIn10s) {
-            startWorkManagerJob(message);
-        } else {
-            // Process the message within 10 seconds.
-            processWithin10s(message);
-        }
+        // Process the message within 10 seconds.
+        processWithin10s();
     }
 
-    private void startWorkManagerJob(RemoteMessage message) {
-        Log.d(TAG, "Start new job processing.");
-    }
-
-    private void processWithin10s(RemoteMessage message) {
+    private void processWithin10s() {
         Log.d(TAG, "Processing now.");
     }
 }

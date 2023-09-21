@@ -1,6 +1,7 @@
 package com.yusufekremunlu.easyway.db.remote.movies;
 
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieCastModel;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
@@ -89,7 +90,7 @@ public class MovieApiClient {
                                   int currentPage) {
         call.enqueue(new Callback<MovieResponse>() {
             @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
                     MovieResponse movieResponse = response.body();
                     if (movieResponse != null) {
@@ -108,7 +109,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -132,7 +133,7 @@ public class MovieApiClient {
         Call<CreditsResponse> movieCasts = movieApiInterface.fetchMovieCasts(movie_id);
         movieCasts.enqueue(new Callback<CreditsResponse>() {
             @Override
-            public void onResponse(Call<CreditsResponse> call, Response<CreditsResponse> response) {
+            public void onResponse(@NonNull Call<CreditsResponse> call, @NonNull Response<CreditsResponse> response) {
                 if (response.isSuccessful()) {
                     CreditsResponse movieCastResponse = response.body();
                     if (movieCastResponse != null) {
@@ -143,7 +144,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<CreditsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -152,7 +153,7 @@ public class MovieApiClient {
         Call<VideosResponse> movieVideos = movieApiInterface.fetchMovieVideos(movie_id);
         movieVideos.enqueue(new Callback<VideosResponse>() {
             @Override
-            public void onResponse(Call<VideosResponse> call, Response<VideosResponse> response) {
+            public void onResponse(@NonNull Call<VideosResponse> call, @NonNull Response<VideosResponse> response) {
                 if (response.isSuccessful()) {
                     VideosResponse movieVideosResponse = response.body();
                     if (movieVideosResponse != null) {
@@ -163,7 +164,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<VideosResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<VideosResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -172,7 +173,7 @@ public class MovieApiClient {
         Call<MoviePerson> responseCall = movieApiInterface.fetchPersonDetails(personId);
         responseCall.enqueue(new Callback<MoviePerson>() {
             @Override
-            public void onResponse(Call<MoviePerson> call, Response<MoviePerson> response) {
+            public void onResponse(@NonNull Call<MoviePerson> call, @NonNull Response<MoviePerson> response) {
                 if (response.isSuccessful()) {
                     MoviePerson moviePerson = response.body();
                     callback.onSuccess(moviePerson);
@@ -182,7 +183,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<MoviePerson> call, Throwable t) {
+            public void onFailure(@NonNull Call<MoviePerson> call, @NonNull Throwable t) {
                 callback.onFailure(t);
             }
         });
@@ -198,7 +199,7 @@ public class MovieApiClient {
         Call<MoviePersonImagesResponse> moviePersonImagesResponseCall = movieApiInterface.fetchPersonImages(person_id);
         moviePersonImagesResponseCall.enqueue(new Callback<MoviePersonImagesResponse>() {
             @Override
-            public void onResponse(Call<MoviePersonImagesResponse> call, Response<MoviePersonImagesResponse> response) {
+            public void onResponse(@NonNull Call<MoviePersonImagesResponse> call, @NonNull Response<MoviePersonImagesResponse> response) {
                 if (response.isSuccessful()) {
                     MoviePersonImagesResponse moviePersonImagesResponse = response.body();
                     if (moviePersonImagesResponse != null) {
@@ -209,7 +210,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<MoviePersonImagesResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<MoviePersonImagesResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -218,7 +219,7 @@ public class MovieApiClient {
         Call<MoviePersonCreditsResponse> moviePersonCreditsResponseCall = movieApiInterface.fetchPersonCredits(person_id);
         moviePersonCreditsResponseCall.enqueue(new Callback<MoviePersonCreditsResponse>() {
             @Override
-            public void onResponse(Call<MoviePersonCreditsResponse> call, Response<MoviePersonCreditsResponse> response) {
+            public void onResponse(@NonNull Call<MoviePersonCreditsResponse> call, @NonNull Response<MoviePersonCreditsResponse> response) {
                 if (response.isSuccessful()) {
                     MoviePersonCreditsResponse moviePersonCreditsResponse = response.body();
                     if (moviePersonCreditsResponse != null) {
@@ -229,7 +230,7 @@ public class MovieApiClient {
             }
 
             @Override
-            public void onFailure(Call<MoviePersonCreditsResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<MoviePersonCreditsResponse> call, @NonNull Throwable t) {
             }
         });
     }
@@ -241,14 +242,11 @@ public class MovieApiClient {
         retrieveMoviesRunnable = new RetrieveMoviesRunnable(query, pageNumber);
 
 
-        final Future myHandler = AppExecutors.getInstance().netWorkIO().submit(retrieveMoviesRunnable);
+        final Future<?> myHandler = AppExecutors.getInstance().netWorkIO().submit(retrieveMoviesRunnable);
 
-        AppExecutors.getInstance().netWorkIO().schedule(new Runnable() {
-            @Override
-            public void run() {
-                // Cancelling the retrofit call
-                myHandler.cancel(true);
-            }
+        AppExecutors.getInstance().netWorkIO().schedule(() -> {
+            // Cancelling the retrofit call
+            myHandler.cancel(true);
         }, 5000, TimeUnit.MILLISECONDS);
 
     }
@@ -266,15 +264,15 @@ public class MovieApiClient {
 
         public void run() {
             try {
-                Response response = getMovies(query, pageNumber).execute();
+                Response<MovieResponse> response = getMovies(query, pageNumber).execute();
                 if (cancelRequest) {
                     return;
                 }
                 if (response.code() == 200) {
                     assert response.body() != null;
-                    List<MovieModel> listTrending = new ArrayList<>(((MovieResponse) response.body()).getMovies());
-                    List<MovieModel> listPopular = new ArrayList<>(((MovieResponse) response.body()).getMovies());
-                    List<MovieModel> listUpcoming = new ArrayList<>(((MovieResponse) response.body()).getMovies());
+                    List<MovieModel> listTrending = new ArrayList<>(response.body().getMovies());
+                    List<MovieModel> listPopular = new ArrayList<>(response.body().getMovies());
+                    List<MovieModel> listUpcoming = new ArrayList<>(response.body().getMovies());
                     if (pageNumber == 1) {
                         mTrendingMovies.postValue(listTrending);
                         mPopularMovies.postValue(listPopular);
@@ -308,11 +306,6 @@ public class MovieApiClient {
                     query,
                     pageNumber
             );
-        }
-
-        private void cancelRequest() {
-            Log.v("Tag", "Cancelling search request");
-            cancelRequest = true;
         }
     }
 }

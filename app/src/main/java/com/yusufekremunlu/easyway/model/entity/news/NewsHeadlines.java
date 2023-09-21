@@ -7,10 +7,10 @@ public class NewsHeadlines implements Parcelable {
     private Source source;
     private Object author;
     private String title;
-    private String description;
-    private String url;
-    private String urlToImage;
-    private String publishedAt;
+    private final String description;
+    private final String url;
+    private final String urlToImage;
+    private final String publishedAt;
     private String content;
 
     protected NewsHeadlines(Parcel in) {
@@ -61,10 +61,6 @@ public class NewsHeadlines implements Parcelable {
         return author;
     }
 
-    public void setAuthor(Object author) {
-        this.author = author;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -77,32 +73,16 @@ public class NewsHeadlines implements Parcelable {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getUrl() {
         return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public String getUrlToImage() {
         return urlToImage;
     }
 
-    public void setUrlToImage(String urlToImage) {
-        this.urlToImage = urlToImage;
-    }
-
     public String getPublishedAt() {
         return publishedAt;
-    }
-
-    public void setPublishedAt(String publishedAt) {
-        this.publishedAt = publishedAt;
     }
 
     public String getContent() {

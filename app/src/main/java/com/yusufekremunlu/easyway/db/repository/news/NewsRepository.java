@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.db.repository.news;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import com.yusufekremunlu.easyway.db.remote.news.NewsApiInterface;
 import com.yusufekremunlu.easyway.model.entity.news.NewsHeadlines;
@@ -32,7 +33,7 @@ public class NewsRepository {
         Call<NewsApiResponse> newsApiResponseCall = newsApiInterface.callHeadlines(100, country, category);
         newsApiResponseCall.enqueue(new Callback<NewsApiResponse>() {
             @Override
-            public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
+            public void onResponse(@NonNull Call<NewsApiResponse> call, @NonNull Response<NewsApiResponse> response) {
                 if (response.isSuccessful()) {
                     NewsApiResponse newsApiResponse = response.body();
                     if (newsApiResponse != null) {
@@ -43,7 +44,7 @@ public class NewsRepository {
             }
 
             @Override
-            public void onFailure(Call<NewsApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<NewsApiResponse> call, @NonNull Throwable t) {
 
             }
         });
@@ -54,7 +55,7 @@ public class NewsRepository {
         Call<NewsApiResponse> newsApiResponseCall = newsApiInterface.callEverything(query);
         newsApiResponseCall.enqueue(new Callback<NewsApiResponse>() {
             @Override
-            public void onResponse(Call<NewsApiResponse> call, Response<NewsApiResponse> response) {
+            public void onResponse(@NonNull Call<NewsApiResponse> call, @NonNull Response<NewsApiResponse> response) {
                 if (response.isSuccessful()) {
                     NewsApiResponse newsApiResponse = response.body();
                     if (newsApiResponse != null) {
@@ -65,7 +66,7 @@ public class NewsRepository {
             }
 
             @Override
-            public void onFailure(Call<NewsApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<NewsApiResponse> call, @NonNull Throwable t) {
 
             }
         });

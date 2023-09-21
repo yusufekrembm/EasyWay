@@ -17,14 +17,6 @@ public class MoviePerson implements Parcelable {
     @SerializedName("biography")
     private String biography;
 
-    public MoviePerson(int id, String name, String profile_path, String known_for_department, String biography) {
-        this.id = id;
-        this.name = name;
-        this.profile_path = profile_path;
-        this.known_for_department = known_for_department;
-        this.biography = biography;
-    }
-
     protected MoviePerson(Parcel in) {
         id = in.readInt();
         name = in.readString();
@@ -65,24 +57,12 @@ public class MoviePerson implements Parcelable {
         return profile_path;
     }
 
-    public void setProfile_path(String profile_path) {
-        this.profile_path = profile_path;
-    }
-
     public String getKnown_for_department() {
         return known_for_department;
     }
 
-    public void setKnown_for_department(String known_for_department) {
-        this.known_for_department = known_for_department;
-    }
-
     public String getBiography() {
         return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
     }
 
     @Override

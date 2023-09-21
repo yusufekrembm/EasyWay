@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
 
 public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonCreditsAdapter.MoviePersonCreditsViewHolder> {
-    private List<MoviePersonCredits> creditList;
+    private final List<MoviePersonCredits> creditList;
     private final Context context;
     private OnItemClickListener listener;
 
@@ -74,6 +75,7 @@ public class MoviePersonCreditsAdapter extends RecyclerView.Adapter<MoviePersonC
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setCreditList(List<MoviePersonCredits> newCreditList) {
         notifyDataSetChanged();
         creditList.clear();

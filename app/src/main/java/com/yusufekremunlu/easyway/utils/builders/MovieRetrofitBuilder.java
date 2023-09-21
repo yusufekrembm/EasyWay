@@ -1,5 +1,7 @@
 package com.yusufekremunlu.easyway.utils.builders;
 
+import androidx.annotation.NonNull;
+
 import com.yusufekremunlu.easyway.utils.Credentials;
 import java.io.IOException;
 import okhttp3.Interceptor;
@@ -10,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import okhttp3.Response;
 
 public class MovieRetrofitBuilder {
-    private static OkHttpClient okHttp = new OkHttpClient.Builder().addInterceptor(new RequestInterceptor()).build();
-    private static Retrofit retrofit = new Retrofit.Builder()
+    private static final OkHttpClient okHttp = new OkHttpClient.Builder().addInterceptor(new RequestInterceptor()).build();
+    private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Credentials.MOVIE_BASE_API_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttp)
@@ -22,6 +24,7 @@ public class MovieRetrofitBuilder {
     }
 
     private static class RequestInterceptor implements Interceptor {
+        @NonNull
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request oldRequest = chain.request();

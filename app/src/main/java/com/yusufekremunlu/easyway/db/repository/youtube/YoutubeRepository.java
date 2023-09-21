@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.db.repository.youtube;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import com.yusufekremunlu.easyway.db.remote.youtube.YoutubeApiInterface;
 import com.yusufekremunlu.easyway.model.entity.youtube.YoutubeItemModel;
@@ -30,7 +31,7 @@ public class YoutubeRepository {
         Call<YoutubeApiResponse> youtubeApiResponseCall = youtubeApiInterface.callAllYoutubeVideos(query);
         youtubeApiResponseCall.enqueue(new Callback<YoutubeApiResponse>() {
             @Override
-            public void onResponse(Call<YoutubeApiResponse> call, Response<YoutubeApiResponse> response) {
+            public void onResponse(@NonNull Call<YoutubeApiResponse> call, @NonNull Response<YoutubeApiResponse> response) {
                 if (response.isSuccessful()) {
                     YoutubeApiResponse youtubeApiResponse = response.body();
                     if (youtubeApiResponse != null) {
@@ -41,7 +42,7 @@ public class YoutubeRepository {
             }
 
             @Override
-            public void onFailure(Call<YoutubeApiResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<YoutubeApiResponse> call, @NonNull Throwable t) {
 
             }
         });

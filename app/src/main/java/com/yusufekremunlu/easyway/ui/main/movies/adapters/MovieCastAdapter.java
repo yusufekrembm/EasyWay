@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.yusufekremunlu.easyway.utils.Credentials;
 import java.util.List;
 
 public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.MovieCastViewHolder> {
-    private List<MovieCastModel> castModelList;
+    private final List<MovieCastModel> castModelList;
     private final Context context;
     private OnItemClickListener listener;
 
@@ -71,6 +72,7 @@ public class MovieCastAdapter extends RecyclerView.Adapter<MovieCastAdapter.Movi
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMovieCastList(List<MovieCastModel> newCastModelList) {
         notifyDataSetChanged();
         castModelList.clear();

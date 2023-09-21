@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.yusufekremunlu.easyway.model.entity.movies.MovieModel;
-
 import java.util.List;
 
 public class MovieResponse {
@@ -17,22 +16,11 @@ public class MovieResponse {
     @SerializedName("results")
     private List<MovieModel> movies;
 
-    public int getTotal_results() {
-        return total_results;
-    }
-
-    public int getTotal_pages() {
-        return total_pages;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
     public List<MovieModel> getMovies() {
         return movies;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "MovieResponse{" +

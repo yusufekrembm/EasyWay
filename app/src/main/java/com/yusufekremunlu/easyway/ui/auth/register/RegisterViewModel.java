@@ -46,12 +46,11 @@ public class RegisterViewModel extends ViewModel {
                 .addOnCompleteListener(activity, task -> {
                     if (task.isSuccessful()) {
                         // Oturum açma başarılı
-                        FirebaseUser user = mAuth.getCurrentUser();
+                        mAuth.getCurrentUser();
                         Utils.startHomeActivity(activity);
                         // İlgili işlemleri gerçekleştirin
-                    } else {
-                        // Oturum açma başarısız
-                    }
+                    }  // Oturum açma başarısız
+
                 });
     }
 
@@ -81,9 +80,7 @@ public class RegisterViewModel extends ViewModel {
                             Utils.startHomeActivity(activity);
                         })
                 .addOnFailureListener(
-                        e -> {
-                            signInTwitterError.setValue(e.getMessage());
-                        });
+                        e -> signInTwitterError.setValue(e.getMessage()));
     }
 
     public void registerUser(String email, String password, String rePassword, OnRegistrationListener listener) {

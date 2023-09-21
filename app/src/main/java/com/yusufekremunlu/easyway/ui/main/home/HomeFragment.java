@@ -108,12 +108,8 @@ public class HomeFragment extends Fragment implements SelectListener, View.OnCli
     }
 
     private void observeData() {
-        newsViewModel.getTopHeadNews().observe(getViewLifecycleOwner(), newsHeadlines -> {
-            newsAdapter.updateData(newsHeadlines);
-        });
-        newsViewModel.getEverythingNews().observe(getViewLifecycleOwner(), newsHeadlines -> {
-            newsAdapter.updateData(newsHeadlines);
-        });
+        newsViewModel.getTopHeadNews().observe(getViewLifecycleOwner(), newsHeadlines -> newsAdapter.updateData(newsHeadlines));
+        newsViewModel.getEverythingNews().observe(getViewLifecycleOwner(), newsHeadlines -> newsAdapter.updateData(newsHeadlines));
     }
 
     @Override

@@ -11,8 +11,8 @@ import com.yusufekremunlu.easyway.model.entity.youtube.YoutubeItemModel;
 import java.util.List;
 
 public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder> {
-    private Context context;
-    private List<YoutubeItemModel> youtubeItemModelList;
+    private final Context context;
+    private final List<YoutubeItemModel> youtubeItemModelList;
 
     public YoutubeAdapter(Context context, List<YoutubeItemModel> youtubeItemModelList) {
         this.context = context;
@@ -36,6 +36,7 @@ public class YoutubeAdapter extends RecyclerView.Adapter<YoutubeViewHolder> {
     public int getItemCount() {
         return youtubeItemModelList.size();
     }
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<YoutubeItemModel> newData) {
         youtubeItemModelList.clear();
         youtubeItemModelList.addAll(newData);

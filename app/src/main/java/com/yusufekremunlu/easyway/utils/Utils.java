@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -87,6 +88,7 @@ public class Utils {
 
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String password = s.toString();

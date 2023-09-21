@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.home.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,9 +13,9 @@ import com.yusufekremunlu.easyway.ui.main.home.SelectListener;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
-    private Context context;
-    private List<NewsHeadlines> newsHeadlinesList;
-    private SelectListener listener;
+    private final Context context;
+    private final List<NewsHeadlines> newsHeadlinesList;
+    private final SelectListener listener;
 
     public NewsAdapter(Context context, List<NewsHeadlines> newsHeadlinesList, SelectListener listener) {
         this.context = context;
@@ -38,9 +39,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         if (newsHeadline.getUrlToImage() != null) {
             Picasso.get().load(newsHeadline.getUrlToImage()).into(holder.img_headline);
         }
-        holder.cardView.setOnClickListener(v -> {
-            listener.OnNewsClicked(newsHeadlinesList.get(position));
-        });
+        holder.cardView.setOnClickListener(v -> listener.OnNewsClicked(newsHeadlinesList.get(position)));
     }
 
     @Override
@@ -48,6 +47,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsViewHolder> {
         return newsHeadlinesList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateData(List<NewsHeadlines> newData) {
         newsHeadlinesList.clear();
         newsHeadlinesList.addAll(newData);

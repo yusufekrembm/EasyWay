@@ -1,11 +1,12 @@
 package com.yusufekremunlu.easyway.ui.main.movies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import androidx.annotation.NonNull;;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yusufekremunlu.easyway.R;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class MoviesPersonImagesAdapter extends RecyclerView.Adapter<MoviesPersonImagesAdapter.MoviePersonImagesViewHolder> {
 
-    private List<MoviePersonImages> imagesList;
+    private final List<MoviePersonImages> imagesList;
     private final Context context;
     private OnItemClickListener listener;
 
@@ -71,6 +72,7 @@ public class MoviesPersonImagesAdapter extends RecyclerView.Adapter<MoviesPerson
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setImagesList(List<MoviePersonImages> newImagesList) {
         notifyDataSetChanged();
         imagesList.clear();

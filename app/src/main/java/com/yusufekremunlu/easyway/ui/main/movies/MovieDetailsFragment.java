@@ -1,5 +1,6 @@
 package com.yusufekremunlu.easyway.ui.main.movies;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         movieCastAdapter.setOnItemClickListener(this);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -73,7 +75,7 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
                 RatingBar detailMovieRatingBar = view.findViewById(R.id.detailMovieRatingBar);
                 detailMovieRatingBar.setRating(movie.getVote_average() / 2);
                 TextView detailMovieNumOfVotes = view.findViewById(R.id.detailMovienumOfVotes);
-                detailMovieNumOfVotes.setText(String.valueOf(movie.getVote_count() + " votes"));
+                detailMovieNumOfVotes.setText(movie.getVote_count() + " votes");
                 TextView detailMovieOverView = view.findViewById(R.id.detailMovieOverView);
                 detailMovieOverView.setText(movie.getOverview());
                 TextView detailMovieReleasedDate = view.findViewById(R.id.detailMovieReleasedDate);
@@ -139,12 +141,8 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
     }
 
     private void observeData() {
-        movieDetailViewModel.getCastModelMovies().observe(getViewLifecycleOwner(), castModelList -> {
-            movieCastAdapter.setMovieCastList(castModelList);
-        });
-        movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> {
-            movieVideoAdapter.setVideoModelList(videoModelList);
-        });
+        movieDetailViewModel.getCastModelMovies().observe(getViewLifecycleOwner(), castModelList -> movieCastAdapter.setMovieCastList(castModelList));
+        movieDetailViewModel.getVideoModelMovies().observe(getViewLifecycleOwner(), videoModelList -> movieVideoAdapter.setVideoModelList(videoModelList));
     }
 
     @Override
@@ -152,7 +150,8 @@ public class MovieDetailsFragment extends Fragment implements MovieCastAdapter.O
         Bundle bundle = new Bundle();
         bundle.putParcelable("castModel", movieCastModel);
 
-        MovieApiClient.getInstance().getMoviesPersonsFromApi(movieCastModel.getId(), new MovieApiClient.MovieApiCallback() {
+        MovieApiClient.getInstance();
+        MovieApiClient.getMoviesPersonsFromApi(movieCastModel.getId(), new MovieApiClient.MovieApiCallback() {
             @Override
             public void onSuccess(MoviePerson moviePerson) {
                 Bundle bundle = new Bundle();
