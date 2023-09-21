@@ -1,5 +1,7 @@
 # EasyWay Application
 
+This project does not contain deprecated methods. This project has been developed using new technologies and structures.
+
 EasyWay is an application that combines weather updates, travel guides, QR code scanning, new movie information, YouTube integration, note-taking, and a shopping list. With this app, you can receive real-time weather updates, explore travel destinations, scan QR codes, discover new movies and where to watch them, watch YouTube videos, take notes, and create a shopping list.
 
 ## Features
@@ -14,12 +16,14 @@ EasyWay is an application that combines weather updates, travel guides, QR code 
 
 ## Tools and Technologies Used
 
-- Firebase Database and Authentication: Used for database management and user authentication.
-- Google Services: Utilized for integrating various services.
-- Huawei Mobile Services (Push-Kit, Scan-Kit, Map-Kit).
-- MVVM Pattern: Employed to organize and manage the application structure.
-- APIs: Utilized to fetch information from various data sources.
-- SharedPreferences: Used for local data storage and management.
+- Firebase Database and Authentication
+- Google Services
+- Huawei Mobile Services (Push-Kit, Scan-Kit).
+- MVVM Pattern
+- APIs
+- SharedPreferences
+- RoomDB
+- RestFul Services
 
 ## Installation
 
