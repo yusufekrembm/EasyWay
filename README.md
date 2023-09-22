@@ -2,17 +2,14 @@
 
 This project does not contain deprecated methods. This project has been developed using new technologies and structures.
 
-EasyWay is an application that combines weather updates, travel guides, QR code scanning, new movie information, YouTube integration, note-taking, and a shopping list. With this app, you can receive real-time weather updates, explore travel destinations, scan QR codes, discover new movies and where to watch them, watch YouTube videos, take notes, and create a shopping list.
+EasyWay is an application that combines weather updates, travel guides, QR code scanning, new movie information, YouTube integration. With this app, you can receive real-time weather updates, explore news, scan QR codes, discover new movies and watch YouTube videos.
 
 ## Features
-
 - Receive real-time weather updates
-- Explore various travel destinations
-- Easily scan QR codes
-- View new movie information and find out where to watch them
-- Watch YouTube videos within the app
-- Take and store notes
-- Create and manage your shopping list
+- Explore various news.
+- Easily scan QR codes and barcodes.
+- View new movie information and find out where to watch them and add them to favourites.
+- Watch YouTube videos within the app without ads.
 
 ## Tools and Technologies Used
 
