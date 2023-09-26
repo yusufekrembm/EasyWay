@@ -35,7 +35,7 @@
                 android:id="@+id/search_view_youtube"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                app:defaultQueryHint="Search News..."
+                app:defaultQueryHint="Search"
                 app:iconifiedByDefault="false">
 
             </androidx.appcompat.widget.SearchView>

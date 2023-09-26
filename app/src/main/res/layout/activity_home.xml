@@ -37,21 +37,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:menu="@menu/bottom_nav_menu" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:backgroundTint="#A7EF0404"
-                android:contentDescription="@string/qrfloat"
-                android:src="@drawable/qrcode"
-                app:layout_constraintBottom_toBottomOf="@id/bottomNavigationView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/bottomNavigationView"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerCircle"
-                tools:ignore="ImageContrastCheck" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,7 +10,8 @@
         android:icon="@drawable/clouds"/>
     <item
         android:id="@+id/fragment_qr"
-        android:title="" />
+        android:title="Qr"
+        android:icon="@drawable/baseline_qr_code_scanner_24"/>
     <item
         android:id="@+id/fragment_movies"
         android:title="@string/movies"
