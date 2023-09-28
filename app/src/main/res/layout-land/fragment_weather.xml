@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
+    android:id="@+id/fragment_weather"
     tools:context=".ui.main.weather.WeatherFragment">
 
     <Button
@@ -12,10 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#624FCA"
-        android:text="Enable Location"
+        android:text="Refresh"
+        android:onClick="refresh"
         android:textColor="#FFFFFF"
+        android:visibility="visible"
         android:textSize="30sp"
         android:layout_centerInParent="true" />
+
 
     <RelativeLayout
         android:id="@+id/idRLHome"

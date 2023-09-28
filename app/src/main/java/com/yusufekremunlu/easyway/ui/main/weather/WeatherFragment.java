@@ -4,14 +4,12 @@ import static android.content.ContentValues.TAG;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -56,6 +55,7 @@ public class WeatherFragment extends Fragment {
     private ImageView iconIV;
     private TextView conditionIV;
     private ImageView backIV;
+    Button refreshButton;
     private final ActivityResultLauncher<String> mPermissionResult = registerForActivityResult(
             new ActivityResultContracts.RequestPermission(),
             result -> {
@@ -66,6 +66,7 @@ public class WeatherFragment extends Fragment {
                 }
             });
 
+    @SuppressLint("CutPasteId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather, container, false);
@@ -87,7 +88,7 @@ public class WeatherFragment extends Fragment {
 
         enableLocationBtn.setOnClickListener(v -> {
             if (checkLocationPermissions()) {
-                startLocationSettings();
+
             } else {
                 requestLocationPermissions();
             }
@@ -110,7 +111,10 @@ public class WeatherFragment extends Fragment {
                 getWeatherInfo(city);
             }
         });
-
+        refreshButton = view.findViewById(R.id.idBtnEnableLocation);
+        refreshButton.setOnClickListener(v -> {
+            refresh();
+        });
         return view;
     }
 
@@ -122,11 +126,6 @@ public class WeatherFragment extends Fragment {
         mPermissionResult.launch(Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
-    private void startLocationSettings() {
-        Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(intent);
-    }
-
     @SuppressLint("MissingPermission")
     private void getLocation() {
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -134,7 +133,7 @@ public class WeatherFragment extends Fragment {
             String cityName = getCityName(location.getLongitude(), location.getLatitude());
             getWeatherInfo(cityName);
         } else {
-            Toast.makeText(requireContext(), "Location information could not be obtained. Please enable location services.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Location information could not be obtained. Please enable location services and press the refresh button", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -205,6 +204,15 @@ public class WeatherFragment extends Fragment {
         super.onResume();
         if(checkLocationPermissions()){
             getLocation();
+        } else {
+            requestLocationPermissions();
+        }
+    }
+    public void refresh(){
+        if(checkLocationPermissions()){
+            getLocation();
+        } else {
+            requestLocationPermissions();
         }
     }
 }
